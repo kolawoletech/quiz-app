@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { auth, hasFirebaseConfig } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import type {
   LoadStudentSessionResult,
   StudentQuestionResult,
@@ -51,10 +51,7 @@ export function StudentSessionForm() {
     setIsSubmitting(true);
     setError("");
     try {
-      if (!hasFirebaseConfig()) {
-        throw new Error("Firebase is not configured. Add the Firebase client settings to your local .env file.");
-      }
-
+      const auth = getFirebaseAuth();
       const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
       const submissionResult = await submitStudentQuiz({
         roomCode: session.roomCode,
