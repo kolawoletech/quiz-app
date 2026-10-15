@@ -32,6 +32,9 @@ export default function QuizzesPage() {
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Questions: {quiz.questionIds.length}</div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Attempts: {quiz.settings.allowOneAttempt ? "One" : "Multiple"}</div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Timer: {quiz.settings.timeLimitMinutes ?? "None"}</div>
+                {quiz.settings.passMark !== undefined && (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Pass mark: {quiz.settings.passMark}%</div>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="secondary">Edit</Button>

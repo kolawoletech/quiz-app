@@ -75,12 +75,14 @@ export async function loadStudentSession(rawRoomCode: string): Promise<LoadStude
         shuffleOptions: quiz.settings.shuffleOptions,
         showScoreAfterSubmit: quiz.settings.showScoreAfterSubmit,
         showCorrectAnswersAfterSubmit: quiz.settings.showCorrectAnswersAfterSubmit,
+        passMark: quiz.settings.passMark,
         timeLimitMinutes: quiz.settings.timeLimitMinutes,
       },
-      questions: questions.map(({ id, type, question, options, points }) => ({
+      questions: questions.map(({ id, type, question, codeSnippet, options, points }) => ({
         id,
         type,
         question,
+        codeSnippet,
         options,
         points,
       })),

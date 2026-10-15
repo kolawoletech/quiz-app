@@ -39,9 +39,6 @@ export default function QuestionsPage() {
                   </li>
                 ))}
               </ul>
-              <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-                <strong>Answer:</strong> {question.answer.join(", ")}
-              </div>
             </CardContent>
           </Card>
         ))}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildCsv, generateRoomCode, gradeQuestionSubmission, gradeStudentQuizSubmission } from "@/lib/quiz-utils";
-import { questionBank } from "@/lib/mock-data";
+import { questionBank, quizzes } from "@/lib/mock-data";
 
 describe("generateRoomCode", () => {
   it("creates a four-digit code", () => {
@@ -53,6 +53,27 @@ describe("gradeQuestionSubmission", () => {
     expect(result.score).toBeNull();
     expect(result.maxScore).toBeNull();
     expect(result.questionResults?.[0]?.correctAnswer).toBe(questionBank[0].answer.join(", "));
+  });
+
+  it("grades all questions from the Basic C# practice JSON", () => {
+    const quiz = quizzes.find((item) => item.id === "quiz-basic-csharp-practice");
+    expect(quiz).toBeDefined();
+    if (!quiz) return;
+
+    const questions = quiz.questionIds.map((id) => questionBank.find((question) => question.id === id));
+    expect(questions.every((question) => question !== undefined)).toBe(true);
+    const completeQuestionSet = questions.filter((question) => question !== undefined);
+    expect(completeQuestionSet).toHaveLength(22);
+
+    const result = gradeStudentQuizSubmission(
+      completeQuestionSet,
+      Object.fromEntries(completeQuestionSet.map((question) => [question.id, question.answer])),
+      quiz.settings,
+    );
+
+    expect(result.score).toBe(22);
+    expect(result.maxScore).toBe(22);
+    expect(result.questionResults).toHaveLength(22);
   });
 });
 

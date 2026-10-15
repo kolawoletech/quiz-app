@@ -219,6 +219,13 @@ export function StudentSessionForm() {
               <div className="rounded-xl bg-slate-50 p-6 text-center">
                 <p className="text-sm text-slate-500">Your score</p>
                 <p className="mt-1 text-4xl font-bold">{result.score} <span className="text-2xl text-slate-400">/ {result.maxScore}</span></p>
+                {session.settings.passMark !== undefined && (
+                  <Badge className="mt-3">
+                    {result.score / result.maxScore * 100 >= session.settings.passMark ? "Passed" : "Not passed"}
+                    {" · "}
+                    Pass mark: {session.settings.passMark}%
+                  </Badge>
+                )}
               </div>
             ) : (
               <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
@@ -290,6 +297,11 @@ export function StudentSessionForm() {
               <CardTitle className="text-lg">
                 {index + 1}. {question.question}
               </CardTitle>
+              {question.codeSnippet && (
+                <pre className="overflow-x-auto rounded-lg bg-slate-950 p-4 text-sm text-slate-100">
+                  <code>{question.codeSnippet}</code>
+                </pre>
+              )}
               <CardDescription>{question.points} {question.points === 1 ? "point" : "points"}</CardDescription>
             </CardHeader>
             <CardContent>

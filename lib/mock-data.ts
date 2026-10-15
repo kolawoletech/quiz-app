@@ -1,14 +1,17 @@
+import { practiceQuestionBank, practiceQuizzes } from "@/lib/practice-quizzes";
+
 export type QuestionType = "single" | "multiple" | "truefalse" | "short" | "code";
 
 export interface Question {
   id: string;
   type: QuestionType;
   question: string;
+  codeSnippet?: string;
   options: string[];
   answer: string[];
   explanation: string;
   points: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "easy" | "medium" | "hard" | "unrated";
   tags: string[];
   ownerUid: string;
   createdAt: string;
@@ -26,6 +29,7 @@ export interface Quiz {
     allowOneAttempt: boolean;
     showScoreAfterSubmit: boolean;
     showCorrectAnswersAfterSubmit: boolean;
+    passMark?: number;
     timeLimitMinutes?: number;
     mode: "self-paced" | "live";
   };
@@ -103,6 +107,7 @@ export const questionBank: Question[] = [
     ownerUid: "lecturer-1",
     createdAt: "2026-10-12T12:00:00.000Z",
   },
+  ...practiceQuestionBank,
 ];
 
 export const quizzes: Quiz[] = [
@@ -110,7 +115,7 @@ export const quizzes: Quiz[] = [
     id: "quiz-1",
     title: "Advanced C# First Hour",
     description: "Review of Attributes and Reflection",
-    status: "published",
+    status: "archived",
     questionIds: ["q1", "q2", "q3"],
     settings: {
       shuffleQuestions: true,
@@ -139,16 +144,17 @@ export const quizzes: Quiz[] = [
     },
     updatedAt: "2026-10-13T07:30:00.000Z",
   },
+  ...practiceQuizzes,
 ];
 
 export const dashboardStats = [
-  { label: "Total quizzes", value: "18", detail: "+4 this month" },
-  { label: "Draft quizzes", value: "3", detail: "2 need review" },
-  { label: "Published quizzes", value: "12", detail: "4 active" },
-  { label: "Active live sessions", value: "2", detail: "Room codes: 8341, 9762" },
+  { label: "Total quizzes", value: "4", detail: "2 JSON practice samples" },
+  { label: "Draft quizzes", value: "1", detail: "OOP Quick Check" },
+  { label: "Published quizzes", value: "2", detail: "Practice assessments" },
+  { label: "Active live sessions", value: "2", detail: "Rooms: 8341, 9762" },
 ];
 
 export const liveSessions = [
-  { roomCode: "8341", title: "Advanced C# First Hour", quizId: "quiz-1", responses: 27, status: "Live" },
-  { roomCode: "9762", title: "OOP Quick Check", quizId: "quiz-2", responses: 14, status: "Waiting" },
+  { roomCode: "8341", title: "Advanced C# Practice Quiz", quizId: "quiz-advanced-csharp-practice", responses: 0, status: "Live" },
+  { roomCode: "9762", title: "Basic C# Practice Quiz", quizId: "quiz-basic-csharp-practice", responses: 0, status: "Live" },
 ];

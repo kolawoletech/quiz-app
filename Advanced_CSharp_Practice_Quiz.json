@@ -1,0 +1,453 @@
+
+{
+  "title": "Advanced C# Practice Quiz",
+  "description": "Practice questions covering the Advanced C# topics studied so far.",
+  "subject": "Advanced C#",
+  "version": 1,
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "showExplanations": true,
+    "passMark": 50
+  },
+  "questions": [
+    {
+      "id": "AC01",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is the main purpose of deploying a C# application?",
+      "options": [
+        {"id": "A", "text": "To make the application available for use in its target environment"},
+        {"id": "B", "text": "To convert every class into an interface"},
+        {"id": "C", "text": "To remove all methods from the application"},
+        {"id": "D", "text": "To guarantee that the application has no bugs"}
+      ],
+      "answer": "A",
+      "explanation": "Deployment makes the application and its required files available in the environment where it will run."
+    },
+    {
+      "id": "AC02",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which action is most appropriate when preparing an application for deployment?",
+      "options": [
+        {"id": "A", "text": "Delete every dependency"},
+        {"id": "B", "text": "Check the target framework and required dependencies"},
+        {"id": "C", "text": "Rename all methods randomly"},
+        {"id": "D", "text": "Remove the entry point"}
+      ],
+      "answer": "B",
+      "explanation": "The application must be compatible with the target environment and have the dependencies it needs."
+    },
+    {
+      "id": "AC03",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is the primary goal of performance optimization?",
+      "options": [
+        {"id": "A", "text": "To make every method static"},
+        {"id": "B", "text": "To increase the number of classes"},
+        {"id": "C", "text": "To improve efficiency while preserving correct behaviour"},
+        {"id": "D", "text": "To remove all error handling"}
+      ],
+      "answer": "C",
+      "explanation": "Optimization aims to improve resource usage, execution time, or responsiveness without breaking correctness."
+    },
+    {
+      "id": "AC04",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which approach is generally best before optimizing slow code?",
+      "options": [
+        {"id": "A", "text": "Measure performance and identify the bottleneck"},
+        {"id": "B", "text": "Rewrite the whole application immediately"},
+        {"id": "C", "text": "Add more loops"},
+        {"id": "D", "text": "Remove all variables"}
+      ],
+      "answer": "A",
+      "explanation": "Measurement helps identify the actual bottleneck so effort is directed at the right part of the program."
+    },
+    {
+      "id": "AC05",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is boxing in C#?",
+      "options": [
+        {"id": "A", "text": "Converting a reference type into an interface"},
+        {"id": "B", "text": "Converting a value type to object or a compatible interface type"},
+        {"id": "C", "text": "Converting a string to an integer"},
+        {"id": "D", "text": "Converting a class into a struct"}
+      ],
+      "answer": "B",
+      "explanation": "Boxing wraps a value type value in an object representation."
+    },
+    {
+      "id": "AC06",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is unboxing?",
+      "options": [
+        {"id": "A", "text": "Extracting a value type from a boxed object"},
+        {"id": "B", "text": "Converting an integer to a string"},
+        {"id": "C", "text": "Deleting an object"},
+        {"id": "D", "text": "Creating a new interface"}
+      ],
+      "answer": "A",
+      "explanation": "Unboxing extracts the value type from a compatible boxed value."
+    },
+    {
+      "id": "AC07",
+      "type": "code-output",
+      "points": 1,
+      "question": "What is printed by this code?",
+      "language": "csharp",
+      "code": "int number = 10;\nobject boxed = number;\nConsole.WriteLine(boxed);",
+      "options": [
+        {"id": "A", "text": "10"},
+        {"id": "B", "text": "number"},
+        {"id": "C", "text": "object"},
+        {"id": "D", "text": "Compilation error"}
+      ],
+      "answer": "A",
+      "explanation": "The integer is boxed into an object, and Console.WriteLine prints its value."
+    },
+    {
+      "id": "AC08",
+      "type": "code-output",
+      "points": 1,
+      "question": "What happens when this code executes?",
+      "language": "csharp",
+      "code": "object value = 25;\nstring result = (string)value;",
+      "options": [
+        {"id": "A", "text": "result contains \"25\""},
+        {"id": "B", "text": "The value is automatically converted to a string"},
+        {"id": "C", "text": "An InvalidCastException is thrown"},
+        {"id": "D", "text": "The value becomes null"}
+      ],
+      "answer": "C",
+      "explanation": "The object contains a boxed integer, not a string. The explicit cast to string fails at runtime."
+    },
+    {
+      "id": "AC09",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which class is designed for efficient repeated modification of strings?",
+      "options": [
+        {"id": "A", "text": "DateTime"},
+        {"id": "B", "text": "StringBuilder"},
+        {"id": "C", "text": "Reflection"},
+        {"id": "D", "text": "Attribute"}
+      ],
+      "answer": "B",
+      "explanation": "StringBuilder is useful when repeatedly appending or modifying text."
+    },
+    {
+      "id": "AC10",
+      "type": "code-output",
+      "points": 1,
+      "question": "What is printed?",
+      "language": "csharp",
+      "code": "using System.Text;\nStringBuilder text = new StringBuilder(\"Stop\");\ntext.Append(\"watch\");\nConsole.WriteLine(text);",
+      "options": [
+        {"id": "A", "text": "Stop"},
+        {"id": "B", "text": "watch"},
+        {"id": "C", "text": "Stopwatch"},
+        {"id": "D", "text": "Compilation error"}
+      ],
+      "answer": "C",
+      "explanation": "Append adds the supplied text to the end of the existing contents."
+    },
+    {
+      "id": "AC11",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Why can repeated string concatenation be inefficient inside a large loop?",
+      "options": [
+        {"id": "A", "text": "Strings are immutable, so concatenation can create additional string objects"},
+        {"id": "B", "text": "Strings cannot contain numbers"},
+        {"id": "C", "text": "Loops cannot use strings"},
+        {"id": "D", "text": "String concatenation always causes a syntax error"}
+      ],
+      "answer": "A",
+      "explanation": "Because strings are immutable, repeated concatenation may allocate many intermediate strings."
+    },
+    {
+      "id": "AC12",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which C# type is commonly used to represent a date and time?",
+      "options": [
+        {"id": "A", "text": "StringBuilder"},
+        {"id": "B", "text": "DateTime"},
+        {"id": "C", "text": "MethodInfo"},
+        {"id": "D", "text": "ConditionalAttribute"}
+      ],
+      "answer": "B",
+      "explanation": "DateTime represents a date and time value."
+    },
+    {
+      "id": "AC13",
+      "type": "code-output",
+      "points": 1,
+      "question": "What does this expression calculate?",
+      "language": "csharp",
+      "code": "DateTime start = new DateTime(2026, 1, 1);\nDateTime end = start.AddDays(7);\nConsole.WriteLine(end.ToString(\"yyyy-MM-dd\"));",
+      "options": [
+        {"id": "A", "text": "2026-01-01"},
+        {"id": "B", "text": "2026-01-07"},
+        {"id": "C", "text": "2026-01-08"},
+        {"id": "D", "text": "2026-02-01"}
+      ],
+      "answer": "C",
+      "explanation": "Adding seven days to 1 January 2026 produces 8 January 2026."
+    },
+    {
+      "id": "AC14",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What does DateTime.Parse(\"2026-10-15\") attempt to do?",
+      "options": [
+        {"id": "A", "text": "Convert the text into a DateTime value"},
+        {"id": "B", "text": "Convert a date into a class"},
+        {"id": "C", "text": "Create a custom attribute"},
+        {"id": "D", "text": "Retrieve a method using Reflection"}
+      ],
+      "answer": "A",
+      "explanation": "Parse attempts to interpret a string as a date and time. Invalid or culture-incompatible input can cause a FormatException."
+    },
+    {
+      "id": "AC15",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is a C# attribute primarily used for?",
+      "options": [
+        {"id": "A", "text": "Storing metadata about program elements"},
+        {"id": "B", "text": "Replacing every method call"},
+        {"id": "C", "text": "Automatically fixing runtime errors"},
+        {"id": "D", "text": "Making all classes abstract"}
+      ],
+      "answer": "A",
+      "explanation": "Attributes attach metadata to program elements such as classes, methods, properties, and assemblies."
+    },
+    {
+      "id": "AC16",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which attribute can indicate that a method should no longer be used?",
+      "options": [
+        {"id": "A", "text": "Obsolete"},
+        {"id": "B", "text": "Serializable"},
+        {"id": "C", "text": "Conditional"},
+        {"id": "D", "text": "AttributeUsage"}
+      ],
+      "answer": "A",
+      "explanation": "ObsoleteAttribute marks a program element as obsolete and can produce a compiler warning or error."
+    },
+    {
+      "id": "AC17",
+      "type": "code-analysis",
+      "points": 1,
+      "question": "What does the true argument indicate in this declaration?",
+      "language": "csharp",
+      "code": "[Obsolete(\"Use NewMethod instead.\", true)]\nstatic void OldMethod() { }",
+      "options": [
+        {"id": "A", "text": "OldMethod is automatically executed"},
+        {"id": "B", "text": "Using OldMethod produces a compile-time error"},
+        {"id": "C", "text": "OldMethod becomes private"},
+        {"id": "D", "text": "OldMethod becomes static"}
+      ],
+      "answer": "B",
+      "explanation": "The second Obsolete argument specifies whether use of the obsolete member should generate a compiler error."
+    },
+    {
+      "id": "AC18",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which namespace contains ConditionalAttribute?",
+      "options": [
+        {"id": "A", "text": "System.IO"},
+        {"id": "B", "text": "System.Diagnostics"},
+        {"id": "C", "text": "System.Reflection"},
+        {"id": "D", "text": "System.Text"}
+      ],
+      "answer": "B",
+      "explanation": "ConditionalAttribute is defined in the System.Diagnostics namespace."
+    },
+    {
+      "id": "AC19",
+      "type": "code-analysis",
+      "points": 1,
+      "question": "If the DEBUG symbol is not defined, what happens to calls to this method?",
+      "language": "csharp",
+      "code": "[Conditional(\"DEBUG\")]\nstatic void LogMessage() { }\n\nLogMessage();",
+      "options": [
+        {"id": "A", "text": "The method declaration is deleted"},
+        {"id": "B", "text": "Calls to the method are omitted by the compiler"},
+        {"id": "C", "text": "The method always throws an exception"},
+        {"id": "D", "text": "The method becomes abstract"}
+      ],
+      "answer": "B",
+      "explanation": "ConditionalAttribute controls whether calls to the method are included based on a compilation symbol. The method itself is not automatically deleted."
+    },
+    {
+      "id": "AC20",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is the purpose of AttributeUsage when defining a custom attribute?",
+      "options": [
+        {"id": "A", "text": "To specify which program elements can use the attribute and whether it can be inherited or repeated"},
+        {"id": "B", "text": "To execute the attribute immediately"},
+        {"id": "C", "text": "To convert the attribute into a string"},
+        {"id": "D", "text": "To prevent all Reflection operations"}
+      ],
+      "answer": "A",
+      "explanation": "AttributeUsage configures valid targets and options such as AllowMultiple and Inherited."
+    },
+    {
+      "id": "AC21",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which namespace provides many of the core Reflection types?",
+      "options": [
+        {"id": "A", "text": "System.Reflection"},
+        {"id": "B", "text": "System.Net"},
+        {"id": "C", "text": "System.Text"},
+        {"id": "D", "text": "System.Threading"}
+      ],
+      "answer": "A",
+      "explanation": "System.Reflection contains types used to inspect assemblies, types, methods, and other metadata."
+    },
+    {
+      "id": "AC22",
+      "type": "code-output",
+      "points": 1,
+      "question": "What does typeof(Student) return?",
+      "language": "csharp",
+      "code": "Type type = typeof(Student);",
+      "options": [
+        {"id": "A", "text": "A new Student instance"},
+        {"id": "B", "text": "A Type object describing Student"},
+        {"id": "C", "text": "The name of the current method"},
+        {"id": "D", "text": "A string containing the student's name"}
+      ],
+      "answer": "B",
+      "explanation": "typeof obtains type information for a type known at compile time."
+    },
+    {
+      "id": "AC23",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What is the difference between typeof(Student) and student.GetType()?",
+      "options": [
+        {"id": "A", "text": "typeof requires an instance, while GetType does not"},
+        {"id": "B", "text": "typeof obtains information from a type name at compile time, while GetType obtains the runtime type of an instance"},
+        {"id": "C", "text": "They always return strings"},
+        {"id": "D", "text": "GetType creates a new instance"}
+      ],
+      "answer": "B",
+      "explanation": "typeof refers to a known type, whereas GetType is called on an existing object to determine its runtime type."
+    },
+    {
+      "id": "AC24",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which Reflection method retrieves method information from a Type?",
+      "options": [
+        {"id": "A", "text": "GetMethods()"},
+        {"id": "B", "text": "AddDays()"},
+        {"id": "C", "text": "Append()"},
+        {"id": "D", "text": "WriteLine()"}
+      ],
+      "answer": "A",
+      "explanation": "GetMethods retrieves MethodInfo objects describing methods available on a type, subject to the selected binding flags."
+    },
+    {
+      "id": "AC25",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "What does Type.GetInterfaces() return?",
+      "options": [
+        {"id": "A", "text": "A list of strings representing all fields"},
+        {"id": "B", "text": "An array of Type objects representing implemented interfaces"},
+        {"id": "C", "text": "A new instance of every interface"},
+        {"id": "D", "text": "A list of method return values"}
+      ],
+      "answer": "B",
+      "explanation": "GetInterfaces returns Type objects representing the interfaces implemented or inherited by the type."
+    },
+    {
+      "id": "AC26",
+      "type": "code-analysis",
+      "points": 1,
+      "question": "What is the main problem with this code?",
+      "language": "csharp",
+      "code": "Type type = typeof(Student);\nobject instance = Activator.CreateInstance(type);",
+      "options": [
+        {"id": "A", "text": "Activator.CreateInstance can fail if Student has no suitable accessible constructor or cannot be instantiated"},
+        {"id": "B", "text": "typeof cannot be used with classes"},
+        {"id": "C", "text": "object cannot store a reference to an instance"},
+        {"id": "D", "text": "CreateInstance always returns a string"}
+      ],
+      "answer": "A",
+      "explanation": "Reflection-based instance creation depends on the type being instantiable and having a suitable constructor. Runtime exceptions are possible."
+    },
+    {
+      "id": "AC27",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "How can Reflection be used to inspect a custom attribute applied to a class?",
+      "options": [
+        {"id": "A", "text": "Use Reflection APIs such as GetCustomAttributes"},
+        {"id": "B", "text": "Call DateTime.Parse"},
+        {"id": "C", "text": "Use StringBuilder.Append"},
+        {"id": "D", "text": "Call File.Delete"}
+      ],
+      "answer": "A",
+      "explanation": "Reflection provides APIs for retrieving attribute metadata from types and members."
+    },
+    {
+      "id": "AC28",
+      "type": "code-analysis",
+      "points": 1,
+      "question": "What does the following custom attribute declaration allow?",
+      "language": "csharp",
+      "code": "[AttributeUsage(AttributeTargets.Class)]\npublic class CourseAttribute : Attribute\n{\n    public string Name { get; }\n    public CourseAttribute(string name) => Name = name;\n}",
+      "options": [
+        {"id": "A", "text": "The attribute can be applied to classes and stores a supplied name"},
+        {"id": "B", "text": "The attribute can only be applied to local variables"},
+        {"id": "C", "text": "The attribute automatically creates a course database"},
+        {"id": "D", "text": "The attribute makes every class abstract"}
+      ],
+      "answer": "A",
+      "explanation": "AttributeTargets.Class restricts its use to classes, and the constructor stores the supplied name in the Name property."
+    },
+    {
+      "id": "AC29",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which statement about Reflection is correct?",
+      "options": [
+        {"id": "A", "text": "Reflection can inspect metadata about types and members at runtime"},
+        {"id": "B", "text": "Reflection only works with strings"},
+        {"id": "C", "text": "Reflection always improves performance"},
+        {"id": "D", "text": "Reflection prevents exceptions"}
+      ],
+      "answer": "A",
+      "explanation": "Reflection enables runtime inspection of type metadata, members, and attributes."
+    },
+    {
+      "id": "AC30",
+      "type": "multiple-choice",
+      "points": 1,
+      "question": "Which statement best describes the relationship between attributes and Reflection?",
+      "options": [
+        {"id": "A", "text": "Attributes store metadata, and Reflection can inspect that metadata"},
+        {"id": "B", "text": "Attributes and Reflection are identical concepts"},
+        {"id": "C", "text": "Reflection is required to compile every C# method"},
+        {"id": "D", "text": "Attributes can only be applied to strings"}
+      ],
+      "answer": "A",
+      "explanation": "Attributes attach metadata to program elements, and Reflection can retrieve and examine it."
+    }
+  ]
+}
