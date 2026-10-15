@@ -2,15 +2,32 @@
 
 import { z } from "zod";
 
-import { gradeQuestionSubmission } from "@/lib/quiz-utils";
+import { FieldValue } from "firebase-admin/firestore";
+
+import { getFirebaseAdminAuth, getFirebaseAdminFirestore } from "@/lib/firebase-admin";
+import { gradeStudentQuizSubmission } from "@/lib/quiz-utils";
 import { liveSessions, questionBank, quizzes } from "@/lib/mock-data";
-import type { LoadStudentSessionResult, StudentQuestionResult, StudentSubmissionResult } from "@/lib/student-quiz";
+import type { LoadStudentSessionResult, StudentSubmissionResult } from "@/lib/student-quiz";
 
 const roomCodeSchema = z.string().trim().regex(/^\d{4}$/, "Enter a four-digit room code.");
+const submissionResultSchema = z.object({
+  score: z.number().nullable(),
+  maxScore: z.number().nullable(),
+  questionResults: z.array(z.object({
+    questionId: z.string(),
+    isCorrect: z.boolean(),
+    earnedPoints: z.number(),
+    possiblePoints: z.number(),
+    correctAnswer: z.string().optional(),
+    explanation: z.string().optional(),
+  })).nullable(),
+});
 
 const submissionSchema = z.object({
   roomCode: roomCodeSchema,
   answers: z.record(z.string(), z.array(z.string().max(5000)).max(100)),
+  displayName: z.string().trim().max(40).optional(),
+  idToken: z.string().min(1).max(10_000),
 });
 
 function findOpenQuiz(roomCode: string) {
@@ -83,27 +100,51 @@ export async function submitStudentQuiz(payload: unknown): Promise<StudentSubmis
   }
 
   const { quiz, questions } = openQuiz;
-  let score = 0;
-  const questionResults: StudentQuestionResult[] = questions.map((question) => {
-    const result = gradeQuestionSubmission(question, parsedSubmission.data.answers[question.id] ?? []);
-    score += result.score;
-    return {
-      questionId: question.id,
-      isCorrect: result.isCorrect,
-      earnedPoints: result.score,
-      possiblePoints: question.points,
-      ...(quiz.settings.showCorrectAnswersAfterSubmit
-        ? { correctAnswer: question.answer.join(", "), explanation: question.explanation }
-        : {}),
-    };
-  });
+  const validQuestionIds = new Set(questions.map((question) => question.id));
+  if (Object.keys(parsedSubmission.data.answers).some((id) => !validQuestionIds.has(id))) {
+    throw new Error("The quiz submission contains an answer for an unknown question.");
+  }
 
-  const showReview = quiz.settings.showCorrectAnswersAfterSubmit;
-  return {
-    score: quiz.settings.showScoreAfterSubmit ? score : null,
-    maxScore: quiz.settings.showScoreAfterSubmit
-      ? questions.reduce((total, question) => total + question.points, 0)
-      : null,
-    questionResults: showReview ? questionResults : null,
+  for (const question of questions) {
+    const selected = parsedSubmission.data.answers[question.id] ?? [];
+    if (question.type !== "multiple") {
+      if (selected.length > 1) {
+        throw new Error("The quiz submission contains multiple answers for a single-answer question.");
+      }
+    }
+    if (question.options.length && selected.some((answer) => !question.options.includes(answer))) {
+      throw new Error("The quiz submission contains an invalid choice.");
+    }
+  }
+
+  const decodedToken = await getFirebaseAdminAuth().verifyIdToken(parsedSubmission.data.idToken, true);
+  if (decodedToken.firebase.sign_in_provider !== "anonymous") {
+    throw new Error("Join with an anonymous student session before submitting your answers.");
+  }
+
+  const result = gradeStudentQuizSubmission(questions, parsedSubmission.data.answers, quiz.settings);
+  const firestore = getFirebaseAdminFirestore();
+  const submissionCollection = firestore.collection("quizzes").doc(quiz.id).collection("submissions");
+  const submissionRef = quiz.settings.allowOneAttempt
+    ? submissionCollection.doc(decodedToken.uid)
+    : submissionCollection.doc();
+  const submission = {
+    quizId: quiz.id,
+    roomCode: parsedSubmission.data.roomCode,
+    participantUid: decodedToken.uid,
+    displayName: parsedSubmission.data.displayName || null,
+    answers: parsedSubmission.data.answers,
+    ...result,
+    submittedAt: FieldValue.serverTimestamp(),
   };
+
+  return firestore.runTransaction(async (transaction) => {
+    const previousSubmission = await transaction.get(submissionRef);
+    if (previousSubmission.exists) {
+      return submissionResultSchema.parse(previousSubmission.data());
+    }
+
+    transaction.create(submissionRef, submission);
+    return result;
+  });
 }

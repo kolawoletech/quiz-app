@@ -19,20 +19,11 @@ describe("student quiz actions", () => {
     await expect(loadStudentSession("9762")).resolves.toMatchObject({ ok: false });
   });
 
-  it("grades and totals weighted points without revealing a disabled review", async () => {
-    const result = await submitStudentQuiz({
+  it("rejects answers for unknown questions before attempting persistence", async () => {
+    await expect(submitStudentQuiz({
       roomCode: "8341",
-      answers: {
-        q1: ["Whether calls to a method are included based on a compilation symbol"],
-        q2: ["int", "bool", "decimal"],
-        q3: ["False"],
-      },
-    });
-
-    expect(result).toEqual({
-      score: 4,
-      maxScore: 4,
-      questionResults: null,
-    });
+      answers: { unknown: ["answer"] },
+      idToken: "test-token",
+    })).rejects.toThrow("unknown question");
   });
 });

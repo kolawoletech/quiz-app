@@ -1,3 +1,6 @@
+import type { Question } from "@/lib/mock-data";
+import type { StudentSubmissionResult } from "@/lib/student-quiz";
+
 export function generateRoomCode() {
   const digits = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join("");
   return digits;
@@ -20,6 +23,36 @@ export function gradeQuestionSubmission(
   const selectedValue = normalizedSelected[0] ?? "";
   const isCorrect = answer.toLowerCase() === selectedValue.toLowerCase();
   return { isCorrect, score: isCorrect ? points : 0 };
+}
+
+export function gradeStudentQuizSubmission(
+  questions: Question[],
+  answers: Record<string, string[]>,
+  settings: { showScoreAfterSubmit: boolean; showCorrectAnswersAfterSubmit: boolean },
+): StudentSubmissionResult {
+  let score = 0;
+  const questionResults = questions.map((question) => {
+    const result = gradeQuestionSubmission(question, answers[question.id] ?? []);
+    score += result.score;
+
+    return {
+      questionId: question.id,
+      isCorrect: result.isCorrect,
+      earnedPoints: result.score,
+      possiblePoints: question.points,
+      ...(settings.showCorrectAnswersAfterSubmit
+        ? { correctAnswer: question.answer.join(", "), explanation: question.explanation }
+        : {}),
+    };
+  });
+
+  return {
+    score: settings.showScoreAfterSubmit ? score : null,
+    maxScore: settings.showScoreAfterSubmit
+      ? questions.reduce((total, question) => total + question.points, 0)
+      : null,
+    questionResults: settings.showCorrectAnswersAfterSubmit ? questionResults : null,
+  };
 }
 
 export function buildCsv(rows: Array<Record<string, string | number | boolean>>) {

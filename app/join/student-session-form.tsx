@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { CheckCircle2, Clock3, LoaderCircle, XCircle } from "lucide-react";
+import { signInAnonymously } from "firebase/auth";
 
 import { loadStudentSession, submitStudentQuiz } from "@/app/join/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { auth, hasFirebaseConfig } from "@/lib/firebase";
 import type {
   LoadStudentSessionResult,
   StudentQuestionResult,
@@ -49,9 +51,16 @@ export function StudentSessionForm() {
     setIsSubmitting(true);
     setError("");
     try {
+      if (!hasFirebaseConfig()) {
+        throw new Error("Firebase is not configured. Add the Firebase client settings to your local .env file.");
+      }
+
+      const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
       const submissionResult = await submitStudentQuiz({
         roomCode: session.roomCode,
         answers: currentAnswers,
+        displayName: displayName.trim(),
+        idToken: await user.getIdToken(),
       });
       setResult(submissionResult);
     } catch (submissionError) {
@@ -60,7 +69,7 @@ export function StudentSessionForm() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [session]);
+  }, [displayName, session]);
 
   useEffect(() => {
     if (!session?.settings.timeLimitMinutes || result) return;
@@ -182,7 +191,8 @@ export function StudentSessionForm() {
                 {isLoading ? "Checking room..." : "Join session"}
               </Button>
               <p className="text-center text-xs text-slate-500">
-                Demo session: answers are graded but are not saved or shared with the lecturer.
+                No account required. Your answers and score are saved with an anonymous participant ID
+                {displayName.trim() ? " and your display name" : ""}.
               </p>
             </form>
           </CardContent>
@@ -212,7 +222,7 @@ export function StudentSessionForm() {
               </div>
             ) : (
               <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
-                Your response was submitted. Your lecturer will share the results.
+                Your response was submitted. Results are hidden by this quiz&apos;s settings.
               </p>
             )}
             {result.questionResults ? (
@@ -318,7 +328,10 @@ export function StudentSessionForm() {
 
       {error && <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       <div className="flex flex-col items-start justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center">
-        <p className="text-sm text-slate-500">Your answers are graded for this demo and will not be stored.</p>
+        <p className="text-sm text-slate-500">
+          Your answers and score will be saved with an anonymous participant ID
+          {displayName.trim() ? " and your display name" : ""}.
+        </p>
         <Button
           onClick={() => void submitAnswers(answers)}
           disabled={isSubmitting || !hasAnsweredEveryQuestion()}
