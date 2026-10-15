@@ -88,4 +88,10 @@ describe("buildCsv", () => {
     expect(csv).toContain("score");
     expect(csv).toContain("STU-7K42");
   });
+
+  it("escapes commas, quotes, and line breaks in headers and values", () => {
+    const csv = buildCsv([{ 'question, "quoted"': "line 1\nline 2, \"answer\"" }]);
+
+    expect(csv).toBe('"question, ""quoted"""\r\n"line 1\nline 2, ""answer"""');
+  });
 });
