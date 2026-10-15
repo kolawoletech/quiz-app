@@ -19,13 +19,13 @@ export interface Quiz {
   id: string;
   title: string;
   description: string;
-  status: "draft" | "published" | "archived";
+  status: "draft" | "published" | "paused" | "closed";
   roomCode: string;
   questionIds: string[];
   settings: {
     shuffleQuestions: boolean;
     shuffleOptions: boolean;
-    allowOneAttempt: boolean;
+    attemptLimit: number;
     showScoreAfterSubmit: boolean;
     showCorrectAnswersAfterSubmit: boolean;
     passMark?: number;
@@ -39,10 +39,10 @@ export interface QuizSummary {
   id: string;
   title: string;
   description: string;
-  status: "draft" | "published" | "archived";
+  status: "draft" | "published" | "paused" | "closed";
   questionCount: number;
   roomCode: string;
-  settings: Pick<Quiz["settings"], "allowOneAttempt" | "passMark" | "timeLimitMinutes" | "mode">;
+  settings: Pick<Quiz["settings"], "attemptLimit" | "passMark" | "timeLimitMinutes" | "mode">;
 }
 
 export const quizSummaries: QuizSummary[] = [
@@ -53,7 +53,7 @@ export const quizSummaries: QuizSummary[] = [
     status: "published",
     questionCount: 30,
     roomCode: "8341",
-    settings: { allowOneAttempt: false, passMark: 50, mode: "self-paced" },
+    settings: { attemptLimit: 3, passMark: 50, mode: "self-paced" },
   },
   {
     id: "quiz-basic-csharp-practice",
@@ -62,7 +62,7 @@ export const quizSummaries: QuizSummary[] = [
     status: "published",
     questionCount: 22,
     roomCode: "9762",
-    settings: { allowOneAttempt: false, passMark: 50, mode: "self-paced" },
+    settings: { attemptLimit: 3, passMark: 50, mode: "self-paced" },
   },
 ];
 

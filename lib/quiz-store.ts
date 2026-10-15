@@ -8,13 +8,14 @@ import type { Question, Quiz } from "@/lib/mock-data";
 const quizSchema = z.object({
   title: z.string().min(1),
   description: z.string(),
-  status: z.enum(["draft", "published", "archived"]),
+  status: z.enum(["draft", "published", "paused", "closed", "archived"]),
   roomCode: z.string().regex(/^\d{4}$/),
   questionIds: z.array(z.string().min(1)).min(1),
   settings: z.object({
     shuffleQuestions: z.boolean(),
     shuffleOptions: z.boolean(),
-    allowOneAttempt: z.boolean(),
+    attemptLimit: z.number().int().min(1).max(10).optional(),
+    allowOneAttempt: z.boolean().optional(),
     showScoreAfterSubmit: z.boolean(),
     showCorrectAnswersAfterSubmit: z.boolean(),
     passMark: z.number().min(0).max(100).optional(),
@@ -60,21 +61,30 @@ async function loadQuizQuestions(quizId: string, questionIds: string[]): Promise
   });
 }
 
-function parseQuiz(id: string, data: unknown): Quiz {
+export function parseQuiz(id: string, data: unknown): Quiz {
   const parsed = quizSchema.safeParse(data);
   if (!parsed.success) {
     throw new Error(`Quiz "${id}" has an invalid format.`);
   }
-  return { id, ...parsed.data };
+  const { allowOneAttempt, attemptLimit, ...settings } = parsed.data.settings;
+  return {
+    id,
+    ...parsed.data,
+    status: parsed.data.status === "archived" ? "closed" : parsed.data.status,
+    settings: {
+      ...settings,
+      attemptLimit: attemptLimit ?? (allowOneAttempt === false ? 10 : 1),
+    },
+  };
 }
 
-export async function getPublishedQuizByRoomCode(roomCode: string) {
+export async function getQuizByRoomCode(roomCode: string) {
   const snapshot = await getFirebaseAdminFirestore()
     .collection("quizzes")
     .where("roomCode", "==", roomCode)
     .limit(1)
     .get();
-  const document = snapshot.docs.find((candidate) => candidate.get("status") === "published");
+  const document = snapshot.docs[0];
   if (!document) return null;
 
   const quiz = parseQuiz(document.id, document.data());
@@ -84,7 +94,7 @@ export async function getPublishedQuizByRoomCode(roomCode: string) {
 export async function getPublishedQuizzesWithQuestions() {
   const snapshot = await getFirebaseAdminFirestore().collection("quizzes").get();
   const published = snapshot.docs
-    .filter((document) => document.get("status") === "published")
+    .filter((document) => document.get("status") === "published" || document.get("status") === "paused" || document.get("status") === "closed")
     .map((document) => parseQuiz(document.id, document.data()));
 
   return Promise.all(published.map(async (quiz) => ({
@@ -98,4 +108,14 @@ export async function getLecturerQuestionBank() {
   const quizzes = snapshot.docs.map((document) => parseQuiz(document.id, document.data()));
   const questionSets = await Promise.all(quizzes.map((quiz) => loadQuizQuestions(quiz.id, quiz.questionIds)));
   return questionSets.flat();
+}
+
+export async function getLecturerQuizzes() {
+  const snapshot = await getFirebaseAdminFirestore().collection("quizzes").get();
+  const quizzes = snapshot.docs.map((document) => parseQuiz(document.id, document.data()));
+
+  return Promise.all(quizzes.map(async (quiz) => ({
+    quiz,
+    questions: await loadQuizQuestions(quiz.id, quiz.questionIds),
+  })));
 }

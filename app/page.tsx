@@ -1,4 +1,5 @@
 import { ArrowRight, ChartColumn, CheckCircle2, Plus, Users } from "lucide-react";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,8 @@ export default function Home() {
             <h1 className="mt-2 text-3xl font-bold tracking-tight">Quiz and Classroom Polling MVP</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="secondary">Import questions</Button>
-            <Button>
-              Create quiz <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Button asChild variant="secondary"><Link href="/questions">Question bank</Link></Button>
+            <Button asChild><Link href="/quizzes">Manage quizzes <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
           </div>
         </header>
 
@@ -133,7 +132,7 @@ export default function Home() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-slate-500">Students join with a room code and answer without creating an account.</p>
+              <p className="text-sm text-slate-500">Students join with a room code; an anonymous Firebase session supports attempt tracking without registration.</p>
               <ul className="space-y-2 text-sm text-slate-600">
                 <li>• Temporary anonymous identifiers</li>
                 <li>• Live and self-paced modes</li>

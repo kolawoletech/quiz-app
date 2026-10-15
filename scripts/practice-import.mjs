@@ -62,7 +62,7 @@ export function mapPracticeQuiz(rawData, { codePrefix, roomCode }) {
       settings: {
         shuffleQuestions: data.settings.shuffleQuestions,
         shuffleOptions: data.settings.shuffleOptions,
-        allowOneAttempt: false,
+        attemptLimit: 3,
         showScoreAfterSubmit: true,
         showCorrectAnswersAfterSubmit: data.settings.showExplanations,
         passMark: data.settings.passMark,

@@ -13,6 +13,9 @@ export interface StudentSession {
   roomCode: string;
   title: string;
   description: string;
+  attemptsUsed: number;
+  attemptsRemaining: number;
+  attemptLimit: number;
   settings: {
     shuffleQuestions: boolean;
     shuffleOptions: boolean;

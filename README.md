@@ -40,6 +40,14 @@ Set `LECTURER_EMAILS` to a comma-separated list of verified lecturer Google acco
 
 The current sample quizzes are for practice, not verified summative assessments. `showCorrectAnswersAfterSubmit` intentionally controls whether a student receives answer review after submission. Keep that disabled for assessments where answers must remain confidential.
 
+### Quiz authoring, lifecycle, and attempt limits
+
+Open `/quizzes` and sign in with an authorized Google account to create and manage quizzes. Drafts can be edited, then published when ready. Published quizzes can be paused to stop new joins and submissions, resumed, or closed permanently. Closing retains submissions and results; closed quizzes cannot be reopened. Published quizzes are locked against edits so that existing attempts keep their original question set and grading.
+
+Each quiz can allow 1–10 attempts per anonymous Firebase participant. The student page shows remaining attempts and the server checks the limit transactionally when saving each submission; retries with the same attempt ID are idempotent. Students do not need to register, but the limit is tied to their anonymous Firebase identity and can be bypassed by creating a new anonymous identity or clearing browser data. This is an exam-readiness safeguard, not strong identity verification or proctoring. Use verified student accounts and stronger assessment controls before relying on limits for high-stakes exams.
+
+Create and test this work on a non-production branch/Preview first. No deployment is performed automatically by the app; manually merge and deploy only after confirming Firebase and Vercel settings for the target environment.
+
 ## Getting Started
 
 First, run the development server:
