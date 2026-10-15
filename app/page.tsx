@@ -3,7 +3,7 @@ import { ArrowRight, ChartColumn, CheckCircle2, Plus, Users } from "lucide-react
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { dashboardStats, liveSessions, questionBank, quizzes } from "@/lib/mock-data";
+import { dashboardStats, liveSessions, quizSummaries } from "@/lib/mock-data";
 
 export default function Home() {
   return (
@@ -49,7 +49,7 @@ export default function Home() {
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
-              {quizzes.map((quiz) => (
+              {quizSummaries.map((quiz) => (
                 <div key={quiz.id} className="rounded-xl border border-slate-200 p-4">
                   <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -59,7 +59,7 @@ export default function Home() {
                     <Badge>{quiz.status}</Badge>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-500">
-                    <span>{quiz.questionIds.length} questions</span>
+                    <span>{quiz.questionCount} questions</span>
                     <span>{quiz.settings.mode}</span>
                     <span>{quiz.settings.timeLimitMinutes ? `${quiz.settings.timeLimitMinutes} min` : "No timer"}</span>
                   </div>
@@ -99,7 +99,7 @@ export default function Home() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-slate-500">{questionBank.length} saved questions across categories and types.</p>
+              <p className="text-sm text-slate-500">Question content and answer keys are protected behind lecturer sign-in.</p>
               <ul className="space-y-2 text-sm text-slate-600">
                 <li>• Search by text, tag, or difficulty</li>
                 <li>• Import JSON question sets</li>

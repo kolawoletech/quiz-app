@@ -59,11 +59,10 @@ export function buildCsv(rows: Array<Record<string, string | number | boolean>>)
   if (!rows.length) return "";
 
   const headers = Object.keys(rows[0]);
+  const escapeCell = (value: string | number | boolean) => `"${String(value).replaceAll('"', '""')}"`;
   const values = rows.map((row) =>
-    headers
-      .map((key) => JSON.stringify(String(row[key] ?? "")))
-      .join(","),
+    headers.map((key) => escapeCell(row[key] ?? "")).join(","),
   );
 
-  return [headers.join(","), ...values].join("\n");
+  return [headers.map(escapeCell).join(","), ...values].join("\r\n");
 }

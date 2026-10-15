@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { quizzes } from "@/lib/mock-data";
+import { quizSummaries } from "@/lib/mock-data";
 
 export default function QuizzesPage() {
   return (
@@ -15,7 +15,7 @@ export default function QuizzesPage() {
       </header>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        {quizzes.map((quiz) => (
+        {quizSummaries.map((quiz) => (
           <Card key={quiz.id}>
             <CardHeader>
               <div className="flex items-center justify-between gap-3">
@@ -29,7 +29,7 @@ export default function QuizzesPage() {
             <CardContent className="space-y-4">
               <div className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Mode: {quiz.settings.mode}</div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Questions: {quiz.questionIds.length}</div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Questions: {quiz.questionCount}</div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Attempts: {quiz.settings.allowOneAttempt ? "One" : "Multiple"}</div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">Timer: {quiz.settings.timeLimitMinutes ?? "None"}</div>
                 {quiz.settings.passMark !== undefined && (

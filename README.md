@@ -1,23 +1,44 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Firebase student submissions
+## Firebase setup and security
 
-Enable **Anonymous** sign-in in Firebase Authentication and create a Cloud Firestore database.
+Create a Firebase project and Cloud Firestore database. Enable **Anonymous** sign-in for students and **Google** sign-in for lecturers. Add the production domain and any Vercel Preview domain used for lecturer sign-in to Firebase Authentication's **Authorized domains**.
 
-Configure the six `NEXT_PUBLIC_FIREBASE_*` settings from the Firebase project's web app configuration. The Firebase Admin SDK also requires server-only credentials:
+Configure these six Firebase web-app values locally and in the Vercel environments that will run the app:
 
-- Locally, set `GOOGLE_APPLICATION_CREDENTIALS` to the path of a service-account JSON file. Keep the file out of Git.
-- In production, set `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` to the service-account JSON as a server-only secret. Never use a `NEXT_PUBLIC_` prefix.
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
 
-The service account must belong to the same Firebase project as `NEXT_PUBLIC_FIREBASE_PROJECT_ID`. Student submissions are verified and graded on the server, then stored under `quizzes/{quizId}/submissions`. A one-attempt quiz stores one response per anonymous participant; retries return that saved result. The practice quiz definitions are loaded from `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json`; their join codes are `9762` (Basic C#, 22 questions) and `8341` (Advanced C#, 30 questions). Quiz definitions are not stored in Firestore yet. The lecturer results page is still a static demo. These are practice samples, not verified summative assessments; do not use this build for graded exams until lecturer controls, assessment security, and live results have been verified.
+The Firebase Admin SDK uses one of these server-only credentials:
 
-Firestore currently stores student submissions only. Keeping the supplied practice JSON in the app repository is the simplest fit while the quizzes are fixed sample content. Move quiz definitions into Firestore when lecturer-managed editing, publishing, and access controls are implemented; do not upload official answer keys to a public repository.
+- Local use: `GOOGLE_APPLICATION_CREDENTIALS` pointing to a service-account JSON outside Git, or `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` in a private local environment file.
+- Vercel: `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` configured as a sensitive variable for **each** environment that needs Admin operations (Preview and Production). Never use a `NEXT_PUBLIC_` prefix.
 
-Firestore client access is denied by `firestore.rules`; only the server-side Admin SDK writes submissions. Deploy the rules with the Firebase CLI:
+The service account must belong to the same project as `NEXT_PUBLIC_FIREBASE_PROJECT_ID`. Keep all `.env*` files and service-account files out of Git.
 
-```bash
-firebase deploy --only firestore:rules
+### Quiz content and answer-key protection
+
+Quiz documents and question/answer documents are stored in Firestore at `quizzes/{quizId}` and `quizzes/{quizId}/questions/{questionId}`. Submissions are stored separately at `quizzes/{quizId}/submissions/{submissionId}`. Firestore client rules remain deny-all; the Admin SDK reads content and grades submissions on the server. Student join responses contain only the question text, code, options, and points; answer keys and explanations are not sent to the client before submission. Lecturer access requires a verified Google ID token and an email in the server-only `LECTURER_EMAILS` comma-separated allowlist.
+
+The sample source files `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json` are now ignored by Git. Keep local copies to import them; do not add them back to the repository. Seed or refresh Firestore from the project root with:
+
+```powershell
+npm run quizzes:import
 ```
+
+This command uses the local Firebase Admin credentials and `NEXT_PUBLIC_FIREBASE_PROJECT_ID`; it replaces only the two practice quiz documents and their `questions` subcollections. It does not delete submissions. Confirm the import succeeded before deploying code that reads quizzes from Firestore. The sample room codes are `9762` (Basic C#, 22 questions) and `8341` (Advanced C#, 30 questions).
+
+**Repository history note:** earlier commits contained the sample JSON files, so removing them from the current version does not erase them from Git history. These files are practice samples only. Do not put summative assessment questions or real answer keys into this repository; use a private source and Firestore. If any real assessment answers were committed, treat them as disclosed and replace them.
+
+### Lecturer dashboard
+
+Set `LECTURER_EMAILS` to a comma-separated list of verified lecturer Google account emails in local configuration and in Vercel Preview/Production as appropriate. The `/results` dashboard shows submissions, scores, pass status, per-question performance, and participant response details; CSV export includes participant names and responses. The `/questions` page requires the same lecturer authorization before returning the question bank or answer keys.
+
+The current sample quizzes are for practice, not verified summative assessments. `showCorrectAnswersAfterSubmit` intentionally controls whether a student receives answer review after submission. Keep that disabled for assessments where answers must remain confidential.
 
 ## Getting Started
 
@@ -54,6 +75,89 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-# SAmple quiz
+## Validation and deployment commands
+
+Run these from the repository root:
+
+```powershell
+npm ci
+npm test
+npm run lint
+npm run build
+```
+
+The Firestore client rules deny all direct access. Deploy them explicitly to the intended Firebase project:
+
+```powershell
+firebase deploy --only firestore:rules --project quiz-app-comms
+```
+
+Configure Vercel variables in **Project → Settings → Environment Variables**. Use **Preview** for preview deployments and **Production** for the live site. Add/update sensitive `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` using Vercel's protected input; never place secret values in command history or source control. `LECTURER_EMAILS` is server-only; the six `NEXT_PUBLIC_FIREBASE_*` values are public Firebase web-app configuration, not secrets.
+
+The Vercel CLI can manage variables interactively from the linked project directory. It prompts for values; do not add secret values as `--value` arguments:
+
+```powershell
+vercel link
+vercel env ls
+vercel env add NEXT_PUBLIC_FIREBASE_API_KEY preview
+vercel env add NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN preview
+vercel env add NEXT_PUBLIC_FIREBASE_PROJECT_ID preview
+vercel env add NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET preview
+vercel env add NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID preview
+vercel env add NEXT_PUBLIC_FIREBASE_APP_ID preview
+vercel env add FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON preview
+vercel env add LECTURER_EMAILS preview
+```
+
+Repeat for `production` when configuring Production values. If `vercel link` is needed, select the existing `kolawoles-projects/quiz-app` project. After changing an environment variable, create a new deployment; existing deployments do not receive changed values.
+
+For a preview deployment from the current local branch:
+
+```powershell
+vercel
+```
+
+For a production deployment from the checked-out branch:
+
+```powershell
+vercel --prod
+```
+
+Alternatively, push the intended release branch to GitHub and let Vercel deploy its configured Production Branch (usually `main`). To keep production manual, do not use `vercel --prod` and do not merge/push into that configured branch until ready. Any environment-variable change requires a **new deployment** to take effect. For Firebase Auth, also add each deployed host to Authorized domains before testing Google sign-in.
+
+Suggested manual Git release flow (the actual feature branch name is up to you):
+
+```powershell
+git switch main
+git pull --ff-only origin main
+git switch -c feature/your-change
+# make changes; run the validation commands above
+git add .
+git commit -m "Describe the change"
+git push -u origin feature/your-change
+# review/test the Vercel Preview; merge through a PR or the next commands
+git switch main
+git pull --ff-only origin main
+# If you are not using a GitHub pull request, merge the tested branch:
+git merge --no-ff feature/your-change
+# Deploy manually from main; alternatively, push main if Vercel auto-deploys it
+vercel --prod
+```
+
+For this Firestore-backed quiz version, perform these steps before the first deployment after migration:
+
+1. Ensure the quiz source JSONs are present locally (they are intentionally not versioned) and verify the local Firebase Admin credentials point to `quiz-app-comms`.
+2. Run `npm run quizzes:import` to seed/update quiz and question documents.
+3. Run `npm test`, `npm run lint`, and `npm run build`.
+4. Deploy Firestore rules with the project-specific command above.
+5. Deploy to Preview with `vercel` and test student join, answer submission, lecturer sign-in, and results.
+6. When satisfied, deploy manually to Production with `vercel --prod` or merge/push to the configured production branch.
+
+`firebase.json` deploys only Firestore rules; it does not deploy the Next.js app. Vercel deploys the app. `npm run quizzes:import` writes quiz data to Firestore; it does not deploy app code.
+
+## Practice sample reference
 
 https://mylms.vossie.net/mod/quiz/review.php?attempt=3571596&cmid=1573049&showall=1
+
+Basic C# Practice Quiz — 22 questions, room 9762  
+Advanced C# Practice Quiz — 30 questions, room 8341

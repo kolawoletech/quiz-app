@@ -6,7 +6,8 @@ import { FieldValue } from "firebase-admin/firestore";
 
 import { getFirebaseAdminAuth, getFirebaseAdminFirestore } from "@/lib/firebase-admin";
 import { gradeStudentQuizSubmission } from "@/lib/quiz-utils";
-import { liveSessions, questionBank, quizzes } from "@/lib/mock-data";
+import { liveSessions } from "@/lib/mock-data";
+import { getPublishedQuizByRoomCode } from "@/lib/quiz-store";
 import type { LoadStudentSessionResult, StudentSubmissionResult } from "@/lib/student-quiz";
 
 const roomCodeSchema = z.string().trim().regex(/^\d{4}$/, "Enter a four-digit room code.");
@@ -30,23 +31,18 @@ const submissionSchema = z.object({
   idToken: z.string().min(1).max(10_000),
 });
 
-function findOpenQuiz(roomCode: string) {
+async function findOpenQuiz(roomCode: string) {
   const liveSession = liveSessions.find((session) => session.roomCode === roomCode);
   if (!liveSession || liveSession.status !== "Live") {
     return null;
   }
 
-  const quiz = quizzes.find((candidate) => candidate.id === liveSession.quizId);
-  if (!quiz || quiz.status !== "published") {
+  const storedQuiz = await getPublishedQuizByRoomCode(roomCode);
+  if (!storedQuiz || storedQuiz.quiz.id !== liveSession.quizId) {
     return null;
   }
 
-  const questions = quiz.questionIds.map((id) => questionBank.find((question) => question.id === id));
-  if (questions.some((question) => !question)) {
-    throw new Error(`The published quiz "${quiz.id}" refers to a missing question.`);
-  }
-
-  return { quiz, questions: questions.filter((question) => question !== undefined) };
+  return storedQuiz;
 }
 
 export async function loadStudentSession(rawRoomCode: string): Promise<LoadStudentSessionResult> {
@@ -55,7 +51,7 @@ export async function loadStudentSession(rawRoomCode: string): Promise<LoadStude
     return { ok: false, error: parsedRoomCode.error.issues[0]?.message ?? "Enter a valid room code." };
   }
 
-  const openQuiz = findOpenQuiz(parsedRoomCode.data);
+  const openQuiz = await findOpenQuiz(parsedRoomCode.data);
   if (!openQuiz) {
     return {
       ok: false,
@@ -96,7 +92,7 @@ export async function submitStudentQuiz(payload: unknown): Promise<StudentSubmis
     throw new Error("The quiz submission is invalid. Please reload the session and try again.");
   }
 
-  const openQuiz = findOpenQuiz(parsedSubmission.data.roomCode);
+  const openQuiz = await findOpenQuiz(parsedSubmission.data.roomCode);
   if (!openQuiz) {
     throw new Error("This room is no longer accepting responses.");
   }
