@@ -10,10 +10,15 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-
 export function hasFirebaseConfig() {
   return Object.values(firebaseConfig).every((value) => Boolean(value));
+}
+
+export function getFirebaseAuth() {
+  if (!hasFirebaseConfig()) {
+    throw new Error("Firebase is not configured for this deployment. Set the NEXT_PUBLIC_FIREBASE_* variables and redeploy.");
+  }
+
+  const app = getApps().find((candidate) => candidate.name === "[DEFAULT]") ?? initializeApp(firebaseConfig);
+  return getAuth(app);
 }

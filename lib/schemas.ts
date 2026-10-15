@@ -13,7 +13,7 @@ export const questionSchema = z.object({
   answer: z.array(z.string()).min(1),
   explanation: z.string().default(""),
   points: z.number().int().positive().default(1),
-  difficulty: z.enum(["easy", "medium", "hard"]).default("easy"),
+  difficulty: z.enum(["easy", "medium", "hard", "unrated"]).default("easy"),
   tags: z.array(z.string()).default([]),
   codeSnippet: z.string().optional(),
 });

@@ -9,7 +9,9 @@ Configure the six `NEXT_PUBLIC_FIREBASE_*` settings from the Firebase project's 
 - Locally, set `GOOGLE_APPLICATION_CREDENTIALS` to the path of a service-account JSON file. Keep the file out of Git.
 - In production, set `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` to the service-account JSON as a server-only secret. Never use a `NEXT_PUBLIC_` prefix.
 
-The service account must belong to the same Firebase project as `NEXT_PUBLIC_FIREBASE_PROJECT_ID`. Student submissions are verified and graded on the server, then stored under `quizzes/{quizId}/submissions`. A one-attempt quiz stores one response per anonymous participant; retries return that saved result. The room and quiz definitions remain demo data in `lib/mock-data.ts`, and the lecturer results page is still a static demo.
+The service account must belong to the same Firebase project as `NEXT_PUBLIC_FIREBASE_PROJECT_ID`. Student submissions are verified and graded on the server, then stored under `quizzes/{quizId}/submissions`. A one-attempt quiz stores one response per anonymous participant; retries return that saved result. The practice quiz definitions are loaded from `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json`; their join codes are `9762` (Basic C#, 22 questions) and `8341` (Advanced C#, 30 questions). Quiz definitions are not stored in Firestore yet. The lecturer results page is still a static demo. These are practice samples, not verified summative assessments; do not use this build for graded exams until lecturer controls, assessment security, and live results have been verified.
+
+Firestore currently stores student submissions only. Keeping the supplied practice JSON in the app repository is the simplest fit while the quizzes are fixed sample content. Move quiz definitions into Firestore when lecturer-managed editing, publishing, and access controls are implemented; do not upload official answer keys to a public repository.
 
 Firestore client access is denied by `firestore.rules`; only the server-side Admin SDK writes submissions. Deploy the rules with the Firebase CLI:
 

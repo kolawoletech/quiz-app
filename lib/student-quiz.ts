@@ -4,6 +4,7 @@ export interface StudentQuestion {
   id: string;
   type: QuestionType;
   question: string;
+  codeSnippet?: string;
   options: string[];
   points: number;
 }
@@ -17,6 +18,7 @@ export interface StudentSession {
     shuffleOptions: boolean;
     showScoreAfterSubmit: boolean;
     showCorrectAnswersAfterSubmit: boolean;
+    passMark?: number;
     timeLimitMinutes?: number;
   };
   questions: StudentQuestion[];

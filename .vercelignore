@@ -1,0 +1,5 @@
+.env*
+*.pem
+*firebase-adminsdk*.json
+*service-account*.json
+*serviceaccount*.json
