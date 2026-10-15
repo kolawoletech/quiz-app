@@ -22,3 +22,13 @@ export function getFirebaseAuth() {
   const app = getApps().find((candidate) => candidate.name === "[DEFAULT]") ?? initializeApp(firebaseConfig);
   return getAuth(app);
 }
+
+export function getStudentFirebaseAuth() {
+  if (!hasFirebaseConfig()) {
+    throw new Error("Firebase is not configured for this deployment. Set the NEXT_PUBLIC_FIREBASE_* variables and redeploy.");
+  }
+
+  const appName = "quiz-student-session";
+  const app = getApps().find((candidate) => candidate.name === appName) ?? initializeApp(firebaseConfig, appName);
+  return getAuth(app);
+}

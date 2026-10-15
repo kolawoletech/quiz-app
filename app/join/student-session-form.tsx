@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getFirebaseAuth } from "@/lib/firebase";
+import { getStudentFirebaseAuth } from "@/lib/firebase";
 import type {
   LoadStudentSessionResult,
   StudentQuestionResult,
@@ -52,7 +52,7 @@ export function StudentSessionForm() {
     setIsSubmitting(true);
     setError("");
     try {
-      const auth = getFirebaseAuth();
+      const auth = getStudentFirebaseAuth();
       const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
       const submissionResult = await submitStudentQuiz({
         roomCode: session.roomCode,
@@ -98,7 +98,7 @@ export function StudentSessionForm() {
     setError("");
 
     try {
-      const auth = getFirebaseAuth();
+      const auth = getStudentFirebaseAuth();
       const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
       const response: LoadStudentSessionResult = await loadStudentSession(roomCode, await user.getIdToken());
       if (!response.ok) {

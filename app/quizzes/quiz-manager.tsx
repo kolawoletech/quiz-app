@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { LoaderCircle, LogIn, Plus, Save, ShieldCheck, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, LoaderCircle, LogIn, Plus, Save, Search, ShieldCheck, X } from "lucide-react";
 
-import { loadLecturerQuizzes, saveQuizDraft, transitionQuiz, type QuizActionResponse } from "@/app/quizzes/actions";
+import { importQuizJson, loadLecturerQuizzes, saveQuizDraft, transitionQuiz, type QuizActionResponse } from "@/app/quizzes/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +28,8 @@ type QuizDraft = {
   mode: "self-paced" | "live";
   questions: EditableQuestion[];
 };
+
+const QUIZZES_PER_PAGE = 6;
 
 const newQuestion = (): EditableQuestion => ({
   type: "single",
@@ -94,6 +96,11 @@ export function QuizManager() {
   const [notice, setNotice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [busyQuizId, setBusyQuizId] = useState("");
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | Quiz["status"]>("all");
+  const [quizPage, setQuizPage] = useState(1);
 
   async function signIn() {
     setIsLoading(true);
@@ -159,6 +166,37 @@ export function QuizManager() {
     }
   }
 
+  async function importJson() {
+    if (!importFile) return;
+
+    setIsLoading(true);
+    setError("");
+    setNotice("");
+    try {
+      const user = getFirebaseAuth().currentUser;
+      if (!user) throw new Error("Sign in again to import a quiz.");
+      const response: QuizActionResponse<LecturerQuiz> = await importQuizJson(
+        await user.getIdToken(),
+        await importFile.text(),
+      );
+      if (!response.ok) {
+        setError(response.error);
+        return;
+      }
+      setQuizzes((current) => [
+        ...((current ?? []).filter(({ quiz }) => quiz.id !== response.data.quiz.id)),
+        response.data,
+      ].sort((first, second) => first.quiz.title.localeCompare(second.quiz.title)));
+      setImportFile(null);
+      if (importInputRef.current) importInputRef.current.value = "";
+      setNotice(`Imported "${response.data.quiz.title}" as a draft. Room code ${response.data.quiz.roomCode}; review it before publishing.`);
+    } catch (importError) {
+      setError(importError instanceof Error ? importError.message : "The quiz JSON could not be imported.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   async function changeStatus(quizId: string, action: "publish" | "pause" | "resume" | "close") {
     setBusyQuizId(quizId);
     setError("");
@@ -201,6 +239,23 @@ export function QuizManager() {
     setDraft(draftFromQuiz(quiz));
   }
 
+  const filteredQuizzes = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase();
+    return (quizzes ?? []).filter(({ quiz, questions }) => {
+      const matchesStatus = statusFilter === "all" || quiz.status === statusFilter;
+      const searchableText = [
+        quiz.title,
+        quiz.description,
+        quiz.roomCode,
+        quiz.status,
+        ...questions.flatMap((question) => question.tags),
+      ].join(" ").toLocaleLowerCase();
+      return matchesStatus && (!query || searchableText.includes(query));
+    });
+  }, [quizzes, searchQuery, statusFilter]);
+  const quizPageCount = Math.max(1, Math.ceil(filteredQuizzes.length / QUIZZES_PER_PAGE));
+  const currentQuizPage = Math.min(quizPage, quizPageCount);
+  const visibleQuizzes = filteredQuizzes.slice((currentQuizPage - 1) * QUIZZES_PER_PAGE, currentQuizPage * QUIZZES_PER_PAGE);
   const checkboxClass = "size-4 accent-blue-700";
   const labelClass = "space-y-1 text-sm font-medium text-slate-700";
   const controlClass = "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm";
@@ -238,6 +293,36 @@ export function QuizManager() {
       ) : (
         <>
           <p className="text-sm text-slate-600">Signed in as {lecturerEmail}</p>
+          <Card>
+            <CardHeader>
+              <CardTitle>Import a quiz from JSON</CardTitle>
+              <CardDescription>
+                Import the existing Basic or Advanced C# practice quiz JSON format. Imports create a new draft and never overwrite a quiz.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Input
+                ref={importInputRef}
+                type="file"
+                accept=".json,application/json"
+                aria-label="Select quiz JSON file"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+                  if (file && file.size > 1_000_000) {
+                    setImportFile(null);
+                    setError("Choose a JSON file smaller than 1 MB.");
+                    return;
+                  }
+                  setError("");
+                  setImportFile(file);
+                }}
+              />
+              <Button type="button" disabled={!importFile || isLoading} onClick={() => void importJson()}>
+                {isLoading ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-4" />}
+                Import as draft
+              </Button>
+            </CardContent>
+          </Card>
           {draft && (
             <form onSubmit={saveDraft} className="space-y-5">
               <Card>
@@ -342,8 +427,48 @@ export function QuizManager() {
             </form>
           )}
 
-          <section className="grid gap-6 lg:grid-cols-2">
-            {quizzes.map(({ quiz, questions }) => (
+          <section className="space-y-4">
+            <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:flex-row">
+              <label className="relative flex-1">
+                <span className="sr-only">Search quizzes</span>
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                <Input
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setQuizPage(1);
+                  }}
+                  placeholder="Search title, description, room code, or tag"
+                  className="pl-9"
+                />
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-600">
+                <span>Status</span>
+                <select
+                  className="h-10 rounded-md border border-slate-200 bg-white px-3"
+                  value={statusFilter}
+                  onChange={(event) => {
+                    setStatusFilter(event.target.value as "all" | Quiz["status"]);
+                    setQuizPage(1);
+                  }}
+                >
+                  <option value="all">All statuses</option>
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                  <option value="paused">Paused</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </label>
+            </div>
+
+            <p className="text-sm text-slate-500" aria-live="polite">
+              {filteredQuizzes.length === 0
+                ? "No quizzes match your search."
+                : `Showing ${(currentQuizPage - 1) * QUIZZES_PER_PAGE + 1}–${Math.min(currentQuizPage * QUIZZES_PER_PAGE, filteredQuizzes.length)} of ${filteredQuizzes.length} quizzes`}
+            </p>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+            {visibleQuizzes.map(({ quiz, questions }) => (
               <Card key={quiz.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between gap-3">
@@ -370,8 +495,22 @@ export function QuizManager() {
                 </CardContent>
               </Card>
             ))}
-            {quizzes.length === 0 && !draft && (
-              <Card className="lg:col-span-2"><CardContent className="py-10 text-center text-slate-600">No quizzes yet. Create a quiz draft to get started.</CardContent></Card>
+            {filteredQuizzes.length === 0 && (
+              <Card className="lg:col-span-2"><CardContent className="py-10 text-center text-slate-600">
+                {quizzes.length === 0 ? "No quizzes yet. Create a quiz draft or import a JSON file to get started." : "Try another search or choose a different status filter."}
+              </CardContent></Card>
+            )}
+            </div>
+            {quizPageCount > 1 && (
+              <nav aria-label="Quiz list pages" className="flex items-center justify-center gap-3">
+                <Button type="button" variant="outline" size="sm" disabled={currentQuizPage === 1} onClick={() => setQuizPage((page) => Math.max(1, Math.min(page, quizPageCount) - 1))}>
+                  <ChevronLeft className="size-4" /> Previous
+                </Button>
+                <span className="text-sm text-slate-600">Page {currentQuizPage} of {quizPageCount}</span>
+                <Button type="button" variant="outline" size="sm" disabled={currentQuizPage === quizPageCount} onClick={() => setQuizPage((page) => Math.min(quizPageCount, Math.min(page, quizPageCount) + 1))}>
+                  Next <ChevronRight className="size-4" />
+                </Button>
+              </nav>
             )}
           </section>
         </>

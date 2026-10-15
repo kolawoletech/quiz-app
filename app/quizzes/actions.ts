@@ -8,6 +8,7 @@ import { verifyLecturerIdToken } from "@/lib/lecturer-auth";
 import { generateRoomCode } from "@/lib/quiz-utils";
 import { getLecturerQuizzes, parseQuiz } from "@/lib/quiz-store";
 import type { Question, Quiz } from "@/lib/mock-data";
+import { mapPracticeQuiz } from "@/scripts/practice-import.mjs";
 
 const questionInputSchema = z.object({
   id: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
@@ -198,6 +199,75 @@ export async function saveQuizDraft(rawPayload: unknown): Promise<QuizActionResp
     questions.forEach(({ id, ...question }) => transaction.set(questionCollection.doc(id), question));
     return { ok: true, email: authorization.email, data: toLecturerQuiz(quiz, questions) };
   });
+}
+
+export async function importQuizJson(rawIdToken: unknown, rawJson: unknown): Promise<QuizActionResponse<LecturerQuiz>> {
+  const authorization = await authorized(rawIdToken);
+  if (!authorization.ok) return authorization;
+
+  const jsonText = z.string().min(1).max(1_000_000).safeParse(rawJson);
+  if (!jsonText.success) {
+    return { ok: false, error: "Choose a JSON file smaller than 1 MB." };
+  }
+
+  let data: unknown;
+  try {
+    data = JSON.parse(jsonText.data);
+  } catch {
+    return { ok: false, error: "The selected file is not valid JSON." };
+  }
+
+  const firestore = getFirebaseAdminFirestore();
+  const quizId = randomUUID();
+  const codePrefix = quizId.replaceAll("-", "").slice(0, 8);
+  const roomCode = await generateUniqueRoomCode();
+  let imported: ReturnType<typeof mapPracticeQuiz>;
+  try {
+    imported = mapPracticeQuiz(data, {
+      codePrefix,
+      roomCode,
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error
+        ? `Could not import this quiz: ${error.message}`
+        : "Could not import this quiz. Check the JSON format.",
+    };
+  }
+
+  const quizRef = firestore.collection("quizzes").doc(quizId);
+  const quiz: Quiz = {
+    ...imported.quiz,
+    id: quizId,
+    status: "draft",
+    settings: {
+      ...imported.quiz.settings,
+      attemptLimit: 3,
+    },
+  };
+  const questions = imported.questions.map((question) => ({
+    ...question,
+    ownerUid: authorization.email,
+  }));
+
+  const committed = await firestore.runTransaction(async (transaction) => {
+    const roomCodeMatches = await transaction.get(
+      firestore.collection("quizzes").where("roomCode", "==", roomCode),
+    );
+    if (!roomCodeMatches.empty) return false;
+
+    transaction.set(quizRef, quiz);
+    questions.forEach(({ id, ...question }) => {
+      transaction.set(quizRef.collection("questions").doc(id), question);
+    });
+    return true;
+  });
+  if (!committed) {
+    return { ok: false, error: "The generated room code was just taken. Please import the file again." };
+  }
+
+  return { ok: true, email: authorization.email, data: toLecturerQuiz(quiz, questions) };
 }
 
 export async function transitionQuiz(rawPayload: unknown): Promise<QuizActionResponse<Quiz>> {
