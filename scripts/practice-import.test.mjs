@@ -57,4 +57,24 @@ describe("mapPracticeQuiz", () => {
       questions: [{ ...sourceQuiz.questions[0], answer: "missing-option" }],
     }, { id: "quiz", codePrefix: "test", roomCode: "0001" })).toThrow(/unknown answer option/);
   });
+
+  it("rejects question IDs that cannot be safely used as Firestore document IDs", () => {
+    expect(() => mapPracticeQuiz({
+      ...sourceQuiz,
+      questions: [{ ...sourceQuiz.questions[0], id: "bad/question" }],
+    }, { id: "quiz", codePrefix: "test", roomCode: "0001" })).toThrow();
+  });
+
+  it("rejects ambiguous duplicate options", () => {
+    expect(() => mapPracticeQuiz({
+      ...sourceQuiz,
+      questions: [{
+        ...sourceQuiz.questions[0],
+        options: [
+          { id: "A", text: "Same answer" },
+          { id: "B", text: "Same answer" },
+        ],
+      }],
+    }, { id: "quiz", codePrefix: "test", roomCode: "0001" })).toThrow(/unique option IDs and option text/);
+  });
 });

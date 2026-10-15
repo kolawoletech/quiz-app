@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getFirebaseAuth } from "@/lib/firebase";
+import { getStudentFirebaseAuth } from "@/lib/firebase";
 import type {
   LoadStudentSessionResult,
   StudentQuestionResult,
@@ -43,6 +43,7 @@ export function StudentSessionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
   const submissionStarted = useRef(false);
+  const attemptId = useRef("");
 
   const submitAnswers = useCallback(async (currentAnswers: Record<string, string[]>) => {
     if (!session || submissionStarted.current) return;
@@ -51,12 +52,13 @@ export function StudentSessionForm() {
     setIsSubmitting(true);
     setError("");
     try {
-      const auth = getFirebaseAuth();
+      const auth = getStudentFirebaseAuth();
       const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
       const submissionResult = await submitStudentQuiz({
         roomCode: session.roomCode,
         answers: currentAnswers,
         displayName: displayName.trim(),
+        attemptId: attemptId.current || (attemptId.current = crypto.randomUUID()),
         idToken: await user.getIdToken(),
       });
       setResult(submissionResult);
@@ -96,7 +98,9 @@ export function StudentSessionForm() {
     setError("");
 
     try {
-      const response: LoadStudentSessionResult = await loadStudentSession(roomCode);
+      const auth = getStudentFirebaseAuth();
+      const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
+      const response: LoadStudentSessionResult = await loadStudentSession(roomCode, await user.getIdToken());
       if (!response.ok) {
         setError(response.error);
         return;
@@ -117,6 +121,7 @@ export function StudentSessionForm() {
       setAnswers({});
       setResult(null);
       submissionStarted.current = false;
+      attemptId.current = "";
       setRemainingSeconds(
         shuffledSession.settings.timeLimitMinutes
           ? shuffledSession.settings.timeLimitMinutes * 60
@@ -152,7 +157,7 @@ export function StudentSessionForm() {
         <Card className="w-full max-w-lg">
           <CardHeader>
             <CardTitle>Join a class session</CardTitle>
-            <CardDescription>Enter the room code provided by your lecturer. No account required.</CardDescription>
+            <CardDescription>Enter the room code provided by your lecturer. A secure anonymous session is created automatically.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={joinSession} className="space-y-5">
@@ -188,8 +193,7 @@ export function StudentSessionForm() {
                 {isLoading ? "Checking room..." : "Join session"}
               </Button>
               <p className="text-center text-xs text-slate-500">
-                No account required. Your answers and score are saved with an anonymous participant ID
-                {displayName.trim() ? " and your display name" : ""}.
+                Your anonymous participant session is used to enforce the quiz attempt limit.
               </p>
             </form>
           </CardContent>
@@ -208,6 +212,9 @@ export function StudentSessionForm() {
         <Card>
           <CardHeader>
             <Badge className="w-fit">Room {session.roomCode}</Badge>
+            <Badge className="w-fit">
+              {Math.max(0, session.attemptsRemaining - 1)} of {session.attemptLimit} attempts remaining
+            </Badge>
             <CardTitle className="text-2xl">{session.title}</CardTitle>
             <CardDescription>Submitted as {displayName.trim() || "Anonymous participant"}</CardDescription>
           </CardHeader>
@@ -277,6 +284,7 @@ export function StudentSessionForm() {
                 {formatTime(remainingSeconds)} remaining
               </Badge>
             )}
+            <Badge>{session.attemptsRemaining} attempt{session.attemptsRemaining === 1 ? "" : "s"} available</Badge>
           </div>
           <p className="text-sm text-slate-500">
             {answeredCount} of {session.questions.length} answered

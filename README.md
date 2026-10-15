@@ -24,21 +24,31 @@ The service account must belong to the same project as `NEXT_PUBLIC_FIREBASE_PRO
 
 Quiz documents and question/answer documents are stored in Firestore at `quizzes/{quizId}` and `quizzes/{quizId}/questions/{questionId}`. Submissions are stored separately at `quizzes/{quizId}/submissions/{submissionId}`. Firestore client rules remain deny-all; the Admin SDK reads content and grades submissions on the server. Student join responses contain only the question text, code, options, and points; answer keys and explanations are not sent to the client before submission. Lecturer access requires a verified Google ID token and an email in the server-only `LECTURER_EMAILS` comma-separated allowlist.
 
-The sample source files `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json` are now ignored by Git. Keep local copies to import them; do not add them back to the repository. Seed or refresh Firestore from the project root with:
+The sample source files `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json` are ignored by Git. Keep local copies to import them; do not add them back to the repository. To import a JSON file through the lecturer UI, open `/quizzes`, sign in, and use **Import a quiz from JSON**. This accepts the existing Basic/Advanced practice quiz format, stores answer keys server-side, and creates a new draft with a generated room code. Review the draft and publish it when ready. This does not overwrite existing quizzes.
+
+The command-line seed/refresh workflow remains available from the project root:
 
 ```powershell
 npm run quizzes:import
 ```
 
-This command uses the local Firebase Admin credentials and `NEXT_PUBLIC_FIREBASE_PROJECT_ID`; it replaces only the two practice quiz documents and their `questions` subcollections. It does not delete submissions. Confirm the import succeeded before deploying code that reads quizzes from Firestore. The sample room codes are `9762` (Basic C#, 22 questions) and `8341` (Advanced C#, 30 questions).
+This command uses the local Firebase Admin credentials and `NEXT_PUBLIC_FIREBASE_PROJECT_ID`; it replaces the two fixed-ID practice quiz documents and their `questions` subcollections. It does not delete submissions. Confirm the import succeeded before deploying code that reads quizzes from Firestore. The sample room codes are `9762` (Basic C#, 22 questions) and `8341` (Advanced C#, 30 questions).
 
 **Repository history note:** earlier commits contained the sample JSON files, so removing them from the current version does not erase them from Git history. These files are practice samples only. Do not put summative assessment questions or real answer keys into this repository; use a private source and Firestore. If any real assessment answers were committed, treat them as disclosed and replace them.
 
 ### Lecturer dashboard
 
-Set `LECTURER_EMAILS` to a comma-separated list of verified lecturer Google account emails in local configuration and in Vercel Preview/Production as appropriate. The `/results` dashboard shows submissions, scores, pass status, per-question performance, and participant response details; CSV export includes participant names and responses. The `/questions` page requires the same lecturer authorization before returning the question bank or answer keys.
+Set `LECTURER_EMAILS` to a comma-separated list of verified lecturer Google account emails in local configuration and in Vercel Preview/Production as appropriate. The lecturer dashboard shows quiz counts, submissions, and average scored percentage; the `/quizzes` list can be searched and filtered by status, with pagination for larger collections. The `/results` dashboard shows scores, pass status, per-question performance, and participant response details; CSV export includes participant names and responses. The `/questions` page requires the same lecturer authorization before returning the question bank or answer keys.
 
 The current sample quizzes are for practice, not verified summative assessments. `showCorrectAnswersAfterSubmit` intentionally controls whether a student receives answer review after submission. Keep that disabled for assessments where answers must remain confidential.
+
+### Quiz authoring, lifecycle, and attempt limits
+
+Open `/quizzes` and sign in with an authorized Google account to create and manage quizzes. Drafts can be edited, then published when ready. Published quizzes can be paused to stop new joins and submissions, resumed, or closed permanently. Closing retains submissions and results; closed quizzes cannot be reopened. Published quizzes are locked against edits so that existing attempts keep their original question set and grading.
+
+Each quiz can allow 1–10 attempts per anonymous Firebase participant. The student page shows remaining attempts and the server checks the limit transactionally when saving each submission; retries with the same attempt ID are idempotent. Students do not need to register, but the limit is tied to their anonymous Firebase identity and can be bypassed by creating a new anonymous identity or clearing browser data. This is an exam-readiness safeguard, not strong identity verification or proctoring. Use verified student accounts and stronger assessment controls before relying on limits for high-stakes exams.
+
+Create and test this work on a non-production branch/Preview first. No deployment is performed automatically by the app; manually merge and deploy only after confirming Firebase and Vercel settings for the target environment.
 
 ## Getting Started
 

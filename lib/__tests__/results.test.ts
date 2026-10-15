@@ -28,7 +28,7 @@ const basicQuiz: Quiz = {
   settings: {
     shuffleQuestions: false,
     shuffleOptions: false,
-    allowOneAttempt: true,
+    attemptLimit: 1,
     showScoreAfterSubmit: true,
     showCorrectAnswersAfterSubmit: false,
     passMark: 50,
