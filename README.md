@@ -94,6 +94,23 @@ firebase deploy --only firestore:rules --project quiz-app-comms
 
 Configure Vercel variables in **Project → Settings → Environment Variables**. Use **Preview** for preview deployments and **Production** for the live site. Add/update sensitive `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON` using Vercel's protected input; never place secret values in command history or source control. `LECTURER_EMAILS` is server-only; the six `NEXT_PUBLIC_FIREBASE_*` values are public Firebase web-app configuration, not secrets.
 
+The Vercel CLI can manage variables interactively from the linked project directory. It prompts for values; do not add secret values as `--value` arguments:
+
+```powershell
+vercel link
+vercel env ls
+vercel env add NEXT_PUBLIC_FIREBASE_API_KEY preview
+vercel env add NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN preview
+vercel env add NEXT_PUBLIC_FIREBASE_PROJECT_ID preview
+vercel env add NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET preview
+vercel env add NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID preview
+vercel env add NEXT_PUBLIC_FIREBASE_APP_ID preview
+vercel env add FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON preview
+vercel env add LECTURER_EMAILS preview
+```
+
+Repeat for `production` when configuring Production values. If `vercel link` is needed, select the existing `kolawoles-projects/quiz-app` project. After changing an environment variable, create a new deployment; existing deployments do not receive changed values.
+
 For a preview deployment from the current local branch:
 
 ```powershell
@@ -107,6 +124,25 @@ vercel --prod
 ```
 
 Alternatively, push the intended release branch to GitHub and let Vercel deploy its configured Production Branch (usually `main`). To keep production manual, do not use `vercel --prod` and do not merge/push into that configured branch until ready. Any environment-variable change requires a **new deployment** to take effect. For Firebase Auth, also add each deployed host to Authorized domains before testing Google sign-in.
+
+Suggested manual Git release flow (the actual feature branch name is up to you):
+
+```powershell
+git switch main
+git pull --ff-only origin main
+git switch -c feature/your-change
+# make changes; run the validation commands above
+git add .
+git commit -m "Describe the change"
+git push -u origin feature/your-change
+# review/test the Vercel Preview; merge through a PR or the next commands
+git switch main
+git pull --ff-only origin main
+# If you are not using a GitHub pull request, merge the tested branch:
+git merge --no-ff feature/your-change
+# Deploy manually from main; alternatively, push main if Vercel auto-deploys it
+vercel --prod
+```
 
 For this Firestore-backed quiz version, perform these steps before the first deployment after migration:
 

@@ -50,7 +50,7 @@ for (const source of sources) {
   const batch = firestore.batch();
 
   previousQuestions.docs.forEach((document) => batch.delete(document.ref));
-  batch.set(quizRef, quiz, { merge: true });
+  batch.set(quizRef, quiz);
   questions.forEach(({ id, ...question }) => {
     batch.set(quizRef.collection("questions").doc(id), question);
   });
