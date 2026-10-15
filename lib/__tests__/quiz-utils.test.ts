@@ -1,7 +1,36 @@
 import { describe, expect, it } from "vitest";
 
 import { buildCsv, generateRoomCode, gradeQuestionSubmission, gradeStudentQuizSubmission } from "@/lib/quiz-utils";
-import { questionBank, quizzes } from "@/lib/mock-data";
+import type { Question } from "@/lib/mock-data";
+
+const questions: Question[] = [
+  {
+    id: "q1",
+    type: "single",
+    question: "Select the correct option.",
+    options: ["A", "B"],
+    answer: ["A"],
+    explanation: "A is correct.",
+    points: 1,
+    difficulty: "easy",
+    tags: [],
+    ownerUid: "test",
+    createdAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: "q2",
+    type: "multiple",
+    question: "Select both correct options.",
+    options: ["A", "B", "C"],
+    answer: ["A", "C"],
+    explanation: "A and C are correct.",
+    points: 2,
+    difficulty: "medium",
+    tags: [],
+    ownerUid: "test",
+    createdAt: "2026-01-01T00:00:00.000Z",
+  },
+];
 
 describe("generateRoomCode", () => {
   it("creates a four-digit code", () => {
@@ -30,10 +59,10 @@ describe("gradeQuestionSubmission", () => {
 
   it("returns a weighted quiz total without leaking answer review when disabled", () => {
     const result = gradeStudentQuizSubmission(
-      questionBank.slice(0, 2),
+      questions,
       {
-        q1: ["Whether calls to a method are included based on a compilation symbol"],
-        q2: ["int", "bool", "decimal"],
+        q1: ["A"],
+        q2: ["A", "C"],
       },
       { showScoreAfterSubmit: true, showCorrectAnswersAfterSubmit: false },
     );
@@ -45,35 +74,14 @@ describe("gradeQuestionSubmission", () => {
 
   it("hides score and includes review only when quiz settings allow it", () => {
     const result = gradeStudentQuizSubmission(
-      questionBank.slice(0, 1),
+      questions.slice(0, 1),
       { q1: ["wrong"] },
       { showScoreAfterSubmit: false, showCorrectAnswersAfterSubmit: true },
     );
 
     expect(result.score).toBeNull();
     expect(result.maxScore).toBeNull();
-    expect(result.questionResults?.[0]?.correctAnswer).toBe(questionBank[0].answer.join(", "));
-  });
-
-  it("grades all questions from the Basic C# practice JSON", () => {
-    const quiz = quizzes.find((item) => item.id === "quiz-basic-csharp-practice");
-    expect(quiz).toBeDefined();
-    if (!quiz) return;
-
-    const questions = quiz.questionIds.map((id) => questionBank.find((question) => question.id === id));
-    expect(questions.every((question) => question !== undefined)).toBe(true);
-    const completeQuestionSet = questions.filter((question) => question !== undefined);
-    expect(completeQuestionSet).toHaveLength(22);
-
-    const result = gradeStudentQuizSubmission(
-      completeQuestionSet,
-      Object.fromEntries(completeQuestionSet.map((question) => [question.id, question.answer])),
-      quiz.settings,
-    );
-
-    expect(result.score).toBe(22);
-    expect(result.maxScore).toBe(22);
-    expect(result.questionResults).toHaveLength(22);
+    expect(result.questionResults?.[0]?.correctAnswer).toBe(questions[0]?.answer.join(", "));
   });
 });
 

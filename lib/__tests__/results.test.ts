@@ -2,12 +2,40 @@ import { describe, expect, it } from "vitest";
 
 import { isAuthorizedLecturer, parseLecturerAllowlist } from "@/lib/lecturer-access";
 import { exportResultsCsv, buildQuizResults } from "@/lib/results";
-import { questionBank, quizzes } from "@/lib/mock-data";
+import type { Question, Quiz } from "@/lib/mock-data";
 
-const basicQuiz = quizzes.find((quiz) => quiz.id === "quiz-basic-csharp-practice");
-if (!basicQuiz) {
-  throw new Error("Basic C# practice quiz fixture is missing.");
-}
+const question: Question = {
+  id: "q1",
+  type: "single",
+  question: "Choose the correct answer.",
+  options: ["Correct", "Incorrect"],
+  answer: ["Correct"],
+  explanation: "Correct is correct.",
+  points: 1,
+  difficulty: "easy",
+  tags: [],
+  ownerUid: "test",
+  createdAt: "2026-01-01T00:00:00.000Z",
+};
+
+const basicQuiz: Quiz = {
+  id: "quiz-test",
+  title: "Test quiz",
+  description: "Test quiz description",
+  status: "published",
+  roomCode: "9762",
+  questionIds: [question.id],
+  settings: {
+    shuffleQuestions: false,
+    shuffleOptions: false,
+    allowOneAttempt: true,
+    showScoreAfterSubmit: true,
+    showCorrectAnswersAfterSubmit: false,
+    passMark: 50,
+    mode: "self-paced",
+  },
+  updatedAt: "2026-01-01T00:00:00.000Z",
+};
 
 describe("lecturer access", () => {
   it("parses and compares allowlisted emails without case sensitivity", () => {
@@ -22,20 +50,11 @@ describe("lecturer access", () => {
 
 describe("buildQuizResults", () => {
   it("computes scores, pass status, participant summaries, and question performance", () => {
-    const quiz = {
-      ...basicQuiz,
-      settings: { ...basicQuiz.settings, passMark: 60 },
-    };
-    const questions = quiz.questionIds.map((id) => {
-      const question = questionBank.find((candidate) => candidate.id === id);
-      if (!question) throw new Error(`Missing question fixture: ${id}`);
-      return question;
-    });
-    const results = buildQuizResults(quiz, [
+    const results = buildQuizResults(basicQuiz, [
       {
         id: "correct",
         displayName: "Ada",
-        answers: Object.fromEntries(questions.map((question) => [question.id, question.answer])),
+        answers: { [question.id]: question.answer },
         score: null,
         maxScore: null,
         submittedAt: "2026-01-02T12:00:00.000Z",
@@ -48,7 +67,7 @@ describe("buildQuizResults", () => {
         maxScore: null,
         submittedAt: "2026-01-01T12:00:00.000Z",
       },
-    ], questionBank, "9762");
+    ], [question], "9762");
 
     expect(results.roomCode).toBe("9762");
     expect(results.submissionCount).toBe(2);
@@ -56,7 +75,7 @@ describe("buildQuizResults", () => {
     expect(results.averagePercent).toBe(50);
     expect(results.passCount).toBe(1);
     expect(results.submissions[0]?.displayName).toBe("Ada");
-    expect(results.submissions[0]?.score).toBe(questions.reduce((sum, question) => sum + question.points, 0));
+    expect(results.submissions[0]?.score).toBe(question.points);
     expect(results.submissions[0]?.passed).toBe(true);
     expect(results.submissions[1]?.passed).toBe(false);
     expect(results.questionStats[0]).toMatchObject({ correctCount: 1, responseCount: 2, percentCorrect: 50 });
@@ -70,7 +89,7 @@ describe("buildQuizResults", () => {
       score: null,
       maxScore: null,
       submittedAt: null,
-    }], questionBank);
+    }], [question]);
     const csv = exportResultsCsv([result]);
 
     expect(csv).toContain('"Participant"');
@@ -81,6 +100,6 @@ describe("buildQuizResults", () => {
 
   it("fails explicitly when a quiz references a missing question", () => {
     const brokenQuiz = { ...basicQuiz, questionIds: ["missing-question"] };
-    expect(() => buildQuizResults(brokenQuiz, [], questionBank)).toThrow(/missing question/);
+    expect(() => buildQuizResults(brokenQuiz, [], [question])).toThrow(/missing question/);
   });
 });

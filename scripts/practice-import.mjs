@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-import advancedQuizJson from "../Advanced_CSharp_Practice_Quiz.json";
-import basicQuizJson from "../Basic_CSharp_Practice_Quiz.json";
-import type { Question, Quiz } from "@/lib/mock-data";
-
 const practiceQuizSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -31,22 +27,20 @@ const practiceQuizSchema = z.object({
   })).min(1),
 });
 
-const sampleQuizSources = [
-  { id: "quiz-basic-csharp-practice", codePrefix: "basic", data: practiceQuizSchema.parse(basicQuizJson) },
-  { id: "quiz-advanced-csharp-practice", codePrefix: "advanced", data: practiceQuizSchema.parse(advancedQuizJson) },
-] as const;
-
-export const practiceQuestionBank: Question[] = sampleQuizSources.flatMap(({ codePrefix, data }) =>
-  data.questions.map((question) => {
+export function mapPracticeQuiz(rawData, { codePrefix, roomCode }) {
+  const data = practiceQuizSchema.parse(rawData);
+  const questions = data.questions.map((question, order) => {
     const correctOption = question.options.find((option) => option.id === question.answer);
     if (!correctOption) {
-      throw new Error(`Practice quiz "${data.title}" question "${question.id}" has an unknown answer option.`);
+      throw new Error(`Quiz "${data.title}" question "${question.id}" has an unknown answer option.`);
     }
 
     return {
       id: `${codePrefix}-${question.id}`,
+      order,
       type: "single",
       question: question.question,
+      ...(question.code ? { codeSnippet: question.code } : {}),
       options: question.options.map((option) => option.text),
       answer: [correctOption.text],
       explanation: question.explanation,
@@ -55,25 +49,27 @@ export const practiceQuestionBank: Question[] = sampleQuizSources.flatMap(({ cod
       tags: [data.subject, question.type],
       ownerUid: "practice-sample",
       createdAt: "2026-10-15T00:00:00.000Z",
-      ...(question.code ? { codeSnippet: question.code } : {}),
     };
-  }),
-);
+  });
 
-export const practiceQuizzes: Quiz[] = sampleQuizSources.map(({ id, codePrefix, data }) => ({
-  id,
-  title: data.title,
-  description: data.description,
-  status: "published",
-  questionIds: data.questions.map((question) => `${codePrefix}-${question.id}`),
-  settings: {
-    shuffleQuestions: data.settings.shuffleQuestions,
-    shuffleOptions: data.settings.shuffleOptions,
-    allowOneAttempt: false,
-    showScoreAfterSubmit: true,
-    showCorrectAnswersAfterSubmit: data.settings.showExplanations,
-    passMark: data.settings.passMark,
-    mode: "self-paced",
-  },
-  updatedAt: "2026-10-15T00:00:00.000Z",
-}));
+  return {
+    quiz: {
+      title: data.title,
+      description: data.description,
+      status: "published",
+      roomCode,
+      questionIds: questions.map((question) => question.id),
+      settings: {
+        shuffleQuestions: data.settings.shuffleQuestions,
+        shuffleOptions: data.settings.shuffleOptions,
+        allowOneAttempt: false,
+        showScoreAfterSubmit: true,
+        showCorrectAnswersAfterSubmit: data.settings.showExplanations,
+        passMark: data.settings.passMark,
+        mode: "self-paced",
+      },
+      updatedAt: new Date().toISOString(),
+    },
+    questions,
+  };
+}
