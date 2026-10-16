@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useCallback, useEffect, useState } from "react";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { LoaderCircle, LogIn, ShieldCheck } from "lucide-react";
 
 import { loadLecturerQuestionBank } from "@/app/questions/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getFirebaseAuth } from "@/lib/firebase";
+import { getFirebaseAuth, hasFirebaseConfig } from "@/lib/firebase";
 import type { Question } from "@/lib/mock-data";
 
 export function LecturerQuestionBank() {
@@ -17,21 +17,63 @@ export function LecturerQuestionBank() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const loadQuestions = useCallback(async (idToken: string) => {
+    const response = await loadLecturerQuestionBank(idToken);
+    if (!response.ok) {
+      setQuestions(null);
+      setError(response.error);
+      return;
+    }
+    setQuestions(response.questions);
+    setLecturerEmail(response.email);
+    setError("");
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    let unsubscribe = () => {};
+
+    if (hasFirebaseConfig()) {
+      unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (user) => {
+        if (!active) return;
+        if (!user || user.providerData.every((provider) => provider.providerId !== "google.com")) {
+          setQuestions(null);
+          setLecturerEmail("");
+          setError("");
+          setIsLoading(false);
+          return;
+        }
+
+        setQuestions(null);
+        setLecturerEmail("");
+        setIsLoading(true);
+        setError("");
+        try {
+          await loadQuestions(await user.getIdToken());
+        } catch (loadError) {
+          if (active) {
+            setQuestions(null);
+            setError(loadError instanceof Error ? loadError.message : "The question bank could not be loaded.");
+          }
+        } finally {
+          if (active) setIsLoading(false);
+        }
+      });
+    }
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [loadQuestions]);
+
   async function signIn() {
     setIsLoading(true);
     setError("");
     try {
       const credential = await signInWithPopup(getFirebaseAuth(), new GoogleAuthProvider());
-      const response = await loadLecturerQuestionBank(await credential.user.getIdToken());
-      if (!response.ok) {
-        setQuestions(null);
-        setError(response.error);
-        return;
-      }
-      setQuestions(response.questions);
-      setLecturerEmail(response.email);
+      await loadQuestions(await credential.user.getIdToken());
     } catch (loadError) {
-      setQuestions(null);
       setError(loadError instanceof Error ? loadError.message : "The question bank could not be loaded.");
     } finally {
       setIsLoading(false);

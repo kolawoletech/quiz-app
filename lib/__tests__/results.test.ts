@@ -74,11 +74,30 @@ describe("buildQuizResults", () => {
     expect(results.gradedCount).toBe(2);
     expect(results.averagePercent).toBe(50);
     expect(results.passCount).toBe(1);
+    expect(results.passPercentage).toBe(50);
     expect(results.submissions[0]?.displayName).toBe("Ada");
     expect(results.submissions[0]?.score).toBe(question.points);
     expect(results.submissions[0]?.passed).toBe(true);
     expect(results.submissions[1]?.passed).toBe(false);
     expect(results.questionStats[0]).toMatchObject({ correctCount: 1, responseCount: 2, percentCorrect: 50 });
+  });
+
+  it("does not report a pass percentage when the quiz has no pass mark", () => {
+    const quizWithoutPassMark = {
+      ...basicQuiz,
+      settings: { ...basicQuiz.settings, passMark: undefined },
+    };
+    const results = buildQuizResults(quizWithoutPassMark, [{
+      id: "participant",
+      displayName: "Ada",
+      answers: { [question.id]: question.answer },
+      score: null,
+      maxScore: null,
+      submittedAt: null,
+    }], [question]);
+
+    expect(results.passCount).toBe(0);
+    expect(results.passPercentage).toBeNull();
   });
 
   it("exports quoted CSV cells and protects spreadsheet formula values", () => {
