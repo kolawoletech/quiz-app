@@ -80,12 +80,14 @@ const quizDraftSchema = z.object({
       }
     }
     if (question.type === "rearrange") {
+      const options = [...question.options].sort();
+      const answers = [...question.answer].sort();
       if (question.options.length < 2) {
         context.addIssue({ code: "custom", message: "Rearrange questions need at least two code lines.", path: ["questions", index, "options"] });
       }
       if (question.answer.length !== question.options.length
-        || question.answer.some((line, lineIndex) => line !== question.options[lineIndex])) {
-        context.addIssue({ code: "custom", message: "The correct code order must match the listed code lines.", path: ["questions", index, "answer"] });
+        || options.some((line, lineIndex) => line !== answers[lineIndex])) {
+        context.addIssue({ code: "custom", message: "The correct order must contain the same items as the listed options.", path: ["questions", index, "answer"] });
       }
     }
   });

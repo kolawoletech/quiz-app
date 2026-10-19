@@ -1,0 +1,160 @@
+{
+  "title": "Random Question Types Practice",
+  "description": "A sample quiz for trying every supported question interaction, including matching and rearranging.",
+  "subject": "General practice",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": true,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": true,
+    "passMark": 60,
+    "attemptLimit": 3,
+    "mode": "self-paced"
+  },
+  "questions": [
+    {
+      "id": "single-01",
+      "type": "single",
+      "question": "Which planet is known as the Red Planet?",
+      "options": ["Venus", "Mars", "Jupiter", "Mercury"],
+      "answer": ["Mars"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["space"],
+      "explanation": "Iron-rich dust gives Mars its reddish appearance."
+    },
+    {
+      "id": "single-02",
+      "type": "single",
+      "question": "Which C# keyword declares a method that does not return a value?",
+      "options": ["void", "null", "var", "static"],
+      "answer": ["void"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["csharp", "methods"]
+    },
+    {
+      "id": "multi-01",
+      "type": "multiple",
+      "question": "Which of these are C# value types? Select all that apply.",
+      "options": ["int", "bool", "string", "double"],
+      "answer": ["int", "bool", "double"],
+      "points": 3,
+      "difficulty": "medium",
+      "tags": ["csharp", "types"],
+      "explanation": "int, bool, and double are value types. string is a reference type."
+    },
+    {
+      "id": "multi-02",
+      "type": "multiple",
+      "question": "Which are valid HTTP methods? Select all that apply.",
+      "options": ["GET", "POST", "FETCH", "DELETE"],
+      "answer": ["GET", "POST", "DELETE"],
+      "points": 3,
+      "difficulty": "easy",
+      "tags": ["web"]
+    },
+    {
+      "id": "tf-01",
+      "type": "truefalse",
+      "question": "The Earth orbits the Sun.",
+      "options": ["True", "False"],
+      "answer": ["True"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["science"]
+    },
+    {
+      "id": "tf-02",
+      "type": "truefalse",
+      "question": "In C#, array indexes start at 1.",
+      "options": ["True", "False"],
+      "answer": ["False"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["csharp", "arrays"],
+      "explanation": "C# arrays are zero-indexed."
+    },
+    {
+      "id": "match-01",
+      "type": "matching",
+      "question": "Match each C# type to a value it can represent.",
+      "matchItems": ["bool", "string", "int"],
+      "options": ["Whole numbers", "Text", "True or false"],
+      "answer": ["True or false", "Text", "Whole numbers"],
+      "points": 3,
+      "difficulty": "easy",
+      "tags": ["csharp", "types"],
+      "explanation": "bool represents truth values, string stores text, and int stores whole numbers."
+    },
+    {
+      "id": "match-02",
+      "type": "matching",
+      "question": "Match each planet to its place from the Sun.",
+      "matchItems": ["Earth", "Mercury", "Mars"],
+      "options": ["Third", "First", "Fourth"],
+      "answer": ["Third", "First", "Fourth"],
+      "points": 3,
+      "difficulty": "easy",
+      "tags": ["space"]
+    },
+    {
+      "id": "rank-01",
+      "type": "rearrange",
+      "question": "Arrange these steps for making a cup of tea in a sensible order.",
+      "options": ["Remove the tea bag and drink.", "Put a tea bag in the cup.", "Pour hot water into the cup."],
+      "answer": ["Put a tea bag in the cup.", "Pour hot water into the cup.", "Remove the tea bag and drink."],
+      "points": 3,
+      "difficulty": "easy",
+      "tags": ["ordering"]
+    },
+    {
+      "id": "rank-02",
+      "type": "rearrange",
+      "question": "Put these C# statements in the correct order to print a message.",
+      "options": ["Console.WriteLine(\"Hello\");", "}", "using System;", "class Program {"],
+      "answer": ["using System;", "class Program {", "Console.WriteLine(\"Hello\");", "}"],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": ["csharp", "ordering"],
+      "explanation": "The using directive comes first, followed by the class and its statement."
+    },
+    {
+      "id": "short-01",
+      "type": "short",
+      "question": "What is the capital city of Japan?",
+      "answer": ["Tokyo"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["geography"]
+    },
+    {
+      "id": "short-02",
+      "type": "short",
+      "question": "What is 9 multiplied by 7?",
+      "answer": ["63"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["math"]
+    },
+    {
+      "id": "code-01",
+      "type": "code",
+      "question": "Type the exact C# statement that writes the number 5 to the console.",
+      "answer": ["Console.WriteLine(5);"],
+      "points": 2,
+      "difficulty": "easy",
+      "tags": ["csharp", "output"],
+      "explanation": "This statement writes 5 followed by a new line."
+    },
+    {
+      "id": "code-02",
+      "type": "code",
+      "question": "What exact text is printed by Console.Write(\"Hi\");?",
+      "answer": ["Hi"],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": ["csharp", "output"]
+    }
+  ]
+}

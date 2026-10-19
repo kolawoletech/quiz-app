@@ -71,7 +71,7 @@ describe("mapPracticeQuiz", () => {
           id: "rank-1",
           type: "rearrange",
           question: "Put these lines in order.",
-          options: ["if (ready) {", "  start();", "}"],
+          options: ["}", "if (ready) {", "  start();"],
           answer: ["if (ready) {", "  start();", "}"],
           points: 3,
         },
@@ -92,7 +92,7 @@ describe("mapPracticeQuiz", () => {
     });
     expect(result.questions[1]).toMatchObject({
       type: "rearrange",
-      options: ["if (ready) {", "  start();", "}"],
+      options: ["}", "if (ready) {", "  start();"],
       answer: ["if (ready) {", "  start();", "}"],
     });
   });

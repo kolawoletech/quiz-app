@@ -109,8 +109,10 @@ const importedQuestionSchema = z.object({
   }
 
   if (question.type === "rearrange") {
+    const options = [...question.options].sort();
+    const answer = [...question.answer].sort();
     if (question.options.length < 2 || question.answer.length !== question.options.length
-      || question.options.some((line, index) => line !== question.answer[index])) {
+      || options.some((line, index) => line !== answer[index])) {
       addIssue("Rearrange questions need at least two options, with answer listing those same items in the correct order.", "answer");
     }
   }
