@@ -1,4 +1,4 @@
-export type QuestionType = "single" | "multiple" | "truefalse" | "short" | "code";
+export type QuestionType = "single" | "multiple" | "truefalse" | "matching" | "rearrange" | "short" | "code";
 
 export interface Question {
   id: string;
@@ -6,6 +6,7 @@ export interface Question {
   question: string;
   codeSnippet?: string;
   options: string[];
+  matchItems?: string[];
   answer: string[];
   explanation: string;
   points: number;

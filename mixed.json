@@ -1,0 +1,938 @@
+{
+  "title": "Basic C# Programming — Comprehensive Practice Quiz (Earlier and Current Notes)",
+  "description": "A deeper, mixed-format practice quiz based on available Eduvos Basic C# Programming notes: Lessons 1–7 and 10–12. Includes C#/.NET foundations, OOP, variables and control flow, arrays and strings, classes and inheritance, preprocessor directives, Math and Random, overloading, exceptions, and namespaces. Lessons 8 and 9 were not included because their notes were not available among the files reviewed.",
+  "subject": "Basic C# Programming",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": true,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": true,
+    "passMark": 60,
+    "attemptLimit": 3,
+    "mode": "self-paced"
+  },
+  "questions": [
+    {
+      "id": "single-01",
+      "type": "single",
+      "question": "What is C#?",
+      "options": [
+        "A programming language commonly used with the .NET platform",
+        "A database table",
+        "An operating system",
+        "A type of computer hardware"
+      ],
+      "answer": [
+        "A programming language commonly used with the .NET platform"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-1",
+        "csharp"
+      ],
+      "explanation": "The notes introduce C# as a programming language used with .NET."
+    },
+    {
+      "id": "single-02",
+      "type": "single",
+      "question": "What is the primary role of the Common Language Runtime (CLR) in the .NET execution process described in the notes?",
+      "options": [
+        "To provide the runtime environment in which .NET code executes",
+        "To write source code for the programmer",
+        "To store all variables permanently",
+        "To replace the C# compiler"
+      ],
+      "answer": [
+        "To provide the runtime environment in which .NET code executes"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-1",
+        "dotnet",
+        "clr"
+      ]
+    },
+    {
+      "id": "rearrange-01",
+      "type": "rearrange",
+      "question": "Arrange the main stages of the C# execution process in the order described in the notes.",
+      "options": [
+        "JIT compilation converts intermediate code to machine code",
+        "C# source code is compiled",
+        "The compiler produces Common Intermediate Language (CIL)",
+        "The CLR/runtime loads and executes the application"
+      ],
+      "answer": [
+        "C# source code is compiled",
+        "The compiler produces Common Intermediate Language (CIL)",
+        "The CLR/runtime loads and executes the application",
+        "JIT compilation converts intermediate code to machine code"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-1",
+        "dotnet",
+        "ordering"
+      ]
+    },
+    {
+      "id": "single-03",
+      "type": "single",
+      "question": "Which statement best distinguishes a class from an object?",
+      "options": [
+        "A class is a template; an object is an instance created from it",
+        "A class is an instance; an object is a template",
+        "They mean exactly the same thing",
+        "An object can contain no data"
+      ],
+      "answer": [
+        "A class is a template; an object is an instance created from it"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-2",
+        "oop"
+      ]
+    },
+    {
+      "id": "match-01",
+      "type": "matching",
+      "question": "Match each object-oriented programming term to its description.",
+      "matchItems": [
+        "Class",
+        "Object",
+        "Attribute",
+        "Behaviour"
+      ],
+      "options": [
+        "A specific instance of a class",
+        "A template defining data and behaviours",
+        "Information describing an object",
+        "An action an object can perform"
+      ],
+      "answer": [
+        "A template defining data and behaviours",
+        "A specific instance of a class",
+        "Information describing an object",
+        "An action an object can perform"
+      ],
+      "points": 4,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-2",
+        "oop"
+      ]
+    },
+    {
+      "id": "multi-01",
+      "type": "multiple",
+      "question": "Which are the four OOP principles listed in the notes? Select all that apply.",
+      "options": [
+        "Abstraction",
+        "Encapsulation",
+        "Inheritance",
+        "Polymorphism",
+        "Compilation",
+        "Iteration"
+      ],
+      "answer": [
+        "Abstraction",
+        "Encapsulation",
+        "Inheritance",
+        "Polymorphism"
+      ],
+      "points": 4,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-2",
+        "oop"
+      ]
+    },
+    {
+      "id": "single-04",
+      "type": "single",
+      "question": "A class keeps its data private and provides public methods or properties to control access. Which OOP principle does this most directly demonstrate?",
+      "options": [
+        "Encapsulation",
+        "Inheritance",
+        "Looping",
+        "Compilation"
+      ],
+      "answer": [
+        "Encapsulation"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-2",
+        "encapsulation"
+      ]
+    },
+    {
+      "id": "single-05",
+      "type": "single",
+      "question": "Which is the correct syntax for a single-line comment in C#?",
+      "options": [
+        "// comment",
+        "/* comment",
+        "<!-- comment -->",
+        "## comment"
+      ],
+      "answer": [
+        "// comment"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-3",
+        "comments"
+      ]
+    },
+    {
+      "id": "single-06",
+      "type": "single",
+      "question": "What is the value of result after this code executes?\nint result = 7 / 2;",
+      "options": [
+        "3",
+        "3.5",
+        "4",
+        "An exception always occurs"
+      ],
+      "answer": [
+        "3"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-3",
+        "operators",
+        "code-output"
+      ],
+      "explanation": "Both operands are integers, so integer division discards the fractional part."
+    },
+    {
+      "id": "single-07",
+      "type": "single",
+      "question": "What does the % operator return when used with integers?",
+      "options": [
+        "The remainder after division",
+        "The quotient as a decimal",
+        "The absolute value",
+        "The square root"
+      ],
+      "answer": [
+        "The remainder after division"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-3",
+        "operators"
+      ]
+    },
+    {
+      "id": "tf-01",
+      "type": "truefalse",
+      "question": "A variable's scope determines where in the program it can be accessed.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-3",
+        "variables",
+        "scope"
+      ]
+    },
+    {
+      "id": "single-08",
+      "type": "single",
+      "question": "What is the output?\nint mark = 68;\nif (mark >= 75) Console.WriteLine(\"Distinction\");\nelse if (mark >= 50) Console.WriteLine(\"Pass\");\nelse Console.WriteLine(\"Fail\");",
+      "options": [
+        "Distinction",
+        "Pass",
+        "Fail",
+        "Nothing is printed"
+      ],
+      "answer": [
+        "Pass"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-3",
+        "conditions",
+        "code-output"
+      ]
+    },
+    {
+      "id": "single-09",
+      "type": "single",
+      "question": "How many times does this loop execute its body?\nfor (int i = 1; i <= 4; i++) { Console.WriteLine(i); }",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "It never executes"
+      ],
+      "answer": [
+        "4"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-3",
+        "loops",
+        "code-analysis"
+      ]
+    },
+    {
+      "id": "single-10",
+      "type": "single",
+      "question": "Which loop checks its condition after executing the body, so the body runs at least once?",
+      "options": [
+        "for",
+        "while",
+        "do...while",
+        "foreach"
+      ],
+      "answer": [
+        "do...while"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-3",
+        "loops"
+      ]
+    },
+    {
+      "id": "multi-02",
+      "type": "multiple",
+      "question": "Which statements about break and continue are correct? Select all that apply.",
+      "options": [
+        "break exits the nearest enclosing loop or switch",
+        "continue skips to the next loop iteration",
+        "break restarts the current iteration",
+        "continue always terminates the whole program"
+      ],
+      "answer": [
+        "break exits the nearest enclosing loop or switch",
+        "continue skips to the next loop iteration"
+      ],
+      "points": 2,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-3",
+        "loops"
+      ]
+    },
+    {
+      "id": "single-11",
+      "type": "single",
+      "question": "What is the index of the first element in a standard C# array?",
+      "options": [
+        "0",
+        "1",
+        "-1",
+        "It depends on the element's value"
+      ],
+      "answer": [
+        "0"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-4",
+        "arrays"
+      ]
+    },
+    {
+      "id": "code-01",
+      "type": "code",
+      "question": "Write the C# statement that declares an integer array containing 3, 6 and 9.",
+      "answer": [
+        "int[] numbers = { 3, 6, 9 };"
+      ],
+      "points": 2,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-4",
+        "arrays",
+        "code"
+      ]
+    },
+    {
+      "id": "single-12",
+      "type": "single",
+      "question": "Given string name = \"Lerato\";, what does name.Length return?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "The string itself"
+      ],
+      "answer": [
+        "6"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-4",
+        "strings"
+      ]
+    },
+    {
+      "id": "match-02",
+      "type": "matching",
+      "question": "Match each C# conversion method to its usual purpose.",
+      "matchItems": [
+        "int.Parse(\"42\")",
+        "Convert.ToDouble(\"3.5\")",
+        "(int)3.9",
+        "Enum.Parse(...)"
+      ],
+      "options": [
+        "Converts a compatible value to an integer by casting/truncating the fractional part",
+        "Parses text into an integer",
+        "Converts a compatible value to a double",
+        "Converts a string representation into an enum value"
+      ],
+      "answer": [
+        "Parses text into an integer",
+        "Converts a compatible value to a double",
+        "Converts a compatible value to an integer by casting/truncating the fractional part",
+        "Converts a string representation into an enum value"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-4",
+        "conversion",
+        "casting",
+        "enums"
+      ]
+    },
+    {
+      "id": "single-13",
+      "type": "single",
+      "question": "What is the value of this expression?\nstring word = \"CSharp\";\nConsole.WriteLine(word.Substring(1, 3));",
+      "options": [
+        "CSh",
+        "Sha",
+        "har",
+        "Sharp"
+      ],
+      "answer": [
+        "Sha"
+      ],
+      "points": 1,
+      "difficulty": "hard",
+      "tags": [
+        "lesson-4",
+        "strings",
+        "code-output"
+      ],
+      "explanation": "Substring(1, 3) starts at index 1 and returns three characters."
+    },
+    {
+      "id": "tf-02",
+      "type": "truefalse",
+      "question": "A foreach loop is useful for visiting each item in an array or other enumerable collection.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-4",
+        "arrays",
+        "loops"
+      ]
+    },
+    {
+      "id": "single-14",
+      "type": "single",
+      "question": "What is the main purpose of a constructor?",
+      "options": [
+        "To initialise a newly created object",
+        "To destroy the application",
+        "To declare a namespace",
+        "To catch every exception"
+      ],
+      "answer": [
+        "To initialise a newly created object"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-5",
+        "constructors"
+      ]
+    },
+    {
+      "id": "single-15",
+      "type": "single",
+      "question": "Which statement about a C# property is most accurate?",
+      "options": [
+        "It can control access to an object's data through get and set accessors",
+        "It must always be a loop",
+        "It cannot be read after construction",
+        "It is another name for a namespace"
+      ],
+      "answer": [
+        "It can control access to an object's data through get and set accessors"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-5",
+        "properties",
+        "encapsulation"
+      ]
+    },
+    {
+      "id": "code-02",
+      "type": "code",
+      "question": "Write a valid C# method declaration for a public method named GetPrice that returns a double and takes no parameters.",
+      "answer": [
+        "public double GetPrice()"
+      ],
+      "points": 2,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-5",
+        "methods",
+        "code"
+      ]
+    },
+    {
+      "id": "single-16",
+      "type": "single",
+      "question": "In a derived class constructor, what is the purpose of base(...) when used in the constructor initializer?",
+      "options": [
+        "To call a constructor of the base class",
+        "To call the Main method",
+        "To declare a new array",
+        "To handle a FormatException"
+      ],
+      "answer": [
+        "To call a constructor of the base class"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-5",
+        "inheritance",
+        "constructors"
+      ]
+    },
+    {
+      "id": "tf-03",
+      "type": "truefalse",
+      "question": "A method can be overloaded by changing only its return type while keeping its name and parameter list identical.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-5",
+        "methods"
+      ]
+    },
+    {
+      "id": "single-17",
+      "type": "single",
+      "question": "When are C# preprocessor directives such as #if evaluated, according to the notes?",
+      "options": [
+        "During compilation",
+        "Only after the program closes",
+        "Only when a user clicks a button",
+        "During database execution"
+      ],
+      "answer": [
+        "During compilation"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-6",
+        "preprocessor"
+      ]
+    },
+    {
+      "id": "match-03",
+      "type": "matching",
+      "question": "Match each preprocessor directive to its role.",
+      "matchItems": [
+        "#define",
+        "#undef",
+        "#warning",
+        "#error",
+        "#region"
+      ],
+      "options": [
+        "Defines a symbol",
+        "Undefines a symbol",
+        "Forces a compiler warning",
+        "Forces a compilation error",
+        "Marks a collapsible code region"
+      ],
+      "answer": [
+        "Defines a symbol",
+        "Undefines a symbol",
+        "Forces a compiler warning",
+        "Forces a compilation error",
+        "Marks a collapsible code region"
+      ],
+      "points": 5,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-6",
+        "preprocessor"
+      ]
+    },
+    {
+      "id": "tf-04",
+      "type": "truefalse",
+      "question": "A #error directive forces a compilation error that prevents the application from being compiled successfully.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-6",
+        "preprocessor"
+      ]
+    },
+    {
+      "id": "single-18",
+      "type": "single",
+      "question": "Why can Math.Sqrt(81) be called without creating a Math object?",
+      "options": [
+        "Math is a static class",
+        "Sqrt is a constructor",
+        "The compiler creates a new Math object every time",
+        "All classes are static by default"
+      ],
+      "answer": [
+        "Math is a static class"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-7",
+        "math"
+      ]
+    },
+    {
+      "id": "single-19",
+      "type": "single",
+      "question": "What value does Math.Abs(-15) return?",
+      "options": [
+        "-15",
+        "15",
+        "0",
+        "An exception"
+      ],
+      "answer": [
+        "15"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-7",
+        "math"
+      ]
+    },
+    {
+      "id": "single-20",
+      "type": "single",
+      "question": "What is the upper-bound behaviour of Random.Next(1, 5)?",
+      "options": [
+        "It can return 1, 2, 3 or 4, but not 5",
+        "It can return 0 through 5 inclusive",
+        "It always returns 5",
+        "It returns only decimal values"
+      ],
+      "answer": [
+        "It can return 1, 2, 3 or 4, but not 5"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-7",
+        "random"
+      ]
+    },
+    {
+      "id": "code-03",
+      "type": "code",
+      "question": "Write a C# expression that returns a random integer from 1 through 6 using a Random object named rng.",
+      "answer": [
+        "rng.Next(1, 7)"
+      ],
+      "points": 2,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-7",
+        "random",
+        "code"
+      ]
+    },
+    {
+      "id": "single-21",
+      "type": "single",
+      "question": "Which pair of methods is a valid overload set?",
+      "options": [
+        "int Add(int a, int b) and int Add(int a, int b, int c)",
+        "int Add(int a, int b) and double Add(int a, int b)",
+        "void Show() and void Show()",
+        "int Add and int Add"
+      ],
+      "answer": [
+        "int Add(int a, int b) and int Add(int a, int b, int c)"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-10",
+        "method-overloading"
+      ]
+    },
+    {
+      "id": "single-22",
+      "type": "single",
+      "question": "In the notes, which syntax allows an object to be accessed using a string key as well as an integer index?",
+      "options": [
+        "An overloaded indexer",
+        "A preprocessor directive",
+        "A finally block",
+        "A constructor only"
+      ],
+      "answer": [
+        "An overloaded indexer"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-10",
+        "indexers"
+      ]
+    },
+    {
+      "id": "single-23",
+      "type": "single",
+      "question": "If a class overloads the + operator, what can happen to the corresponding += operation?",
+      "options": [
+        "It can use the overloaded + behaviour",
+        "It becomes illegal in every case",
+        "It automatically becomes a string",
+        "It bypasses the class definition"
+      ],
+      "answer": [
+        "It can use the overloaded + behaviour"
+      ],
+      "points": 1,
+      "difficulty": "hard",
+      "tags": [
+        "lesson-10",
+        "operator-overloading"
+      ]
+    },
+    {
+      "id": "single-24",
+      "type": "single",
+      "question": "A program tries int.Parse(\"five\"). Which catch block is the most appropriate specific handler?",
+      "options": [
+        "catch (FormatException)",
+        "catch (DivideByZeroException)",
+        "catch (IndexOutOfRangeException)",
+        "catch (ArgumentOutOfRangeException)"
+      ],
+      "answer": [
+        "catch (FormatException)"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-11",
+        "exceptions"
+      ]
+    },
+    {
+      "id": "single-25",
+      "type": "single",
+      "question": "Why should catch (FormatException) generally appear before catch (Exception ex)?",
+      "options": [
+        "The specific exception must be handled before the general handler can catch it",
+        "The general handler must be first",
+        "FormatException is not an exception",
+        "The order never matters"
+      ],
+      "answer": [
+        "The specific exception must be handled before the general handler can catch it"
+      ],
+      "points": 1,
+      "difficulty": "hard",
+      "tags": [
+        "lesson-11",
+        "exceptions"
+      ]
+    },
+    {
+      "id": "rearrange-02",
+      "type": "rearrange",
+      "question": "Arrange the steps for creating and handling a custom exception in the logical order.",
+      "options": [
+        "Catch the custom exception and respond to it",
+        "Define a class that derives from Exception",
+        "Use throw to raise an instance when a rule is violated",
+        "Provide a constructor/message for the custom exception"
+      ],
+      "answer": [
+        "Define a class that derives from Exception",
+        "Provide a constructor/message for the custom exception",
+        "Use throw to raise an instance when a rule is violated",
+        "Catch the custom exception and respond to it"
+      ],
+      "points": 4,
+      "difficulty": "hard",
+      "tags": [
+        "lesson-11",
+        "custom-exceptions",
+        "ordering"
+      ]
+    },
+    {
+      "id": "single-26",
+      "type": "single",
+      "question": "What does using System; allow in a C# file?",
+      "options": [
+        "Use names from System without writing System. each time",
+        "Create a class named System automatically",
+        "Catch all exceptions",
+        "Make all code public"
+      ],
+      "answer": [
+        "Use names from System without writing System. each time"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-12",
+        "namespaces"
+      ]
+    },
+    {
+      "id": "single-27",
+      "type": "single",
+      "question": "What is a using alias useful for?",
+      "options": [
+        "Giving a long namespace or type path a shorter alternative name",
+        "Changing an int into a string automatically",
+        "Creating a loop",
+        "Suppressing compiler errors"
+      ],
+      "answer": [
+        "Giving a long namespace or type path a shorter alternative name"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "lesson-12",
+        "namespaces"
+      ]
+    },
+    {
+      "id": "match-04",
+      "type": "matching",
+      "question": "Match each concept to the most accurate description.",
+      "matchItems": [
+        "Method overloading",
+        "Indexer",
+        "finally",
+        "Namespace"
+      ],
+      "options": [
+        "Allows bracket-style access to an object",
+        "Groups names and helps avoid naming conflicts",
+        "Same method name with different parameter lists",
+        "Code that normally runs whether or not an exception occurs"
+      ],
+      "answer": [
+        "Same method name with different parameter lists",
+        "Allows bracket-style access to an object",
+        "Code that normally runs whether or not an exception occurs",
+        "Groups names and helps avoid naming conflicts"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "review",
+        "csharp"
+      ]
+    },
+    {
+      "id": "multi-03",
+      "type": "multiple",
+      "question": "A student enters text instead of a number in a registration program. Which practices can improve the program? Select all that apply.",
+      "options": [
+        "Place the parse operation inside a try block",
+        "Catch FormatException and display a helpful message",
+        "Use finally for cleanup that must normally happen either way",
+        "Assume int.Parse always succeeds"
+      ],
+      "answer": [
+        "Place the parse operation inside a try block",
+        "Catch FormatException and display a helpful message",
+        "Use finally for cleanup that must normally happen either way"
+      ],
+      "points": 3,
+      "difficulty": "medium",
+      "tags": [
+        "review",
+        "exceptions",
+        "application"
+      ]
+    },
+    {
+      "id": "code-04",
+      "type": "code",
+      "question": "Write the C# statement that declares a namespace named StudentRecords.",
+      "answer": [
+        "namespace StudentRecords"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "lesson-12",
+        "namespaces",
+        "code"
+      ]
+    }
+  ]
+}

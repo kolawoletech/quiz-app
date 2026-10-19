@@ -7,9 +7,10 @@ export const optionSchema = z.object({
 
 export const questionSchema = z.object({
   id: z.string().min(1),
-  type: z.enum(["single", "multiple", "truefalse", "short", "code"]),
+  type: z.enum(["single", "multiple", "truefalse", "matching", "rearrange", "short", "code"]),
   question: z.string().min(1),
   options: z.array(optionSchema).default([]),
+  matchItems: z.array(z.string().min(1)).optional(),
   answer: z.array(z.string()).min(1),
   explanation: z.string().default(""),
   points: z.number().int().positive().default(1),

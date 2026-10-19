@@ -1,0 +1,22 @@
+{
+  "title": "Sample quiz",
+  "questions": [
+    {
+      "id": "match-1",
+      "type": "matching",
+      "question": "Match each term.",
+      "matchItems": ["Class", "Method"],
+      "options": ["A blueprint", "An operation"],
+      "answer": ["A blueprint", "An operation"],
+      "points": 2
+    },
+    {
+      "id": "rank-1",
+      "type": "rearrange",
+      "question": "Put these lines in order.",
+      "options": ["if (ready) {", "  start();", "}"],
+      "answer": ["if (ready) {", "  start();", "}"],
+      "points": 3
+    }
+  ]
+}

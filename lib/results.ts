@@ -14,6 +14,7 @@ export interface SubmissionQuestionResult {
   id: string;
   question: string;
   selectedAnswers: string[];
+  matchItems?: string[];
   isCorrect: boolean;
   earnedPoints: number;
   possiblePoints: number;
@@ -68,6 +69,7 @@ export function buildQuizResults(
         id: question.id,
         question: question.question,
         selectedAnswers,
+        ...(question.matchItems ? { matchItems: question.matchItems } : {}),
         isCorrect: grade.isCorrect,
         earnedPoints: grade.score,
         possiblePoints: question.points,
@@ -144,7 +146,12 @@ export function exportResultsCsv(results: QuizResults[]) {
     "Percent score": submission.percent === null ? "" : submission.percent.toFixed(1),
     Passed: submission.passed === null ? "Not graded" : submission.passed ? "Yes" : "No",
     Responses: submission.questions
-      .map((question, index) => `Q${index + 1}: ${question.selectedAnswers.join("; ") || "No answer"}`)
+      .map((question, index) => {
+        const answer = question.matchItems
+          ? question.matchItems.map((item, itemIndex) => `${item} → ${question.selectedAnswers[itemIndex] || "No match"}`).join("; ")
+          : question.selectedAnswers.join("; ") || "No answer";
+        return `Q${index + 1}: ${answer}`;
+      })
       .join(" | "),
   })));
 
