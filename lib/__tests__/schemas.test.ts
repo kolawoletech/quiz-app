@@ -21,6 +21,26 @@ describe("questionSchema", () => {
 
     expect(() => questionSchema.parse(valid)).not.toThrow();
   });
+
+  it("accepts matching question data", () => {
+    const valid = {
+      id: "q-match",
+      type: "matching",
+      question: "Match each value.",
+      matchItems: ["A", "B"],
+      options: [
+        { id: "1", text: "One" },
+        { id: "2", text: "Two" },
+      ],
+      answer: ["2", "1"],
+      explanation: "",
+      points: 2,
+      difficulty: "easy",
+      tags: [],
+    };
+
+    expect(() => questionSchema.parse(valid)).not.toThrow();
+  });
 });
 
 describe("importPayloadSchema", () => {

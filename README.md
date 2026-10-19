@@ -24,7 +24,57 @@ The service account must belong to the same project as `NEXT_PUBLIC_FIREBASE_PRO
 
 Quiz documents and question/answer documents are stored in Firestore at `quizzes/{quizId}` and `quizzes/{quizId}/questions/{questionId}`. Submissions are stored separately at `quizzes/{quizId}/submissions/{submissionId}`. Firestore client rules remain deny-all; the Admin SDK reads content and grades submissions on the server. Student join responses contain only the question text, code, options, and points; answer keys and explanations are not sent to the client before submission. Lecturer access requires a verified Google ID token and an email in the server-only `LECTURER_EMAILS` comma-separated allowlist.
 
-The sample source files `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json` are ignored by Git. Keep local copies to import them; do not add them back to the repository. To import a JSON file through the lecturer UI, open `/quizzes`, sign in, and use **Import a quiz from JSON**. This accepts the existing Basic/Advanced practice quiz format, stores answer keys server-side, and creates a new draft with a generated room code. Review the draft and publish it when ready. This does not overwrite existing quizzes.
+The sample source files `Basic_CSharp_Practice_Quiz.json` and `Advanced_CSharp_Practice_Quiz.json` are ignored by Git. Keep local copies to import them; do not add them back to the repository. To import a JSON file through the lecturer UI, open `/quizzes`, sign in, and use **Import a quiz from JSON**. The importer accepts both the existing Basic/Advanced practice format and the standard format below. It stores answer keys server-side and creates a new draft with a generated room code. Review the draft and publish it when ready. It never overwrites an existing quiz.
+
+### Standard quiz JSON import format
+
+Save a UTF-8 file with a `.json` extension and upload it from **Import a quiz from JSON**. `title` and `questions` are required; each question needs a unique `id`, `type`, `question`, and positive `points`. The format supports `single`, `multiple`, `truefalse`, `matching`, `rearrange`, `short`, and `code` question types:
+
+```json
+{
+  "title": "Programming fundamentals",
+  "description": "A sample quiz with matching and ranking questions",
+  "subject": "Programming",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": false,
+    "passMark": 50,
+    "attemptLimit": 3
+  },
+  "questions": [
+    {
+      "id": "match-1",
+      "type": "matching",
+      "question": "Match each term to its description.",
+      "matchItems": ["Class", "Method"],
+      "options": ["A reusable operation", "A blueprint for objects"],
+      "answer": ["A blueprint for objects", "A reusable operation"],
+      "points": 2,
+      "explanation": "A class defines a blueprint; a method defines an operation."
+    },
+    {
+      "id": "rank-1",
+      "type": "rearrange",
+      "question": "Put these code lines in the correct order.",
+      "options": ["if (ready) {", "  start();", "}"],
+      "answer": ["if (ready) {", "  start();", "}"],
+      "points": 3
+    },
+    {
+      "id": "tf-1",
+      "type": "truefalse",
+      "question": "A method can return a value.",
+      "options": ["True", "False"],
+      "answer": ["True"],
+      "points": 1
+    }
+  ]
+}
+```
+
+For `matching`, `matchItems` is the left column, `options` is the right column, and `answer` lists the right-column match for each left item in the same order. Each right-column option can be used once; matching gives partial credit per correct pair. For `rearrange`, put every item in `options` and list the intended order in `answer`; the two arrays must contain the same items in the correct order. Code strings are compared exactly, including indentation. For single/multiple choice, use string arrays for `options` and `answer`; multiple choice can have more than one correct answer. True/false must use the exact options `True` and `False`. Short/code questions use an `answer` array with one expected answer and no options. The optional settings are `shuffleQuestions`, `shuffleOptions`, `showScoreAfterSubmit`, `showCorrectAnswersAfterSubmit`, `passMark` (0–100), `attemptLimit` (1–10), `timeLimitMinutes` (1–600), and `mode` (`self-paced` or `live`).
 
 The command-line seed/refresh workflow remains available from the project root:
 
@@ -44,7 +94,7 @@ The current sample quizzes are for practice, not verified summative assessments.
 
 ### Quiz authoring, lifecycle, and attempt limits
 
-Open `/quizzes` and sign in with an authorized Google account to create and manage quizzes. Drafts can be edited, then published when ready. Published quizzes can be paused to stop new joins and submissions, resumed, or closed permanently. Closing retains submissions and results; closed quizzes cannot be reopened. Published quizzes are locked against edits so that existing attempts keep their original question set and grading.
+Open `/quizzes` and sign in with an authorized Google account to create and manage quizzes. Supported question types include single choice, multiple choice, true/false, matching columns, ranking/rearrange, short answer, and code response. Matching questions award partial credit for each correct pair. Ranking/rearrange questions (including rearranging code lines) show items in a shuffled order for students to reorder by dragging or using the accessible move buttons. Drafts can be edited, then published when ready. Published quizzes can be paused to stop new joins and submissions, resumed, or closed permanently. Closing retains submissions and results; closed quizzes cannot be reopened. Published quizzes are locked against edits so that existing attempts keep their original question set and grading.
 
 Each quiz can allow 1–10 attempts per anonymous Firebase participant. The student page shows remaining attempts and the server checks the limit transactionally when saving each submission; retries with the same attempt ID are idempotent. Students do not need to register, but the limit is tied to their anonymous Firebase identity and can be bypassed by creating a new anonymous identity or clearing browser data. This is an exam-readiness safeguard, not strong identity verification or proctoring. Use verified student accounts and stronger assessment controls before relying on limits for high-stakes exams.
 

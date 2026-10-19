@@ -26,10 +26,11 @@ const quizSchema = z.object({
 });
 
 const questionSchema = z.object({
-  type: z.enum(["single", "multiple", "truefalse", "short", "code"]),
+  type: z.enum(["single", "multiple", "truefalse", "matching", "rearrange", "short", "code"]),
   question: z.string().min(1),
   codeSnippet: z.string().optional(),
   options: z.array(z.string()),
+  matchItems: z.array(z.string()).optional(),
   answer: z.array(z.string()),
   explanation: z.string(),
   points: z.number().positive(),

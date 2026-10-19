@@ -131,13 +131,28 @@ export function LecturerQuestionBank() {
                       <code>{question.codeSnippet}</code>
                     </pre>
                   )}
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    {question.options.map((option) => (
-                      <li key={option} className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">{option}</li>
-                    ))}
-                  </ul>
+                  {question.type === "matching" ? (
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      {question.matchItems?.map((item, index) => (
+                        <li key={item} className="grid gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 sm:grid-cols-2">
+                          <span>{item}</span>
+                          <span>{question.answer[index]}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : question.options.length ? (
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      {question.options.map((option, index) => (
+                        <li key={`${option}-${index}`} className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">{option}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                   <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-900">
-                    <p className="font-semibold">Answer: {question.answer.join(", ")}</p>
+                    <p className="font-semibold">
+                      Answer: {question.type === "matching"
+                        ? question.matchItems?.map((item, index) => `${item} → ${question.answer[index]}`).join("; ")
+                        : question.answer.join(question.type === "rearrange" ? "\n" : ", ")}
+                    </p>
                     <p className="mt-1">{question.explanation}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">

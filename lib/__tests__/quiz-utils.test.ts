@@ -52,6 +52,27 @@ describe("gradeQuestionSubmission", () => {
     expect(result.score).toBe(1);
   });
 
+  it("awards matching questions partial credit for each correct pair", () => {
+    const result = gradeQuestionSubmission(
+      { answer: ["one", "two", "three"], type: "matching", points: 3 },
+      ["one", "incorrect", "three"],
+    );
+
+    expect(result.isCorrect).toBe(false);
+    expect(result.score).toBe(2);
+  });
+
+  it("grades rearranged code in exact order while preserving indentation", () => {
+    const answer = ["if (ready) {", "  start();", "}"];
+
+    expect(gradeQuestionSubmission({ answer, type: "rearrange", points: 2 }, answer)).toEqual({
+      isCorrect: true,
+      score: 2,
+    });
+    expect(gradeQuestionSubmission({ answer, type: "rearrange", points: 2 }, [...answer].reverse()).isCorrect).toBe(false);
+    expect(gradeQuestionSubmission({ answer, type: "rearrange", points: 2 }, ["if (ready) {", " start();", "}"]).isCorrect).toBe(false);
+  });
+
   it("awards the question's configured points", () => {
     const result = gradeQuestionSubmission({ answer: ["sealed"], type: "short", points: 2 }, ["sealed"]);
     expect(result.score).toBe(2);
@@ -82,6 +103,24 @@ describe("gradeQuestionSubmission", () => {
     expect(result.score).toBeNull();
     expect(result.maxScore).toBeNull();
     expect(result.questionResults?.[0]?.correctAnswer).toBe(questions[0]?.answer.join(", "));
+  });
+
+  it("shows matching answer review as labeled pairs", () => {
+    const matchingQuestion: Question = {
+      ...questions[0]!,
+      id: "matching",
+      type: "matching",
+      matchItems: ["One", "Two"],
+      options: ["First", "Second"],
+      answer: ["Second", "First"],
+    };
+    const result = gradeStudentQuizSubmission(
+      [matchingQuestion],
+      { matching: ["Second", "First"] },
+      { showScoreAfterSubmit: true, showCorrectAnswersAfterSubmit: true },
+    );
+
+    expect(result.questionResults?.[0]?.correctAnswer).toBe("One → Second; Two → First");
   });
 });
 

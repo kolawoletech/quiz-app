@@ -12,11 +12,12 @@ import { mapPracticeQuiz } from "@/scripts/practice-import.mjs";
 
 const questionInputSchema = z.object({
   id: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
-  type: z.enum(["single", "multiple", "truefalse", "short", "code"]),
+  type: z.enum(["single", "multiple", "truefalse", "matching", "rearrange", "short", "code"]),
   question: z.string().trim().min(1).max(5000),
   codeSnippet: z.string().max(10_000).optional(),
-  options: z.array(z.string().trim().min(1).max(1000)).max(20),
-  answer: z.array(z.string().trim().min(1).max(1000)).min(1).max(20),
+  options: z.array(z.string().min(1).max(1000).refine((value) => value.trim().length > 0)).max(100),
+  matchItems: z.array(z.string().min(1).max(1000).refine((value) => value.trim().length > 0)).max(20).optional(),
+  answer: z.array(z.string().min(1).max(1000).refine((value) => value.trim().length > 0)).min(1).max(100),
   explanation: z.string().max(5000),
   points: z.number().int().min(1).max(100),
   difficulty: z.enum(["easy", "medium", "hard", "unrated"]),
@@ -44,20 +45,48 @@ const quizDraftSchema = z.object({
   }
 
   value.questions.forEach((question, index) => {
-    if (new Set(question.options).size !== question.options.length) {
+    if (question.type !== "rearrange" && new Set(question.options).size !== question.options.length) {
       context.addIssue({ code: "custom", message: "Question options must be unique.", path: ["questions", index, "options"] });
     }
-    if (new Set(question.answer).size !== question.answer.length) {
+    if (!["rearrange"].includes(question.type) && new Set(question.answer).size !== question.answer.length) {
       context.addIssue({ code: "custom", message: "Correct answers must be unique.", path: ["questions", index, "answer"] });
     }
-    if (["single", "multiple", "truefalse"].includes(question.type) && question.options.length < 2) {
+    if (["single", "multiple"].includes(question.type) && (question.options.length < 2 || question.options.length > 20)) {
       context.addIssue({ code: "custom", message: "Choice questions need at least two options.", path: ["questions", index, "options"] });
     }
-    if (question.type !== "multiple" && question.answer.length !== 1) {
-      context.addIssue({ code: "custom", message: "Only multiple-select questions can have multiple correct answers.", path: ["questions", index, "answer"] });
+    if (question.type === "truefalse" && (
+      question.options.length !== 2
+      || !question.options.includes("True")
+      || !question.options.includes("False")
+    )) {
+      context.addIssue({ code: "custom", message: "True/false questions must use True and False options.", path: ["questions", index, "options"] });
     }
-    if (question.options.length && question.answer.some((answer) => !question.options.includes(answer))) {
+    if (!["multiple", "matching", "rearrange"].includes(question.type) && question.answer.length !== 1) {
+      context.addIssue({ code: "custom", message: "Only multiple-select, matching, and rearrange questions can have multiple answers.", path: ["questions", index, "answer"] });
+    }
+    if (["single", "multiple", "truefalse"].includes(question.type) && question.options.length && question.answer.some((answer) => !question.options.includes(answer))) {
       context.addIssue({ code: "custom", message: "Every correct answer must exactly match one of the options.", path: ["questions", index, "answer"] });
+    }
+    if (question.type === "matching") {
+      const matchItems = question.matchItems ?? [];
+      if (matchItems.length < 2 || matchItems.length > 20 || new Set(matchItems).size !== matchItems.length) {
+        context.addIssue({ code: "custom", message: "Matching questions need 2–20 unique items in the left column.", path: ["questions", index, "matchItems"] });
+      }
+      if (question.options.length < 2 || question.options.length > 20) {
+        context.addIssue({ code: "custom", message: "Matching questions need 2–20 options in the right column.", path: ["questions", index, "options"] });
+      }
+      if (question.answer.length !== matchItems.length || question.answer.some((answer) => !question.options.includes(answer))) {
+        context.addIssue({ code: "custom", message: "Provide one valid right-column match for each left-column item.", path: ["questions", index, "answer"] });
+      }
+    }
+    if (question.type === "rearrange") {
+      if (question.options.length < 2) {
+        context.addIssue({ code: "custom", message: "Rearrange questions need at least two code lines.", path: ["questions", index, "options"] });
+      }
+      if (question.answer.length !== question.options.length
+        || question.answer.some((line, lineIndex) => line !== question.options[lineIndex])) {
+        context.addIssue({ code: "custom", message: "The correct code order must match the listed code lines.", path: ["questions", index, "answer"] });
+      }
     }
   });
 });
@@ -161,6 +190,7 @@ export async function saveQuizDraft(rawPayload: unknown): Promise<QuizActionResp
       question: question.question,
       ...(question.codeSnippet ? { codeSnippet: question.codeSnippet } : {}),
       options: question.options,
+      ...(question.matchItems ? { matchItems: question.matchItems } : {}),
       answer: question.answer,
       explanation: question.explanation,
       points: question.points,
@@ -243,7 +273,7 @@ export async function importQuizJson(rawIdToken: unknown, rawJson: unknown): Pro
     status: "draft",
     settings: {
       ...imported.quiz.settings,
-      attemptLimit: 3,
+      attemptLimit: imported.quiz.settings.attemptLimit,
     },
   };
   const questions = imported.questions.map((question) => ({

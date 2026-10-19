@@ -51,6 +51,67 @@ describe("mapPracticeQuiz", () => {
     });
   });
 
+  it("imports native matching and rearrange questions without losing their type or answer data", () => {
+    const result = mapPracticeQuiz({
+      title: "Question types",
+      description: "Matching and ranking import.",
+      subject: "Programming",
+      settings: { passMark: 60 },
+      questions: [
+        {
+          id: "match-1",
+          type: "matching",
+          question: "Match each term.",
+          matchItems: ["Class", "Method"],
+          options: ["Blueprint", "Operation"],
+          answer: ["Blueprint", "Operation"],
+          points: 2,
+        },
+        {
+          id: "rank-1",
+          type: "rearrange",
+          question: "Put these lines in order.",
+          options: ["if (ready) {", "  start();", "}"],
+          answer: ["if (ready) {", "  start();", "}"],
+          points: 3,
+        },
+      ],
+    }, { codePrefix: "newtypes", roomCode: "1234" });
+
+    expect(result.quiz).toMatchObject({
+      status: "draft",
+      roomCode: "1234",
+      settings: { attemptLimit: 3, passMark: 60 },
+      questionIds: ["newtypes-match-1", "newtypes-rank-1"],
+    });
+    expect(result.questions[0]).toMatchObject({
+      type: "matching",
+      matchItems: ["Class", "Method"],
+      options: ["Blueprint", "Operation"],
+      answer: ["Blueprint", "Operation"],
+    });
+    expect(result.questions[1]).toMatchObject({
+      type: "rearrange",
+      options: ["if (ready) {", "  start();", "}"],
+      answer: ["if (ready) {", "  start();", "}"],
+    });
+  });
+
+  it("rejects invalid native matching answer references", () => {
+    expect(() => mapPracticeQuiz({
+      title: "Invalid matching",
+      questions: [{
+        id: "match-1",
+        type: "matching",
+        question: "Match these.",
+        matchItems: ["A", "B"],
+        options: ["One", "Two"],
+        answer: ["One", "Missing"],
+        points: 2,
+      }],
+    }, { codePrefix: "test", roomCode: "0001" })).toThrow(/one unique valid option/);
+  });
+
   it("fails on invalid question answer references", () => {
     expect(() => mapPracticeQuiz({
       ...sourceQuiz,

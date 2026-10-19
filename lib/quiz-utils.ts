@@ -10,8 +10,11 @@ export function gradeQuestionSubmission(
   question: { answer: string[]; type: string; points?: number },
   selected: string[],
 ) {
-  const normalizedSelected = [...selected].map((value) => value.trim());
-  const normalizedAnswer = [...question.answer].map((value) => value.trim());
+  const normalize = question.type === "rearrange"
+    ? (value: string) => value
+    : (value: string) => value.trim();
+  const normalizedSelected = [...selected].map(normalize);
+  const normalizedAnswer = [...question.answer].map(normalize);
   const points = question.points ?? 1;
 
   if (question.type === "multiple") {
@@ -19,9 +22,28 @@ export function gradeQuestionSubmission(
     return { isCorrect: correct, score: correct ? points : 0 };
   }
 
+  if (question.type === "matching") {
+    const correctCount = normalizedAnswer.reduce(
+      (count, answer, index) => count + (normalizedSelected[index] === answer ? 1 : 0),
+      0,
+    );
+    const isCorrect = normalizedSelected.length === normalizedAnswer.length
+      && correctCount === normalizedAnswer.length;
+    return {
+      isCorrect,
+      score: normalizedAnswer.length
+        ? Number(((points * correctCount) / normalizedAnswer.length).toFixed(2))
+        : 0,
+    };
+  }
+
   const answer = normalizedAnswer[0] ?? "";
   const selectedValue = normalizedSelected[0] ?? "";
-  const isCorrect = answer.toLowerCase() === selectedValue.toLowerCase();
+  const isRearrangeQuestion = question.type === "rearrange";
+  const isCorrect = isRearrangeQuestion
+    ? normalizedSelected.length === normalizedAnswer.length
+      && normalizedSelected.every((value, index) => value === normalizedAnswer[index])
+    : answer.toLowerCase() === selectedValue.toLowerCase();
   return { isCorrect, score: isCorrect ? points : 0 };
 }
 
@@ -41,7 +63,12 @@ export function gradeStudentQuizSubmission(
       earnedPoints: result.score,
       possiblePoints: question.points,
       ...(settings.showCorrectAnswersAfterSubmit
-        ? { correctAnswer: question.answer.join(", "), explanation: question.explanation }
+        ? {
+            correctAnswer: question.type === "matching" && question.matchItems
+              ? question.matchItems.map((item, index) => `${item} → ${question.answer[index]}`).join("; ")
+              : question.answer.join(question.type === "rearrange" ? "\n" : ", "),
+            explanation: question.explanation,
+          }
         : {}),
     };
   });

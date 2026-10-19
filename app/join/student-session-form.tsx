@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { CheckCircle2, Clock3, LoaderCircle, XCircle } from "lucide-react";
+import { ArrowDown, ArrowUp, CheckCircle2, Clock3, GripVertical, LoaderCircle, XCircle } from "lucide-react";
 import { signInAnonymously } from "firebase/auth";
 
 import { loadStudentSession, submitStudentQuiz } from "@/app/join/actions";
@@ -114,11 +114,18 @@ export function StudentSessionForm() {
         ...loadedSession,
         questions: questions.map((question) => ({
           ...question,
-          options: loadedSession.settings.shuffleOptions ? shuffle(question.options) : question.options,
+          options: ["matching", "rearrange"].includes(question.type)
+            || (loadedSession.settings.shuffleOptions && question.type !== "truefalse")
+            ? shuffle(question.options)
+            : question.options,
         })),
       };
       setSession(shuffledSession);
-      setAnswers({});
+      setAnswers(Object.fromEntries(
+        shuffledSession.questions
+          .filter((question) => question.type === "rearrange")
+          .map((question) => [question.id, question.options]),
+      ));
       setResult(null);
       submissionStarted.current = false;
       attemptId.current = "";
@@ -147,8 +154,42 @@ export function StudentSessionForm() {
     });
   }
 
+  function updateMatch(questionId: string, matchIndex: number, value: string) {
+    setAnswers((current) => {
+      const question = session?.questions.find((item) => item.id === questionId);
+      if (!question) return current;
+      const selected = [...(current[questionId] ?? Array(question.matchItems?.length ?? 0).fill(""))];
+      selected[matchIndex] = value;
+      return { ...current, [questionId]: selected };
+    });
+  }
+
+  function moveCodeLine(questionId: string, fromIndex: number, toIndex: number) {
+    setAnswers((current) => {
+      const question = session?.questions.find((item) => item.id === questionId);
+      if (!question || toIndex < 0 || toIndex >= question.options.length) return current;
+      const orderedLines = [...(current[questionId] ?? question.options)];
+      const [line] = orderedLines.splice(fromIndex, 1);
+      if (line === undefined) return current;
+      orderedLines.splice(toIndex, 0, line);
+      return { ...current, [questionId]: orderedLines };
+    });
+  }
+
+  function hasAnswer(questionId: string) {
+    const question = session?.questions.find((item) => item.id === questionId);
+    const selected = answers[questionId] ?? [];
+    if (question?.type === "matching") {
+      return selected.length === question.matchItems?.length && selected.every((answer) => answer.trim());
+    }
+    if (question?.type === "rearrange") {
+      return selected.length === question.options.length;
+    }
+    return selected.some((answer) => answer.trim());
+  }
+
   function hasAnsweredEveryQuestion() {
-    return session?.questions.every((question) => (answers[question.id] ?? []).some((answer) => answer.trim())) ?? false;
+    return session?.questions.every((question) => hasAnswer(question.id)) ?? false;
   }
 
   if (!session) {
@@ -202,9 +243,7 @@ export function StudentSessionForm() {
     );
   }
 
-  const answeredCount = session.questions.filter((question) =>
-    (answers[question.id] ?? []).some((answer) => answer.trim()),
-  ).length;
+  const answeredCount = session.questions.filter((question) => hasAnswer(question.id)).length;
 
   if (result) {
     return (
@@ -248,7 +287,7 @@ export function StudentSessionForm() {
                           : <XCircle className="mt-0.5 h-5 w-5 text-red-600" />}
                         <div className="space-y-1">
                           <p className="font-medium">{index + 1}. {question?.question}</p>
-                          <p className="text-sm text-slate-600">
+                          <p className="whitespace-pre-wrap text-sm text-slate-600">
                             Correct answer: {questionResult.correctAnswer}
                           </p>
                           {questionResult.explanation && <p className="text-sm text-slate-500">{questionResult.explanation}</p>}
@@ -307,10 +346,77 @@ export function StudentSessionForm() {
                   <code>{question.codeSnippet}</code>
                 </pre>
               )}
-              <CardDescription>{question.points} {question.points === 1 ? "point" : "points"}</CardDescription>
+              <CardDescription>
+                {question.points} {question.points === 1 ? "point" : "points"}
+                {question.type === "rearrange" && " · Drag the items into order or use the arrow buttons."}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              {question.options.length ? (
+              {question.type === "matching" ? (
+                <div className="space-y-3">
+                  {question.matchItems?.map((item, matchIndex) => (
+                    <label key={item} className="grid items-center gap-2 sm:grid-cols-[1fr_1fr]">
+                      <span className="rounded-md bg-slate-50 p-3 text-sm">{item}</span>
+                      <select
+                        value={selected[matchIndex] ?? ""}
+                        onChange={(event) => updateMatch(question.id, matchIndex, event.target.value)}
+                        disabled={isSubmitting}
+                        required
+                        aria-label={`Match for ${item}`}
+                        className="w-full rounded-md border border-slate-200 bg-white p-3 text-sm"
+                      >
+                        <option value="">Choose a match</option>
+                        {question.options.map((option) => (
+                          <option key={option} value={option} disabled={selected.includes(option) && selected[matchIndex] !== option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+                </div>
+              ) : question.type === "rearrange" ? (
+                <ol className="space-y-2">
+                  {selected.map((line, lineIndex) => (
+                    <li
+                      key={`${line}-${lineIndex}`}
+                      draggable={!isSubmitting}
+                      onDragStart={(event) => event.dataTransfer.setData("text/plain", String(lineIndex))}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const fromIndex = Number(event.dataTransfer.getData("text/plain"));
+                        if (Number.isInteger(fromIndex)) moveCodeLine(question.id, fromIndex, lineIndex);
+                      }}
+                      className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 p-2"
+                    >
+                      <GripVertical className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+                      <pre className="min-w-0 flex-1 overflow-x-auto whitespace-pre-wrap text-sm"><code>{line}</code></pre>
+                      <span className="sr-only">Line {lineIndex + 1}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Move line ${lineIndex + 1} up`}
+                        disabled={isSubmitting || lineIndex === 0}
+                        onClick={() => moveCodeLine(question.id, lineIndex, lineIndex - 1)}
+                      >
+                        <ArrowUp className="size-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Move line ${lineIndex + 1} down`}
+                        disabled={isSubmitting || lineIndex === selected.length - 1}
+                        onClick={() => moveCodeLine(question.id, lineIndex, lineIndex + 1)}
+                      >
+                        <ArrowDown className="size-4" />
+                      </Button>
+                    </li>
+                  ))}
+                </ol>
+              ) : question.options.length ? (
                 <div className="space-y-2">
                   {question.options.map((option) => (
                     <label key={option} className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50">

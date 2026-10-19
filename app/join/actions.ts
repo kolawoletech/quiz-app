@@ -93,12 +93,13 @@ export async function loadStudentSession(rawRoomCode: string, rawIdToken: unknow
         passMark: quiz.settings.passMark,
         timeLimitMinutes: quiz.settings.timeLimitMinutes,
       },
-      questions: questions.map(({ id, type, question, codeSnippet, options, points }) => ({
+      questions: questions.map(({ id, type, question, codeSnippet, options, matchItems, points }) => ({
         id,
         type,
         question,
         codeSnippet,
         options,
+        ...(matchItems ? { matchItems } : {}),
         points,
       })),
     },
@@ -124,13 +125,30 @@ export async function submitStudentQuiz(payload: unknown): Promise<StudentSubmis
 
   for (const question of questions) {
     const selected = parsedSubmission.data.answers[question.id] ?? [];
-    if (question.type !== "multiple") {
+    if (!["multiple", "matching", "rearrange"].includes(question.type)) {
       if (selected.length > 1) {
         throw new Error("The quiz submission contains multiple answers for a single-answer question.");
       }
     }
-    if (question.options.length && selected.some((answer) => !question.options.includes(answer))) {
+    if (["single", "multiple", "truefalse"].includes(question.type)
+      && question.options.length
+      && selected.some((answer) => !question.options.includes(answer))) {
       throw new Error("The quiz submission contains an invalid choice.");
+    }
+    if (question.type === "matching") {
+      if (selected.length !== question.matchItems?.length
+        || selected.some((answer) => !question.options.includes(answer))
+        || new Set(selected).size !== selected.length) {
+        throw new Error("The matching response is incomplete or contains an invalid match.");
+      }
+    }
+    if (question.type === "rearrange") {
+      const sortedSelected = [...selected].sort();
+      const sortedOptions = [...question.options].sort();
+      if (selected.length !== question.options.length
+        || sortedSelected.some((line, lineIndex) => line !== sortedOptions[lineIndex])) {
+        throw new Error("The rearranged response must contain each code line exactly once.");
+      }
     }
   }
 

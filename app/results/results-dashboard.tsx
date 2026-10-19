@@ -268,7 +268,9 @@ export function ResultsDashboard() {
                           <div key={question.id} className="space-y-1 text-sm">
                             <p className="font-medium">{index + 1}. {question.question}</p>
                             <p className="text-slate-600">
-                              Answer: {question.selectedAnswers.length ? question.selectedAnswers.join(", ") : "No answer"}
+                              Answer: {question.matchItems
+                                ? question.matchItems.map((item, itemIndex) => `${item} → ${question.selectedAnswers[itemIndex] || "No match"}`).join("; ")
+                                : question.selectedAnswers.length ? question.selectedAnswers.join(", ") : "No answer"}
                             </p>
                             <p className={question.isCorrect ? "text-green-700" : "text-red-700"}>
                               {question.isCorrect ? "Correct" : "Incorrect"} · {question.earnedPoints}/{question.possiblePoints} points

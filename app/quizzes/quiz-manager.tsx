@@ -183,9 +183,10 @@ export function QuizManager() {
         idToken: await user.getIdToken(),
         questions: draft.questions.map((question) => ({
           ...question,
-          options: ["single", "multiple", "truefalse"].includes(question.type)
+          options: ["single", "multiple", "truefalse", "matching", "rearrange"].includes(question.type)
             ? question.options
             : [],
+          ...(question.type === "matching" ? { matchItems: question.matchItems ?? [] } : {}),
           answer: question.answer,
           tags: question.tags,
         })),
@@ -338,7 +339,7 @@ export function QuizManager() {
             <CardHeader>
               <CardTitle>Import a quiz from JSON</CardTitle>
               <CardDescription>
-                Import the existing Basic or Advanced C# practice quiz JSON format. Imports create a new draft and never overwrite a quiz.
+                Import a practice quiz JSON or the standard format described in the README. Imports create a new draft and never overwrite a quiz.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -424,31 +425,100 @@ export function QuizManager() {
                     <label className={labelClass}>Type
                       <select className={controlClass} value={question.type} onChange={(event) => {
                         const type = event.target.value as QuestionType;
+                        const options = type === "truefalse"
+                          ? ["True", "False"]
+                          : type === "matching"
+                            ? ["Option 1", "Option 2"]
+                            : type === "rearrange"
+                              ? ["Code line 1", "Code line 2"]
+                              : ["single", "multiple"].includes(type)
+                                ? ["Option 1", "Option 2"]
+                                : [];
                         updateQuestion(index, {
                           type,
-                          options: ["single", "multiple", "truefalse"].includes(type) ? (type === "truefalse" ? ["True", "False"] : ["Option 1", "Option 2"]) : [],
-                          answer: [type === "truefalse" ? "True" : ""],
+                          options,
+                          matchItems: type === "matching" ? ["Item 1", "Item 2"] : undefined,
+                          answer: type === "matching" || type === "rearrange"
+                            ? [...options]
+                            : [type === "truefalse" ? "True" : options[0] ?? ""],
                         });
                       }}>
                         <option value="single">Single choice</option><option value="multiple">Multiple choice</option>
-                        <option value="truefalse">True / false</option><option value="short">Short answer</option><option value="code">Code response</option>
+                        <option value="truefalse">True / false</option><option value="matching">Matching columns</option>
+                        <option value="rearrange">Rearrange / ranking (drag and drop)</option><option value="short">Short answer</option><option value="code">Code response</option>
                       </select>
                     </label>
                     <label className={labelClass}>Points
                       <Input required type="number" min={1} max={100} value={question.points} onChange={(event) => updateQuestion(index, { points: Number(event.target.value) })} />
                     </label>
-                    {["single", "multiple", "truefalse"].includes(question.type) && (
+                    {["single", "multiple"].includes(question.type) && (
                       <label className={`${labelClass} sm:col-span-2`}>Options (one per line)
                         <textarea rows={4} className={controlClass} value={question.options.join("\n")} onChange={(event) => updateQuestion(index, { options: event.target.value.split("\n").map((item) => item.trim()).filter(Boolean) })} />
                       </label>
                     )}
-                    <label className={labelClass}>Correct answer{question.type === "multiple" ? "s (one per line)" : ""}
+                    {question.type === "matching" && (
+                      <>
+                        <label className={`${labelClass} sm:col-span-2`}>Left-column items (one per line)
+                          <textarea rows={4} className={controlClass} value={(question.matchItems ?? []).join("\n")} onChange={(event) => updateQuestion(index, { matchItems: event.target.value.split("\n").map((item) => item.trim()).filter(Boolean) })} />
+                        </label>
+                        <label className={`${labelClass} sm:col-span-2`}>Right-column choices (one per line)
+                          <textarea rows={4} className={controlClass} value={question.options.join("\n")} onChange={(event) => updateQuestion(index, { options: event.target.value.split("\n").map((item) => item.trim()).filter(Boolean) })} />
+                        </label>
+                        <fieldset className="space-y-3 sm:col-span-2">
+                          <legend className={labelClass}>Correct matches</legend>
+                          {(question.matchItems ?? []).map((item, itemIndex) => (
+                            <label key={`${item}-${itemIndex}`} className="grid items-center gap-2 text-sm sm:grid-cols-[1fr_1fr]">
+                              <span>{item}</span>
+                              <select
+                                required
+                                className={controlClass}
+                                value={question.answer[itemIndex] ?? ""}
+                                onChange={(event) => {
+                                  const answer = [...question.answer];
+                                  answer[itemIndex] = event.target.value;
+                                  updateQuestion(index, { answer });
+                                }}
+                              >
+                                <option value="">Choose a match</option>
+                                {question.options.map((option) => (
+                                  <option key={option} value={option} disabled={question.answer.includes(option) && question.answer[itemIndex] !== option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          ))}
+                        </fieldset>
+                      </>
+                    )}
+                    {question.type === "rearrange" ? (
+                      <label className={`${labelClass} sm:col-span-2`}>Correct order or ranking (one item per line)
+                        <textarea
+                          required
+                          rows={8}
+                          className={`${controlClass} font-mono`}
+                          value={question.options.join("\n")}
+                          onChange={(event) => {
+                            const lines = event.target.value.split("\n").filter((line) => line.trim());
+                            updateQuestion(index, { options: lines, answer: lines });
+                          }}
+                        />
+                        <span className="font-normal text-slate-500">Students will receive these items in a shuffled order.</span>
+                      </label>
+                    ) : null}
+                    {["single", "multiple", "truefalse", "short", "code"].includes(question.type) && (
+                      <label className={labelClass}>Correct answer{question.type === "multiple" ? "s (one per line)" : ""}
                       {question.type === "multiple" ? (
                         <textarea required rows={3} className={controlClass} value={question.answer.join("\n")} onChange={(event) => updateQuestion(index, { answer: event.target.value.split("\n").map((item) => item.trim()).filter(Boolean) })} />
+                      ) : question.type === "truefalse" ? (
+                        <select required className={controlClass} value={question.answer[0] ?? ""} onChange={(event) => updateQuestion(index, { answer: [event.target.value] })}>
+                          <option value="True">True</option><option value="False">False</option>
+                        </select>
                       ) : (
                         <Input required value={question.answer[0] ?? ""} onChange={(event) => updateQuestion(index, { answer: [event.target.value] })} />
                       )}
-                    </label>
+                      </label>
+                    )}
                     <label className={labelClass}>Explanation — optional
                       <Input maxLength={5000} value={question.explanation} onChange={(event) => updateQuestion(index, { explanation: event.target.value })} />
                     </label>

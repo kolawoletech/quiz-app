@@ -6,6 +6,7 @@ export interface StudentQuestion {
   question: string;
   codeSnippet?: string;
   options: string[];
+  matchItems?: string[];
   points: number;
 }
 
