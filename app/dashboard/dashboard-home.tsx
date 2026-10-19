@@ -38,7 +38,15 @@ export function DashboardHome() {
     let unsubscribe = () => {};
     if (hasFirebaseConfig()) {
       unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (user) => {
-        if (!active || !user || user.providerData.every((provider) => provider.providerId !== "google.com")) return;
+        if (!active) return;
+        if (!user || user.providerData.every((provider) => provider.providerId !== "google.com")) {
+          setDashboard(null);
+          setError("");
+          setIsLoading(false);
+          return;
+        }
+        setDashboard(null);
+        setError("");
         setIsLoading(true);
         try {
           await loadDashboard(await user.getIdToken());

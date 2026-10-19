@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Download, LoaderCircle, LogIn, LogOut, ShieldCheck } from "lucide-react";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 
 import { getLecturerResults } from "@/app/results/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getFirebaseAuth } from "@/lib/firebase";
+import { getFirebaseAuth, hasFirebaseConfig } from "@/lib/firebase";
 import { exportResultsCsv, type QuizResults } from "@/lib/results";
 
 type DashboardData = {
@@ -25,20 +25,60 @@ export function ResultsDashboard() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const loadResults = useCallback(async (idToken: string) => {
+    const response = await getLecturerResults(idToken);
+    if (!response.ok) {
+      setDashboard(null);
+      setError(response.error);
+      return;
+    }
+
+    setDashboard({ email: response.email, quizzes: response.quizzes });
+    setError("");
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    let unsubscribe = () => {};
+
+    if (hasFirebaseConfig()) {
+      unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (user) => {
+        if (!active) return;
+        if (!user || user.providerData.every((provider) => provider.providerId !== "google.com")) {
+          setDashboard(null);
+          setError("");
+          setIsLoading(false);
+          return;
+        }
+
+        setDashboard(null);
+        setIsLoading(true);
+        setError("");
+        try {
+          await loadResults(await user.getIdToken());
+        } catch (loadError) {
+          if (active) {
+            setDashboard(null);
+            setError(loadError instanceof Error ? loadError.message : "Results could not be loaded.");
+          }
+        } finally {
+          if (active) setIsLoading(false);
+        }
+      });
+    }
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [loadResults]);
+
   async function signIn() {
     setIsLoading(true);
     setError("");
     try {
-      const auth = getFirebaseAuth();
-      const credential = await signInWithPopup(auth, new GoogleAuthProvider());
-      const response = await getLecturerResults(await credential.user.getIdToken());
-      if (!response.ok) {
-        setDashboard(null);
-        setError(response.error);
-        return;
-      }
-
-      setDashboard({ email: response.email, quizzes: response.quizzes });
+      const credential = await signInWithPopup(getFirebaseAuth(), new GoogleAuthProvider());
+      await loadResults(await credential.user.getIdToken());
     } catch (signInError) {
       setDashboard(null);
       setError(signInError instanceof Error ? signInError.message : "Sign-in or results loading failed.");
@@ -153,14 +193,13 @@ export function ResultsDashboard() {
                     <p className="text-2xl font-semibold">{percentage(quiz.averagePercent)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-500">Passed</p>
-                    <p className="text-2xl font-semibold">
-                      {quiz.passCount}
-                      {quiz.passMark === null ? "" : ` / ${quiz.gradedCount}`}
+                    <p className="text-sm text-slate-500">Pass rate</p>
+                    <p className="text-2xl font-semibold">{percentage(quiz.passPercentage)}</p>
+                    <p className="text-xs text-slate-500">
+                      {quiz.passMark === null
+                        ? "Set a pass mark to calculate"
+                        : `${quiz.passCount} of ${quiz.gradedCount} graded submissions passed · Pass mark: ${quiz.passMark}%`}
                     </p>
-                    {quiz.passMark !== null && (
-                      <p className="text-xs text-slate-500">Pass mark: {quiz.passMark}%</p>
-                    )}
                   </div>
                 </CardContent>
               </Card>

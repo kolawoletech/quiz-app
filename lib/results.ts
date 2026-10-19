@@ -35,6 +35,7 @@ export interface QuizResults {
   gradedCount: number;
   averagePercent: number | null;
   passCount: number;
+  passPercentage: number | null;
   questionStats: Array<{
     id: string;
     question: string;
@@ -94,6 +95,10 @@ export function buildQuizResults(
     ? gradedSubmissions.reduce((total, submission) => total + (submission.percent ?? 0), 0) / gradedSubmissions.length
     : null;
   const passCount = gradedSubmissions.filter((submission) => submission.passed === true).length;
+  const passEligibleCount = gradedSubmissions.filter((submission) => submission.passed !== null).length;
+  const passPercentage = passEligibleCount
+    ? (passCount / passEligibleCount) * 100
+    : null;
 
   return {
     id: quiz.id,
@@ -105,6 +110,7 @@ export function buildQuizResults(
     gradedCount: gradedSubmissions.length,
     averagePercent,
     passCount,
+    passPercentage,
     questionStats: quizQuestions.map((question) => {
       const correctCount = submissionsWithResults.filter((submission) =>
         submission.questions.find((result) => result.id === question.id)?.isCorrect,

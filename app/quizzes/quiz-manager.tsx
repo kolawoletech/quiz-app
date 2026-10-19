@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { ChevronLeft, ChevronRight, LoaderCircle, LogIn, Plus, Save, Search, ShieldCheck, X } from "lucide-react";
 
 import { importQuizJson, loadLecturerQuizzes, saveQuizDraft, transitionQuiz, type QuizActionResponse } from "@/app/quizzes/actions";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getFirebaseAuth } from "@/lib/firebase";
+import { getFirebaseAuth, hasFirebaseConfig } from "@/lib/firebase";
 import type { Question, QuestionType, Quiz } from "@/lib/mock-data";
 
 type LecturerQuiz = { quiz: Quiz; questions: Question[] };
@@ -102,6 +102,59 @@ export function QuizManager() {
   const [statusFilter, setStatusFilter] = useState<"all" | Quiz["status"]>("all");
   const [quizPage, setQuizPage] = useState(1);
 
+  const refreshQuizzes = useCallback(async (idToken: string) => {
+    const response = await loadLecturerQuizzes(idToken);
+    if (!response.ok) {
+      setQuizzes(null);
+      setError(response.error);
+      return false;
+    }
+    setQuizzes(response.data);
+    setLecturerEmail(response.email);
+    setError("");
+    return true;
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    let unsubscribe = () => {};
+
+    if (hasFirebaseConfig()) {
+      unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (user) => {
+        if (!active) return;
+        if (!user || user.providerData.every((provider) => provider.providerId !== "google.com")) {
+          setQuizzes(null);
+          setLecturerEmail("");
+          setDraft(null);
+          setError("");
+          setIsLoading(false);
+          return;
+        }
+
+        setQuizzes(null);
+        setLecturerEmail("");
+        setDraft(null);
+        setIsLoading(true);
+        setError("");
+        try {
+          await refreshQuizzes(await user.getIdToken());
+        } catch (loadError) {
+          if (active) {
+            setQuizzes(null);
+            setError(loadError instanceof Error ? loadError.message : "Lecturer quizzes could not be loaded.");
+          }
+        } finally {
+          if (active) setIsLoading(false);
+        }
+      });
+    }
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [refreshQuizzes]);
+
   async function signIn() {
     setIsLoading(true);
     setError("");
@@ -113,18 +166,6 @@ export function QuizManager() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  async function refreshQuizzes(idToken: string) {
-    const response = await loadLecturerQuizzes(idToken);
-    if (!response.ok) {
-      setQuizzes(null);
-      setError(response.error);
-      return false;
-    }
-    setQuizzes(response.data);
-    setLecturerEmail(response.email);
-    return true;
   }
 
   async function saveDraft(event: FormEvent<HTMLFormElement>) {
