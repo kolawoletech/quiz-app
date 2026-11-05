@@ -1,0 +1,614 @@
+{
+  "title": "Eduvos Basic C# Programming Practice Quiz",
+  "description": "30-question mixed-format C# programming assessment.",
+  "totalQuestions": 30,
+  "questions": [
+    {
+      "id": "1",
+      "type": "single",
+      "question": "What is displayed by this code?",
+      "points": 1,
+      "answer": [
+        "A"
+      ],
+      "options": [
+        "A",
+        "B",
+        "Both A and B",
+        "Nothing"
+      ],
+      "tags": [
+        "Control Statements"
+      ],
+      "codeSnippet": "int x = 8;\nif (x > 5)\n{\n    Console.WriteLine(\"A\");\n}\nelse\n{\n    Console.WriteLine(\"B\");\n}"
+    },
+    {
+      "id": "2",
+      "type": "single",
+      "question": "Two methods have the same name but different parameter lists. What C# feature allows this?",
+      "points": 1,
+      "answer": [
+        "Method overloading"
+      ],
+      "options": [
+        "Method overriding",
+        "Method overloading",
+        "Method hiding",
+        "Method recursion"
+      ],
+      "tags": [
+        "Methods"
+      ]
+    },
+    {
+      "id": "3",
+      "type": "truefalse",
+      "question": "A C# class is a reference type, while a C# struct is a value type.",
+      "points": 1,
+      "answer": [
+        "True"
+      ],
+      "options": [
+        "True",
+        "False"
+      ],
+      "tags": [
+        "Classes and Structs"
+      ]
+    },
+    {
+      "id": "4",
+      "type": "single",
+      "question": "Which expression correctly concatenates two strings named str1 and str2?",
+      "points": 1,
+      "answer": [
+        "str1 + str2"
+      ],
+      "options": [
+        "str1 + str2",
+        "str1 & str2",
+        "str1 - str2",
+        "str1.Concat()"
+      ],
+      "tags": [
+        "Strings"
+      ]
+    },
+    {
+      "id": "5",
+      "type": "multiple",
+      "question": "Which statements about C# methods are correct? Select all that apply.",
+      "points": 1,
+      "answer": [
+        "A method can accept parameters.",
+        "A method can return a value.",
+        "A method can be overloaded."
+      ],
+      "options": [
+        "A method can accept parameters.",
+        "A method can return a value.",
+        "Every method must return an int.",
+        "A method can be overloaded."
+      ],
+      "tags": [
+        "Methods"
+      ]
+    },
+    {
+      "id": "6",
+      "type": "single",
+      "question": "Which declaration creates a public read-only property named Email?",
+      "points": 1,
+      "answer": [
+        "public string Email { get; }"
+      ],
+      "options": [
+        "public string Email { get; }",
+        "public string Email { set; }",
+        "public string Email { get; set; }",
+        "public readonly string Email { get; set; }"
+      ],
+      "tags": [
+        "Properties"
+      ]
+    },
+    {
+      "id": "7",
+      "type": "single",
+      "question": "What is the purpose of a finally block?",
+      "points": 1,
+      "answer": [
+        "It executes whether an exception occurs or not."
+      ],
+      "options": [
+        "It executes only when an exception occurs.",
+        "It executes whether an exception occurs or not.",
+        "It prevents all exceptions.",
+        "It replaces the catch block."
+      ],
+      "tags": [
+        "Exception Handling"
+      ]
+    },
+    {
+      "id": "8",
+      "type": "single",
+      "question": "What happens when this code executes?",
+      "points": 1,
+      "answer": [
+        "Cannot divide by zero."
+      ],
+      "options": [
+        "10",
+        "Cannot divide by zero.",
+        "0",
+        "The application must always terminate."
+      ],
+      "tags": [
+        "Exception Handling"
+      ],
+      "codeSnippet": "int number = 10;\ntry\n{\n    number = number / 0;\n}\ncatch (DivideByZeroException)\n{\n    MessageBox.Show(\"Cannot divide by zero.\");\n}"
+    },
+    {
+      "id": "9",
+      "type": "single",
+      "question": "What is the primary purpose of a Label control?",
+      "points": 1,
+      "answer": [
+        "To display text or information on a form"
+      ],
+      "options": [
+        "To display text or information on a form",
+        "To accept editable user input",
+        "To execute code automatically every second",
+        "To store database records"
+      ],
+      "tags": [
+        "Windows Forms"
+      ]
+    },
+    {
+      "id": "10",
+      "type": "truefalse",
+      "question": "A Windows Forms Form can contain controls such as buttons, labels and text boxes.",
+      "points": 1,
+      "answer": [
+        "True"
+      ],
+      "options": [
+        "True",
+        "False"
+      ],
+      "tags": [
+        "Windows Forms"
+      ]
+    },
+    {
+      "id": "11",
+      "type": "single",
+      "question": "What is displayed by this code?",
+      "points": 1,
+      "answer": [
+        "Sha"
+      ],
+      "options": [
+        "CSh",
+        "Sha",
+        "Sharp",
+        "har"
+      ],
+      "tags": [
+        "Strings"
+      ],
+      "codeSnippet": "string word = \"CSharp\";\nConsole.WriteLine(word.Substring(1, 3));"
+    },
+    {
+      "id": "12",
+      "type": "single",
+      "question": "What is displayed by this code?",
+      "points": 1,
+      "answer": [
+        "Faith"
+      ],
+      "options": [
+        "FAITH",
+        "Faith",
+        "faith",
+        "Compilation error"
+      ],
+      "tags": [
+        "Strings"
+      ],
+      "codeSnippet": "string name = \"Faith\";\nname.ToUpper();\nConsole.WriteLine(name);"
+    },
+    {
+      "id": "13",
+      "type": "multiple",
+      "question": "Which are valid uses of StringBuilder?",
+      "points": 1,
+      "answer": [
+        "Append text to existing content",
+        "Replace a portion of its content",
+        "Modify its contents without creating a new StringBuilder for every change"
+      ],
+      "options": [
+        "Append text to existing content",
+        "Replace a portion of its content",
+        "Modify its contents without creating a new StringBuilder for every change",
+        "Automatically validate an email address"
+      ],
+      "tags": [
+        "StringBuilder"
+      ]
+    },
+    {
+      "id": "14",
+      "type": "single",
+      "question": "What does the virtual keyword allow a derived class to do?",
+      "points": 1,
+      "answer": [
+        "Override the method"
+      ],
+      "options": [
+        "Override the method",
+        "Call the method without an object in every situation",
+        "Prevent inheritance",
+        "Change the method into a constructor"
+      ],
+      "tags": [
+        "Polymorphism"
+      ]
+    },
+    {
+      "id": "15",
+      "type": "single",
+      "question": "What is displayed?",
+      "points": 1,
+      "answer": [
+        "Dog barks"
+      ],
+      "options": [
+        "Generic mammal",
+        "Dog barks",
+        "Both messages",
+        "Compile-time error"
+      ],
+      "tags": [
+        "Polymorphism"
+      ],
+      "codeSnippet": "class Animal\n{\n    public virtual void Speak()\n    {\n        Console.WriteLine(\"Generic mammal\");\n    }\n}\n\nclass Dog : Animal\n{\n    public override void Speak()\n    {\n        Console.WriteLine(\"Dog barks\");\n    }\n}\n\nAnimal pet = new Dog();\npet.Speak();"
+    },
+    {
+      "id": "16",
+      "type": "single",
+      "question": "Which statement best describes an abstract class compared with an interface in the introductory C# model?",
+      "points": 1,
+      "answer": [
+        "An abstract class can contain instance fields, while an interface defines a contract."
+      ],
+      "options": [
+        "An abstract class can contain instance fields, while an interface defines a contract.",
+        "An interface must always be instantiated directly.",
+        "An abstract class cannot contain implemented methods.",
+        "A class cannot implement an interface."
+      ],
+      "tags": [
+        "Interfaces and Abstract Classes"
+      ]
+    },
+    {
+      "id": "17",
+      "type": "single",
+      "question": "How many times is Hello! displayed?",
+      "points": 1,
+      "answer": [
+        "Three times"
+      ],
+      "options": [
+        "Once",
+        "Twice",
+        "Three times",
+        "Compilation error"
+      ],
+      "tags": [
+        "Delegates"
+      ],
+      "codeSnippet": "public delegate void Notify();\n\nstatic void First()\n{\n    Console.WriteLine(\"Hello!\");\n}\n\nNotify n = First;\nn += First;\nn += First;\nn();"
+    },
+    {
+      "id": "18",
+      "type": "single",
+      "question": "Which declaration defines a delegate returning double and accepting an int and a string?",
+      "points": 1,
+      "answer": [
+        "delegate double Calculate(int value, string name);"
+      ],
+      "options": [
+        "delegate double Calculate(int value, string name);",
+        "delegate int Calculate(double value, string name);",
+        "delegate void Calculate(int value, string name);",
+        "delegate double Calculate(string name);"
+      ],
+      "tags": [
+        "Delegates"
+      ]
+    },
+    {
+      "id": "19",
+      "type": "truefalse",
+      "question": "The += operator can add another compatible method to a multicast delegate.",
+      "points": 1,
+      "answer": [
+        "True"
+      ],
+      "options": [
+        "True",
+        "False"
+      ],
+      "tags": [
+        "Delegates"
+      ]
+    },
+    {
+      "id": "20",
+      "type": "single",
+      "question": "What happens when a user clicks a button connected to btnStart_Click?",
+      "points": 1,
+      "answer": [
+        "The Click event causes the connected event-handler method to execute."
+      ],
+      "options": [
+        "The Click event causes the connected event-handler method to execute.",
+        "The button automatically creates a new form.",
+        "The application restarts from Main().",
+        "The button changes its Name property to btnStart_Click."
+      ],
+      "tags": [
+        "Windows Forms Events"
+      ]
+    },
+    {
+      "id": "21",
+      "type": "matching",
+      "question": "Match each C# concept with its correct description.",
+      "points": 2,
+      "answer": [
+        "A class or struct that provides code for interface methods.",
+        "A method in an interface that has a body.",
+        "A method without a body that must be implemented.",
+        "A contract defining members an implementing type must provide."
+      ],
+      "matchItems": [
+        "Implementation",
+        "Default Implementation",
+        "Abstract Method",
+        "Interface"
+      ],
+      "options": [
+        "A class or struct that provides code for interface methods.",
+        "A method in an interface that has a body.",
+        "A method without a body that must be implemented.",
+        "A contract defining members an implementing type must provide."
+      ],
+      "tags": [
+        "C# Terminology"
+      ]
+    },
+    {
+      "id": "22",
+      "type": "matching",
+      "question": "Match each Windows Forms control with its main purpose.",
+      "points": 2,
+      "answer": [
+        "Displays text or information.",
+        "Accepts text input from a user.",
+        "Provides a clickable action.",
+        "Raises events at specified time intervals."
+      ],
+      "matchItems": [
+        "Label",
+        "TextBox",
+        "Button",
+        "Timer"
+      ],
+      "options": [
+        "Accepts text input from a user.",
+        "Displays text or information.",
+        "Raises events at specified time intervals.",
+        "Provides a clickable action."
+      ],
+      "tags": [
+        "Windows Forms Controls"
+      ]
+    },
+    {
+      "id": "23",
+      "type": "matching",
+      "question": "Match each conversion description with its conversion type.",
+      "points": 2,
+      "answer": [
+        "Implicit conversion: integer to floating-point number.",
+        "Explicit conversion: floating-point number to integer using a cast.",
+        "Implicit conversion: smaller numeric type to larger compatible numeric type.",
+        "Explicit conversion: larger numeric type to smaller type that may lose data."
+      ],
+      "matchItems": [
+        "Converting an integer to a floating-point number.",
+        "Converting a floating-point number to an integer using a cast.",
+        "Converting a smaller numeric type to a larger compatible numeric type.",
+        "Converting a larger numeric type to a smaller type that may lose data."
+      ],
+      "options": [
+        "Implicit conversion: integer to floating-point number.",
+        "Explicit conversion: floating-point number to integer using a cast.",
+        "Implicit conversion: smaller numeric type to larger compatible numeric type.",
+        "Explicit conversion: larger numeric type to smaller type that may lose data."
+      ],
+      "tags": [
+        "Type Conversion"
+      ]
+    },
+    {
+      "id": "24",
+      "type": "matching",
+      "question": "Match each member type with its description.",
+      "points": 2,
+      "answer": [
+        "Belongs to the class and can be called without creating an instance.",
+        "Can access instance and static members when called on an object.",
+        "Belongs to an individual object.",
+        "Shared among instances of the class."
+      ],
+      "matchItems": [
+        "Static Method",
+        "Instance Method",
+        "Instance Field",
+        "Static Field"
+      ],
+      "options": [
+        "Belongs to the class and can be called without creating an instance.",
+        "Can access instance and static members when called on an object.",
+        "Belongs to an individual object.",
+        "Shared among instances of the class."
+      ],
+      "tags": [
+        "Static and Instance Members"
+      ]
+    },
+    {
+      "id": "25",
+      "type": "rearrange",
+      "question": "Rearrange the following code lines to declare, assign and invoke a delegate.",
+      "points": 2,
+      "answer": [
+        "public delegate void Notify();",
+        "static void DisplayMessage()",
+        "{ Console.WriteLine(\"Hello!\"); }",
+        "Notify notification = DisplayMessage;",
+        "notification();"
+      ],
+      "options": [
+        "Notify notification = DisplayMessage;",
+        "public delegate void Notify();",
+        "notification();",
+        "static void DisplayMessage()",
+        "{ Console.WriteLine(\"Hello!\"); }"
+      ],
+      "tags": [
+        "Delegates"
+      ]
+    },
+    {
+      "id": "26",
+      "type": "rearrange",
+      "question": "Arrange these lines to create a method that accepts a number and returns its double.",
+      "points": 2,
+      "answer": [
+        "public static int DoubleNumber(int number)",
+        "{",
+        "return number * 2;",
+        "}",
+        "Console.WriteLine(DoubleNumber(5));"
+      ],
+      "options": [
+        "return number * 2;",
+        "public static int DoubleNumber(int number)",
+        "{",
+        "}",
+        "Console.WriteLine(DoubleNumber(5));"
+      ],
+      "tags": [
+        "Methods"
+      ]
+    },
+    {
+      "id": "27",
+      "question": "Complete the exception-handling structure by matching each code fragment to its slot:\ntry\n{\n[slot1]\n}\ncatch (DivideByZeroException)\n{\n[slot2]\n}",
+      "points": 2,
+      "answer": [
+        "int result = 10 / 0;",
+        "MessageBox.Show(\"Cannot divide by zero.\");"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "slot1 (try block)",
+        "slot2 (catch block)"
+      ],
+      "options": [
+        "int result = 10 / 0;",
+        "MessageBox.Show(\"Cannot divide by zero.\");",
+        "finally",
+        "Console.ReadLine();"
+      ],
+      "tags": [
+        "Exception Handling"
+      ]
+    },
+    {
+      "id": "28",
+      "question": "Complete the delegate declaration by matching each fragment to its slot:\npublic delegate {{slot1}} CalculateFuelUsage({{slot2}} seconds, {{slot3}} vehicleWeight, {{slot4}} engineCC);",
+      "points": 2,
+      "answer": [
+        "a. double",
+        "b. int",
+        "c. double",
+        "d. int"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "slot1 (return type)",
+        "slot2 (seconds parameter type)",
+        "slot3 (vehicleWeight parameter type)",
+        "slot4 (engineCC parameter type)"
+      ],
+      "options": [
+        "a. double",
+        "b. int",
+        "c. double",
+        "d. int",
+        "e. void"
+      ],
+      "tags": [
+        "Delegate Signature"
+      ]
+    },
+    {
+      "id": "29",
+      "type": "single",
+      "question": "Consider this code: class Animal { public void Eat() { Console.WriteLine(\"Eating\"); } } class Dog : Animal { } Dog dog = new Dog(); dog.Eat(); What is displayed?",
+      "points": 1,
+      "answer": [
+        "Eating"
+      ],
+      "options": [
+        "Eating",
+        "Dog",
+        "Compilation error",
+        "Nothing"
+      ],
+      "tags": [
+        "Inheritance"
+      ]
+    },
+    {
+      "id": "30",
+      "type": "single",
+      "question": "Which line contains the compilation error?",
+      "points": 1,
+      "answer": [
+        "None of the lines"
+      ],
+      "options": [
+        "int age = 20;",
+        "string name = \"Faith\";",
+        "double height = 1.75;",
+        "int total = age + name.Length;",
+        "None of the lines"
+      ],
+      "tags": [
+        "C# Errors"
+      ],
+      "codeSnippet": "int age = 20;\nstring name = \"Faith\";\ndouble height = 1.75;\nint total = age + name.Length;"
+    }
+  ]
+}

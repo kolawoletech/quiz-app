@@ -1,0 +1,863 @@
+{
+  "title": "ITDCA0-44 Database Design Concepts — Comprehensive Practice Quiz",
+  "description": "Practice quiz based on the Database Design Concepts topics covered so far: entities, attributes and instances; entity and attribute naming; Barker's notation; UIDs; relationship cardinality and optionality; many-to-many relationships and intersection entities; recursive relationships; hierarchical and network structures; and modelling roles. Questions are for practice and revision.",
+  "subject": "Database Design Concepts",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": true,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": true,
+    "passMark": 60,
+    "attemptLimit": 3,
+    "mode": "self-paced"
+  },
+  "questions": [
+    {
+      "id": "single-01",
+      "type": "single",
+      "question": "In database modelling, what is an entity?",
+      "options": [
+        "A type of thing or concept about which data is stored",
+        "A single value stored in a column",
+        "A line connecting two tables only",
+        "A query that retrieves records"
+      ],
+      "answer": [
+        "A type of thing or concept about which data is stored"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "entities"
+      ],
+      "explanation": "An entity represents a type of thing or concept for which the system needs to store information."
+    },
+    {
+      "id": "single-02",
+      "type": "single",
+      "question": "Which of the following is an instance of the entity PERSON?",
+      "options": [
+        "Bob Dude",
+        "PERSON",
+        "dateOfBirth",
+        "personID"
+      ],
+      "answer": [
+        "Bob Dude"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "instances"
+      ]
+    },
+    {
+      "id": "single-03",
+      "type": "single",
+      "question": "In the example PERSON with attributes personID, name and height, which item is an attribute?",
+      "options": [
+        "height",
+        "PERSON",
+        "Bob Dude",
+        "A particular person record"
+      ],
+      "answer": [
+        "height"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "attributes"
+      ]
+    },
+    {
+      "id": "matching-01",
+      "type": "matching",
+      "question": "Classify each example by matching the object to its correct category.",
+      "matchItems": [
+        "PERSON",
+        "name",
+        "Bob Dude",
+        "DOG"
+      ],
+      "options": [
+        "Person entity",
+        "Attribute",
+        "Instance",
+        "Animal entity"
+      ],
+      "answer": [
+        "Person entity",
+        "Attribute",
+        "Instance",
+        "Animal entity"
+      ],
+      "points": 4,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "entities",
+        "attributes",
+        "instances"
+      ],
+      "explanation": "PERSON and DOG are entity types, name is an attribute, and Bob Dude is an instance of a suitable person entity."
+    },
+    {
+      "id": "single-04",
+      "type": "single",
+      "question": "According to the naming convention in the lesson notes, how should an entity name be written?",
+      "options": [
+        "UPPERCASE, for example EMPLOYEE",
+        "lower camelCase, for example employeeName",
+        "snake_case, for example employee_name",
+        "With spaces, for example Employee Name"
+      ],
+      "answer": [
+        "UPPERCASE, for example EMPLOYEE"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "naming-conventions"
+      ]
+    },
+    {
+      "id": "single-05",
+      "type": "single",
+      "question": "According to the lesson notes, which is the correctly formatted multi-word attribute name?",
+      "options": [
+        "employeeName",
+        "Employee Name",
+        "EMPLOYEENAME",
+        "employee_name"
+      ],
+      "answer": [
+        "employeeName"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "naming-conventions"
+      ],
+      "explanation": "The lesson notes specify lowercase attribute names, with each subsequent word starting with a capital letter, such as employeeName."
+    },
+    {
+      "id": "truefalse-01",
+      "type": "truefalse",
+      "question": "A student should follow the naming conventions specified in the official lesson notes or assessment instructions rather than automatically adopting a convention found online.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "topic-1",
+        "naming-conventions",
+        "study-skills"
+      ]
+    },
+    {
+      "id": "single-06",
+      "type": "single",
+      "question": "In the Barker's notation examples used in the lesson notes, what does # indicate beside an attribute?",
+      "options": [
+        "A UID component",
+        "An optional attribute",
+        "A many-to-many relationship",
+        "A derived attribute"
+      ],
+      "answer": [
+        "A UID component"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "barkers-notation",
+        "uid"
+      ]
+    },
+    {
+      "id": "single-07",
+      "type": "single",
+      "question": "In the Barker's notation legend used in the practice material, what does o indicate beside an attribute?",
+      "options": [
+        "The attribute is optional",
+        "The attribute is the UID",
+        "The attribute is always unique",
+        "The attribute is a relationship"
+      ],
+      "answer": [
+        "The attribute is optional"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "barkers-notation",
+        "optionality"
+      ]
+    },
+    {
+      "id": "single-08",
+      "type": "single",
+      "question": "In the Barker's notation legend used in the practice material, what does * indicate beside an attribute?",
+      "options": [
+        "The attribute is mandatory",
+        "The attribute is optional",
+        "The attribute is a foreign key only",
+        "The attribute is an entity name"
+      ],
+      "answer": [
+        "The attribute is mandatory"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "barkers-notation",
+        "mandatory-attributes"
+      ]
+    },
+    {
+      "id": "truefalse-02",
+      "type": "truefalse",
+      "question": "In an ER diagram, attributes should be placed inside the entity soft box according to the practice quiz example.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "barkers-notation",
+        "diagram-conventions"
+      ]
+    },
+    {
+      "id": "single-09",
+      "type": "single",
+      "question": "What is a UID used for in an entity?",
+      "options": [
+        "Uniquely identifying each instance of the entity",
+        "Describing the entity's appearance",
+        "Showing that every attribute is optional",
+        "Replacing all relationships"
+      ],
+      "answer": [
+        "Uniquely identifying each instance of the entity"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "uid"
+      ]
+    },
+    {
+      "id": "multiple-01",
+      "type": "multiple",
+      "question": "Which statements about UIDs are correct? Select all that apply.",
+      "options": [
+        "A UID uniquely identifies an entity instance",
+        "A UID may consist of more than one attribute",
+        "An intersection entity may use both parent UIDs as a compound UID",
+        "A UID is always an entity's descriptive name"
+      ],
+      "answer": [
+        "A UID uniquely identifies an entity instance",
+        "A UID may consist of more than one attribute",
+        "An intersection entity may use both parent UIDs as a compound UID"
+      ],
+      "points": 3,
+      "difficulty": "medium",
+      "tags": [
+        "uid",
+        "compound-uid"
+      ]
+    },
+    {
+      "id": "single-10",
+      "type": "single",
+      "question": "A HOTEL has hotelID, address and numParking. Which attribute is the most suitable UID from the options, assuming hotelID is unique?",
+      "options": [
+        "hotelID",
+        "address",
+        "numParking",
+        "All three must form a compound UID"
+      ],
+      "answer": [
+        "hotelID"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "uid",
+        "attributes"
+      ]
+    },
+    {
+      "id": "single-11",
+      "type": "single",
+      "question": "What does a one-to-many relationship between PRODUCT and STOCK mean in the example where STOCK records products held by stores?",
+      "options": [
+        "One PRODUCT can be associated with many STOCK records",
+        "One STOCK record must represent many products",
+        "Every PRODUCT must have exactly one STOCK record",
+        "STOCK and PRODUCT are the same entity"
+      ],
+      "answer": [
+        "One PRODUCT can be associated with many STOCK records"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "relationships",
+        "cardinality"
+      ]
+    },
+    {
+      "id": "truefalse-03",
+      "type": "truefalse",
+      "question": "A foreign key relationship to a parent entity automatically means that every parent must have at least one child.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "relationships",
+        "optionality"
+      ],
+      "explanation": "A parent can have zero children unless the model's rules specify otherwise."
+    },
+    {
+      "id": "single-12",
+      "type": "single",
+      "question": "A many-to-many relationship exists between PIZZA and FILLING. Which design resolves it in the practice example?",
+      "options": [
+        "Create PIZZA_FILLING as an intersection entity",
+        "Place all filling names in one text attribute on PIZZA",
+        "Remove FILLING from the model",
+        "Give every pizza the same fillingID"
+      ],
+      "answer": [
+        "Create PIZZA_FILLING as an intersection entity"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "many-to-many",
+        "intersection-entities"
+      ]
+    },
+    {
+      "id": "single-13",
+      "type": "single",
+      "question": "In the STOCK intersection entity between PRODUCT and STORE, which compound UID is shown in the practice example?",
+      "options": [
+        "productID and storeID together",
+        "productName only",
+        "storeName only",
+        "quantity and productName"
+      ],
+      "answer": [
+        "productID and storeID together"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "intersection-entities",
+        "compound-uid"
+      ]
+    },
+    {
+      "id": "multiple-02",
+      "type": "multiple",
+      "question": "Which statements about the PIZZA–PIZZA_FILLING–FILLING example are correct? Select all that apply.",
+      "options": [
+        "PIZZA_FILLING records which fillings are used on which pizzas",
+        "A filling may be unused",
+        "Each PIZZA must have at least one filling in the stated business rules",
+        "A PIZZA_FILLING record can refer to a non-existent pizza"
+      ],
+      "answer": [
+        "PIZZA_FILLING records which fillings are used on which pizzas",
+        "A filling may be unused",
+        "Each PIZZA must have at least one filling in the stated business rules"
+      ],
+      "points": 3,
+      "difficulty": "medium",
+      "tags": [
+        "intersection-entities",
+        "optionality",
+        "business-rules"
+      ]
+    },
+    {
+      "id": "single-14",
+      "type": "single",
+      "question": "What is an intersection entity primarily used for?",
+      "options": [
+        "Resolving a many-to-many relationship into two one-to-many relationships",
+        "Replacing all UIDs with descriptive text",
+        "Making every attribute optional",
+        "Representing only one instance of an entity"
+      ],
+      "answer": [
+        "Resolving a many-to-many relationship into two one-to-many relationships"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "intersection-entities",
+        "many-to-many"
+      ]
+    },
+    {
+      "id": "rearrange-01",
+      "type": "rearrange",
+      "question": "Arrange the steps for modelling a many-to-many relationship using an intersection entity.",
+      "options": [
+        "Identify the two parent entities",
+        "Create an intersection entity between them",
+        "Carry both parent UIDs into the intersection entity",
+        "Define the two relationships between the parents and the intersection entity"
+      ],
+      "answer": [
+        "Identify the two parent entities",
+        "Create an intersection entity between them",
+        "Carry both parent UIDs into the intersection entity",
+        "Define the two relationships between the parents and the intersection entity"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "intersection-entities",
+        "ordering"
+      ]
+    },
+    {
+      "id": "single-15",
+      "type": "single",
+      "question": "What is a recursive relationship?",
+      "options": [
+        "A relationship between instances of the same entity type",
+        "A relationship that always connects exactly three different entities",
+        "A table without a UID",
+        "A relationship that cannot be represented in SQL"
+      ],
+      "answer": [
+        "A relationship between instances of the same entity type"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "recursive-relationships"
+      ]
+    },
+    {
+      "id": "single-16",
+      "type": "single",
+      "question": "In the recursive example EMPLOYEE manages EMPLOYEE, what are the two roles played by EMPLOYEE instances?",
+      "options": [
+        "Manager and subordinate",
+        "Product and store",
+        "Hotel and room",
+        "Company and department"
+      ],
+      "answer": [
+        "Manager and subordinate"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "recursive-relationships",
+        "roles"
+      ]
+    },
+    {
+      "id": "truefalse-04",
+      "type": "truefalse",
+      "question": "A recursive relationship means that two separate entity types must always be created, such as MANAGER and EMPLOYEE.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "recursive-relationships"
+      ]
+    },
+    {
+      "id": "single-17",
+      "type": "single",
+      "question": "In the SQL implementation of EMPLOYEE manages EMPLOYEE, what does managerID usually reference?",
+      "options": [
+        "employeeID in the same EMPLOYEE table",
+        "A separate MANAGER table in every design",
+        "The employeeName column only",
+        "The departmentName column"
+      ],
+      "answer": [
+        "employeeID in the same EMPLOYEE table"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "recursive-relationships",
+        "sql-implementation"
+      ]
+    },
+    {
+      "id": "single-18",
+      "type": "single",
+      "question": "Why might managerID be optional in the EMPLOYEE example?",
+      "options": [
+        "A top-level employee may not have a manager",
+        "Every employee must manage themselves",
+        "employeeID is not unique",
+        "The EMPLOYEE entity has no attributes"
+      ],
+      "answer": [
+        "A top-level employee may not have a manager"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "recursive-relationships",
+        "optionality"
+      ]
+    },
+    {
+      "id": "single-19",
+      "type": "single",
+      "question": "What is the key distinction between a hierarchical recursive structure and a network recursive structure in the lesson example?",
+      "options": [
+        "In a hierarchy each child has at most one parent; in a network a child may have multiple parents",
+        "A hierarchy has no entities; a network has no attributes",
+        "A network always has exactly two records",
+        "There is no distinction"
+      ],
+      "answer": [
+        "In a hierarchy each child has at most one parent; in a network a child may have multiple parents"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "hierarchies",
+        "network-structures"
+      ]
+    },
+    {
+      "id": "single-20",
+      "type": "single",
+      "question": "Which example best represents a hierarchy?",
+      "options": [
+        "COMPANY → BRANCH → DEPARTMENT",
+        "PIZZA and FILLING connected through PIZZA_FILLING",
+        "A list of unrelated colours",
+        "One attribute with several values"
+      ],
+      "answer": [
+        "COMPANY → BRANCH → DEPARTMENT"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "hierarchies"
+      ]
+    },
+    {
+      "id": "single-21",
+      "type": "single",
+      "question": "In a network structure where a PART may contain other PARTs, what does CONSTRUCTION_DETAIL represent?",
+      "options": [
+        "An intersection entity recording parent-part/component-part relationships",
+        "A new name for the PART UID",
+        "A type of attribute naming convention",
+        "A separate database server"
+      ],
+      "answer": [
+        "An intersection entity recording parent-part/component-part relationships"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "network-structures",
+        "intersection-entities"
+      ]
+    },
+    {
+      "id": "single-22",
+      "type": "single",
+      "question": "In a recursive network structure, why might both parentPartID and componentPartID reference PART?",
+      "options": [
+        "They identify two different roles played by instances of the same entity type",
+        "They must have the same value",
+        "One is always an attribute of COMPANY",
+        "The PART entity has no UID"
+      ],
+      "answer": [
+        "They identify two different roles played by instances of the same entity type"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "network-structures",
+        "roles",
+        "foreign-keys"
+      ]
+    },
+    {
+      "id": "single-23",
+      "type": "single",
+      "question": "What does modelling roles help a designer do?",
+      "options": [
+        "Describe the different parts or responsibilities played by entities in a relationship",
+        "Remove all relationships from the ERD",
+        "Make all attributes UIDs",
+        "Turn every entity into an attribute"
+      ],
+      "answer": [
+        "Describe the different parts or responsibilities played by entities in a relationship"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "modelling-roles"
+      ]
+    },
+    {
+      "id": "single-24",
+      "type": "single",
+      "question": "In a MOTOR_SERVICE example, the same PERSON entity is referenced as customer and mechanic. What does this demonstrate?",
+      "options": [
+        "One entity type can participate in different roles in a relationship",
+        "CUSTOMER and MECHANIC must always be attributes",
+        "PERSON cannot have a UID",
+        "Roles remove the need for foreign keys"
+      ],
+      "answer": [
+        "One entity type can participate in different roles in a relationship"
+      ],
+      "points": 1,
+      "difficulty": "medium",
+      "tags": [
+        "modelling-roles",
+        "recursive-and-role-modelling"
+      ]
+    },
+    {
+      "id": "matching-02",
+      "type": "matching",
+      "question": "Match each concept to its description.",
+      "matchItems": [
+        "UID",
+        "Intersection entity",
+        "Recursive relationship",
+        "Hierarchy"
+      ],
+      "options": [
+        "Uniquely identifies an entity instance",
+        "Resolves a many-to-many relationship",
+        "Connects instances of the same entity type",
+        "Organises parent-child levels"
+      ],
+      "answer": [
+        "Uniquely identifies an entity instance",
+        "Resolves a many-to-many relationship",
+        "Connects instances of the same entity type",
+        "Organises parent-child levels"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "review",
+        "matching"
+      ]
+    },
+    {
+      "id": "single-25",
+      "type": "single",
+      "question": "A hotel model includes GUEST, HOTEL and ROOM. Which attribute is most suitable for ROOM from the list below?",
+      "options": [
+        "roomNumber",
+        "familyName",
+        "arrivalDate",
+        "numParking"
+      ],
+      "answer": [
+        "roomNumber"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "entity-attribute-allocation",
+        "practice"
+      ]
+    },
+    {
+      "id": "single-26",
+      "type": "single",
+      "question": "In the hotel example, which attribute most naturally belongs to HOTEL?",
+      "options": [
+        "address",
+        "familyName",
+        "arrivalDate",
+        "roomNumber"
+      ],
+      "answer": [
+        "address"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "entity-attribute-allocation",
+        "practice"
+      ]
+    },
+    {
+      "id": "single-27",
+      "type": "single",
+      "question": "In the hotel example, which attribute most naturally belongs to GUEST?",
+      "options": [
+        "familyName",
+        "numBeds",
+        "price",
+        "hasWiFi"
+      ],
+      "answer": [
+        "familyName"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "entity-attribute-allocation",
+        "practice"
+      ]
+    },
+    {
+      "id": "multiple-03",
+      "type": "multiple",
+      "question": "Which attributes from the hotel example are most naturally associated with HOTEL? Select all that apply.",
+      "options": [
+        "address",
+        "numParking",
+        "hasWiFi",
+        "familyName",
+        "roomNumber"
+      ],
+      "answer": [
+        "address",
+        "numParking",
+        "hasWiFi"
+      ],
+      "points": 3,
+      "difficulty": "medium",
+      "tags": [
+        "entity-attribute-allocation",
+        "practice"
+      ]
+    },
+    {
+      "id": "single-28",
+      "type": "single",
+      "question": "A student draws attributes outside the entity box in a Barker ERD. What should the student do according to the practice quiz convention?",
+      "options": [
+        "Place the attributes inside the entity soft box",
+        "Move all attributes to a separate page",
+        "Remove the attributes",
+        "Turn every attribute into a relationship"
+      ],
+      "answer": [
+        "Place the attributes inside the entity soft box"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "barkers-notation",
+        "diagram-conventions"
+      ]
+    },
+    {
+      "id": "truefalse-05",
+      "type": "truefalse",
+      "question": "If a source outside the module uses a different naming style, that automatically overrides the naming convention stated in the official lesson notes.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "difficulty": "easy",
+      "tags": [
+        "naming-conventions",
+        "study-skills"
+      ]
+    },
+    {
+      "id": "rearrange-02",
+      "type": "rearrange",
+      "question": "Arrange these levels from the broadest parent level to the most specific child level in the hierarchy example.",
+      "options": [
+        "DEPARTMENT",
+        "COMPANY",
+        "BRANCH"
+      ],
+      "answer": [
+        "COMPANY",
+        "BRANCH",
+        "DEPARTMENT"
+      ],
+      "points": 3,
+      "difficulty": "easy",
+      "tags": [
+        "hierarchies",
+        "ordering"
+      ]
+    },
+    {
+      "id": "multiple-04",
+      "type": "multiple",
+      "question": "Which checks are useful when reviewing an ERD? Select all that apply.",
+      "options": [
+        "Check that each entity has an appropriate UID",
+        "Check that attributes belong to the correct entity",
+        "Check relationship cardinality and optionality against the scenario",
+        "Use any naming convention regardless of the lesson notes",
+        "Check whether a many-to-many relationship needs an intersection entity"
+      ],
+      "answer": [
+        "Check that each entity has an appropriate UID",
+        "Check that attributes belong to the correct entity",
+        "Check relationship cardinality and optionality against the scenario",
+        "Check whether a many-to-many relationship needs an intersection entity"
+      ],
+      "points": 4,
+      "difficulty": "medium",
+      "tags": [
+        "review",
+        "erd-validation"
+      ]
+    }
+  ]
+}

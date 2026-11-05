@@ -43,6 +43,7 @@ export interface QuizResults {
     correctCount: number;
     responseCount: number;
     percentCorrect: number | null;
+    averageScorePercent: number | null;
   }>;
   submissions: QuizSubmissionResult[];
 }
@@ -114,16 +115,22 @@ export function buildQuizResults(
     passCount,
     passPercentage,
     questionStats: quizQuestions.map((question) => {
-      const correctCount = submissionsWithResults.filter((submission) =>
-        submission.questions.find((result) => result.id === question.id)?.isCorrect,
-      ).length;
+      const questionResults = submissionsWithResults.flatMap((submission) =>
+        submission.questions.filter((result) => result.id === question.id),
+      );
+      const correctCount = questionResults.filter((result) => result.isCorrect).length;
+      const possiblePoints = questionResults.reduce((total, result) => total + result.possiblePoints, 0);
+      const earnedPoints = questionResults.reduce((total, result) => total + result.earnedPoints, 0);
       return {
         id: question.id,
         question: question.question,
         correctCount,
-        responseCount: submissionsWithResults.length,
-        percentCorrect: submissionsWithResults.length
-          ? (correctCount / submissionsWithResults.length) * 100
+        responseCount: questionResults.length,
+        percentCorrect: questionResults.length
+          ? (correctCount / questionResults.length) * 100
+          : null,
+        averageScorePercent: possiblePoints > 0
+          ? (earnedPoints / possiblePoints) * 100
           : null,
       };
     }),

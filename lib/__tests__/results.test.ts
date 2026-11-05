@@ -79,7 +79,41 @@ describe("buildQuizResults", () => {
     expect(results.submissions[0]?.score).toBe(question.points);
     expect(results.submissions[0]?.passed).toBe(true);
     expect(results.submissions[1]?.passed).toBe(false);
-    expect(results.questionStats[0]).toMatchObject({ correctCount: 1, responseCount: 2, percentCorrect: 50 });
+    expect(results.questionStats[0]).toMatchObject({
+      correctCount: 1,
+      responseCount: 2,
+      percentCorrect: 50,
+      averageScorePercent: 50,
+    });
+  });
+
+  it("includes matching partial credit in average question performance", () => {
+    const matchingQuestion: Question = {
+      ...question,
+      id: "matching",
+      type: "matching",
+      matchItems: ["One", "Two"],
+      options: ["First", "Second"],
+      answer: ["First", "Second"],
+      points: 2,
+    };
+    const results = buildQuizResults({ ...basicQuiz, questionIds: [matchingQuestion.id] }, [
+      {
+        id: "partial",
+        displayName: "Ada",
+        answers: { matching: ["First", "wrong"] },
+        score: null,
+        maxScore: null,
+        submittedAt: null,
+      },
+    ], [matchingQuestion]);
+
+    expect(results.questionStats[0]).toMatchObject({
+      correctCount: 0,
+      responseCount: 1,
+      percentCorrect: 0,
+      averageScorePercent: 50,
+    });
   });
 
   it("does not report a pass percentage when the quiz has no pass mark", () => {
