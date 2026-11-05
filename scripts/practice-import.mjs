@@ -128,7 +128,7 @@ const importedQuizSchema = z.object({
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(1000).default(""),
   subject: z.string().trim().max(100).default(""),
-  settings: z.object({
+  settings: z.preprocess((settings) => settings ?? {}, z.object({
     shuffleQuestions: z.boolean().default(false),
     shuffleOptions: z.boolean().default(false),
     showScoreAfterSubmit: z.boolean().default(true),
@@ -137,7 +137,7 @@ const importedQuizSchema = z.object({
     timeLimitMinutes: z.number().int().min(1).max(600).optional(),
     attemptLimit: z.number().int().min(1).max(10).default(3),
     mode: z.enum(["self-paced", "live"]).default("self-paced"),
-  }).default({}),
+  })),
   questions: z.array(importedQuestionSchema).min(1).max(100),
 }).superRefine((quiz, context) => {
   const ids = quiz.questions.map((question) => question.id);

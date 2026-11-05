@@ -97,6 +97,30 @@ describe("mapPracticeQuiz", () => {
     });
   });
 
+  it("applies default quiz settings when settings are omitted", () => {
+    const result = mapPracticeQuiz({
+      title: "Quiz without settings",
+      questions: [{
+        id: "Q1",
+        type: "single",
+        question: "Which option is correct?",
+        options: ["Correct", "Incorrect"],
+        answer: ["Correct"],
+        points: 1,
+      }],
+    }, { codePrefix: "defaults", roomCode: "1234" });
+
+    expect(result.quiz.settings).toMatchObject({
+      shuffleQuestions: false,
+      shuffleOptions: false,
+      showScoreAfterSubmit: true,
+      showCorrectAnswersAfterSubmit: false,
+      attemptLimit: 3,
+      mode: "self-paced",
+    });
+    expect(Object.values(result.quiz.settings)).not.toContain(undefined);
+  });
+
   it("rejects invalid native matching answer references", () => {
     expect(() => mapPracticeQuiz({
       title: "Invalid matching",
