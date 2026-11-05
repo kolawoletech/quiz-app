@@ -274,8 +274,18 @@ export async function importQuizJson(rawIdToken: unknown, rawJson: unknown): Pro
     id: quizId,
     status: "draft",
     settings: {
-      ...imported.quiz.settings,
-      attemptLimit: imported.quiz.settings.attemptLimit,
+      shuffleQuestions: imported.quiz.settings?.shuffleQuestions ?? false,
+      shuffleOptions: imported.quiz.settings?.shuffleOptions ?? false,
+      attemptLimit: imported.quiz.settings?.attemptLimit ?? 3,
+      showScoreAfterSubmit: imported.quiz.settings?.showScoreAfterSubmit ?? true,
+      showCorrectAnswersAfterSubmit: imported.quiz.settings?.showCorrectAnswersAfterSubmit ?? false,
+      ...(imported.quiz.settings?.passMark !== undefined
+        ? { passMark: imported.quiz.settings.passMark }
+        : {}),
+      ...(imported.quiz.settings?.timeLimitMinutes !== undefined
+        ? { timeLimitMinutes: imported.quiz.settings.timeLimitMinutes }
+        : {}),
+      mode: imported.quiz.settings?.mode ?? "self-paced",
     },
   };
   const questions = imported.questions.map((question) => ({
