@@ -1,0 +1,881 @@
+{
+  "title": "Advanced C# Web and Data Technologies - Reconstructed Practice Quiz",
+  "description": "Upload-ready reconstructed practice quiz based on the attached Advanced C# assessment review. The attachment omitted the original prompts and choices for Questions 1-40, so those items are newly written practice questions based on the answer feedback, not verbatim exam questions. Question 42 also had a duplicated matching label; its second label was reconstructed as Windows Forms. Review all answers and wording before publishing.",
+  "subject": "Advanced C# Programming",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": true,
+    "mode": "self-paced"
+  },
+  "questions": [
+    {
+      "id": "q-1",
+      "type": "single",
+      "topic": "Web services",
+      "question": "Which combination supports interoperable SOAP web services?",
+      "options": [
+        "Using SOAP, WSDL, and adhering to WS-I Basic Profile",
+        "Using JSON only and omitting a service contract",
+        "Using FTP with a proprietary binary format",
+        "Using HTML forms without a web-service protocol"
+      ],
+      "answer": [
+        "Using SOAP, WSDL, and adhering to WS-I Basic Profile"
+      ],
+      "points": 2,
+      "explanation": "This answer is taken from the attached review feedback.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-2",
+      "type": "single",
+      "topic": "ADO.NET",
+      "question": "Which call opens an existing SqlConnection?",
+      "options": [
+        "SqlConnection.Open()",
+        "SqlConnection.Start()",
+        "SqlConnection.Connect()",
+        "SqlConnection.Begin()"
+      ],
+      "answer": [
+        "SqlConnection.Open()"
+      ],
+      "points": 2,
+      "explanation": "Open establishes the database connection.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-3",
+      "type": "single",
+      "topic": "Design patterns",
+      "question": "In a singleton service design, what does the singleton guarantee?",
+      "options": [
+        "The same instance is shared across all clients",
+        "A new instance is created for every method call",
+        "Each client receives a separate database",
+        "The service can only run on one computer"
+      ],
+      "answer": [
+        "The same instance is shared across all clients"
+      ],
+      "points": 2,
+      "explanation": "This answer is taken from the attached review feedback; actual service lifetime depends on its configuration.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-4",
+      "type": "single",
+      "topic": "XML",
+      "question": "What does XML stand for?",
+      "options": [
+        "eXtensible Markup Language",
+        "eXecutable Model Language",
+        "eXternal Machine Logic",
+        "eXchange Method List"
+      ],
+      "answer": [
+        "eXtensible Markup Language"
+      ],
+      "points": 2,
+      "explanation": "XML is short for eXtensible Markup Language.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-5",
+      "type": "single",
+      "topic": "XML reading",
+      "question": "What does XmlReader.Read() do?",
+      "options": [
+        "Moves the reader to the next node in the XML document",
+        "Writes the current node to a new file",
+        "Deletes the current node",
+        "Loads an XML string into an XmlDocument"
+      ],
+      "answer": [
+        "Moves the reader to the next node in the XML document"
+      ],
+      "points": 2,
+      "explanation": "Read advances the forward-only XML reader.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-6",
+      "type": "single",
+      "topic": "File I/O",
+      "question": "Which .NET method reads an entire text file into a string?",
+      "options": [
+        "ReadAllText()",
+        "Read()",
+        "WriteAllText()",
+        "AppendAllText()"
+      ],
+      "answer": [
+        "ReadAllText()"
+      ],
+      "points": 2,
+      "explanation": "File.ReadAllText reads the complete file contents as text.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-7",
+      "type": "single",
+      "topic": "ASP.NET MVC",
+      "question": "In the MVC pattern, which component is responsible for presenting data to the user?",
+      "options": [
+        "View",
+        "Controller",
+        "Model",
+        "Repository"
+      ],
+      "answer": [
+        "View"
+      ],
+      "points": 2,
+      "explanation": "The View renders the presentation. The original prompt was not included in the attachment.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-8",
+      "type": "single",
+      "topic": "File I/O",
+      "question": "Which .NET method writes a string to a text file, creating or replacing the file?",
+      "options": [
+        "WriteAllText()",
+        "ReadAllText()",
+        "ReadLine()",
+        "OpenRead()"
+      ],
+      "answer": [
+        "WriteAllText()"
+      ],
+      "points": 2,
+      "explanation": "File.WriteAllText creates or overwrites the destination file.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-9",
+      "type": "single",
+      "topic": "C# output",
+      "question": "What is printed by the following code?",
+      "codeSnippet": "int first = 1;\nint second = 1;\nint third = 1;\nConsole.WriteLine($\"{first}, {second}, {third}\");",
+      "options": [
+        "1, 1, 1",
+        "1, 2, 3",
+        "0, 0, 0",
+        "The program does not compile"
+      ],
+      "answer": [
+        "1, 1, 1"
+      ],
+      "points": 2,
+      "explanation": "The attached key reports this output; the original code snippet was absent, so this item was reconstructed.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-10",
+      "type": "single",
+      "topic": "ASP.NET state",
+      "question": "Which ASP.NET state object is shared across users for the lifetime of the application?",
+      "options": [
+        "Application",
+        "Session",
+        "ViewState",
+        "Request"
+      ],
+      "answer": [
+        "Application"
+      ],
+      "points": 2,
+      "explanation": "Application state is shared by sessions within the application.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-11",
+      "type": "single",
+      "topic": "Data binding",
+      "question": "What is a common purpose of data binding in a user interface?",
+      "options": [
+        "To dynamically populate UI elements with data",
+        "To compile source code at runtime",
+        "To encrypt every database column",
+        "To replace event handlers with SQL statements"
+      ],
+      "answer": [
+        "To dynamically populate UI elements with data"
+      ],
+      "points": 2,
+      "explanation": "Data binding connects UI controls to data sources.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-12",
+      "type": "single",
+      "topic": "Web services",
+      "question": "What is the purpose of discovery in a web-services environment?",
+      "options": [
+        "To locate available web services",
+        "To encrypt a SOAP message",
+        "To create a database transaction",
+        "To render an ASP.NET view"
+      ],
+      "answer": [
+        "To locate available web services"
+      ],
+      "points": 2,
+      "explanation": "The attached review identifies the answer as Discovery; the original prompt was absent.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-13",
+      "type": "single",
+      "topic": "SQL",
+      "question": "Which SQL statement adds a new row to a table?",
+      "options": [
+        "INSERT",
+        "UPDATE",
+        "SELECT",
+        "DELETE"
+      ],
+      "answer": [
+        "INSERT"
+      ],
+      "points": 2,
+      "explanation": "INSERT adds new rows.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-14",
+      "type": "single",
+      "topic": "ASP.NET events",
+      "question": "How is an ASP.NET control event commonly connected to its handler in code-behind?",
+      "options": [
+        "By attaching a function to the event in code-behind",
+        "By changing the database connection string",
+        "By placing the handler inside a CSS file",
+        "By renaming the web.config file"
+      ],
+      "answer": [
+        "By attaching a function to the event in code-behind"
+      ],
+      "points": 2,
+      "explanation": "Event handlers are wired to events in markup or code.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-15",
+      "type": "single",
+      "topic": "XPath",
+      "question": "What does XPathNodeIterator.MoveNext() do?",
+      "options": [
+        "Moves the iterator to the next node in the selected node set",
+        "Moves the XML file to a different directory",
+        "Deletes the current node from the document",
+        "Creates a new XPath expression"
+      ],
+      "answer": [
+        "Moves the iterator to the next node in the selected node set"
+      ],
+      "points": 2,
+      "explanation": "MoveNext advances the iterator.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-16",
+      "type": "single",
+      "topic": "XML",
+      "question": "Which XmlDocument method loads XML content supplied as a string?",
+      "options": [
+        "LoadXml()",
+        "ReadXml()",
+        "ParseXml()",
+        "OpenXml()"
+      ],
+      "answer": [
+        "LoadXml()"
+      ],
+      "points": 2,
+      "explanation": "LoadXml loads XML from a string.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-17",
+      "type": "single",
+      "topic": "Web services",
+      "question": "Which technology name refers to a web service using XML-based messaging and web-service conventions?",
+      "options": [
+        "XML Web Service",
+        "Windows Service",
+        "Web Forms View",
+        "DataGridView"
+      ],
+      "answer": [
+        "XML Web Service"
+      ],
+      "points": 2,
+      "explanation": "This is the answer recorded in the attached review.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-18",
+      "type": "single",
+      "topic": "Web services",
+      "question": "If a web service does not specify a custom namespace, what happens?",
+      "options": [
+        "The service can still be called, but the default namespace is used",
+        "The service cannot compile",
+        "All service methods become private",
+        "The service automatically switches to FTP"
+      ],
+      "answer": [
+        "The service can still be called, but the default namespace is used"
+      ],
+      "points": 2,
+      "explanation": "A custom namespace is optional; the framework default applies when one is not configured.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-19",
+      "type": "single",
+      "topic": "IIS deployment",
+      "question": "A web service is not reachable at its deployed URL. Which issue matches the attached review key?",
+      "options": [
+        "The virtual directory and IIS configuration are not correctly set",
+        "The service class has too many public methods",
+        "The XML file contains a declaration",
+        "The client uses a View instead of a Model"
+      ],
+      "answer": [
+        "The virtual directory and IIS configuration are not correctly set"
+      ],
+      "points": 2,
+      "explanation": "The review key points to the virtual directory/IIS configuration; verify against the original prompt before relying on this item.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-20",
+      "type": "single",
+      "topic": "XML",
+      "question": "Which statement best describes XML?",
+      "options": [
+        "XML describes data, not presentation",
+        "XML is only a programming language for UI layout",
+        "XML can contain no nested elements",
+        "XML automatically executes server-side C# code"
+      ],
+      "answer": [
+        "XML describes data, not presentation"
+      ],
+      "points": 2,
+      "explanation": "XML structures and describes data; presentation is handled separately.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-21",
+      "type": "truefalse",
+      "topic": "SOAP",
+      "question": "SOAP web-service messages are commonly represented using XML.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True, SOAP uses XML-based message envelopes.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-22",
+      "type": "truefalse",
+      "topic": "WSDL",
+      "question": "WSDL can describe a web service’s operations and how a client can access them.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True, WSDL describes the service contract.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-23",
+      "type": "truefalse",
+      "topic": "XML reading",
+      "question": "XmlReader is designed for forward-only, read-only access to XML.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True, XmlReader provides forward-only, read-only access.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-24",
+      "type": "truefalse",
+      "topic": "File I/O",
+      "question": "File.ReadAllText returns the full contents of a text file as a string.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-25",
+      "type": "truefalse",
+      "topic": "File I/O",
+      "question": "File.WriteAllText can create a file or replace the contents of an existing file.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True; use an append method when existing content should be preserved.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-26",
+      "type": "truefalse",
+      "topic": "ASP.NET state",
+      "question": "ASP.NET Application state can be shared by multiple user sessions in one application.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-27",
+      "type": "truefalse",
+      "topic": "Events",
+      "question": "An event handler contains code that runs in response to its associated event.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-28",
+      "type": "truefalse",
+      "topic": "Data binding",
+      "question": "Data binding can be used to populate a user-interface control from a data source.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "The review key says True, although the recorded response was False.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-29",
+      "type": "truefalse",
+      "topic": "Windows controls",
+      "question": "A DataGridView can display tabular data in a Windows Forms application.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-30",
+      "type": "truefalse",
+      "topic": "XPath",
+      "question": "XPath expressions can be used to select nodes from an XML document.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-31",
+      "type": "truefalse",
+      "topic": "XML",
+      "question": "XmlDocument.LoadXml can load XML supplied as a string.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-32",
+      "type": "truefalse",
+      "topic": "XML",
+      "question": "XML describes and structures data; it does not by itself define how that data must be presented.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-33",
+      "type": "truefalse",
+      "topic": "Web services",
+      "question": "An ASP.NET web service must always define a custom namespace or it cannot be called.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "explanation": "False; a service can use a default namespace.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-34",
+      "type": "truefalse",
+      "topic": "ADO.NET",
+      "question": "Calling SqlConnection.Open() attempts to establish the database connection.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-35",
+      "type": "truefalse",
+      "topic": "SQL",
+      "question": "An INSERT statement is used to add rows to a database table.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-36",
+      "type": "truefalse",
+      "topic": "XPath",
+      "question": "XPathNodeIterator.MoveNext advances an iterator to its next selected node.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-37",
+      "type": "truefalse",
+      "topic": "File I/O",
+      "question": "File.WriteAllText always appends to a file and never replaces existing contents.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ],
+      "points": 1,
+      "explanation": "False; it creates or overwrites the file.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-38",
+      "type": "truefalse",
+      "topic": "Web services",
+      "question": "WSDL stands for Web Services Description Language.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-39",
+      "type": "truefalse",
+      "topic": "C# events",
+      "question": "In C#, the += operator is commonly used to subscribe a handler to an event.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-40",
+      "type": "truefalse",
+      "topic": "Web services",
+      "question": "A web service can use a framework-provided default namespace when no custom namespace is set.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ],
+      "points": 1,
+      "explanation": "True, consistent with the answer in the attached review.",
+      "difficulty": "unrated",
+      "tags": [
+        "reconstructed-practice"
+      ]
+    },
+    {
+      "id": "q-41",
+      "type": "matching",
+      "topic": "ASP.NET and web development",
+      "question": "Match each term with its description.",
+      "matchItems": [
+        "Codebehind files",
+        "ASP.NET",
+        "Events",
+        "Event Handlers",
+        "IDE"
+      ],
+      "options": [
+        "Separate files containing code that defines the behavior of a web form, enhancing modularity and maintainability.",
+        "A framework for building web applications developed by Microsoft.",
+        "Actions or occurrences that happen in program control flow, often triggered by user interactions.",
+        "Methods or functions that respond to events, executing specific code when the associated event occurs.",
+        "Software used for developing web applications, providing tools for coding, debugging, and testing."
+      ],
+      "answer": [
+        "Separate files containing code that defines the behavior of a web form, enhancing modularity and maintainability.",
+        "A framework for building web applications developed by Microsoft.",
+        "Actions or occurrences that happen in program control flow, often triggered by user interactions.",
+        "Methods or functions that respond to events, executing specific code when the associated event occurs.",
+        "Software used for developing web applications, providing tools for coding, debugging, and testing."
+      ],
+      "points": 10,
+      "explanation": "The mapping is taken from the attached review feedback.",
+      "difficulty": "unrated",
+      "tags": [
+        "review-export"
+      ]
+    },
+    {
+      "id": "q-42",
+      "type": "matching",
+      "topic": "C# data and UI",
+      "question": "Match each topic with its description. One item label was corrected from the duplicated label in the attached feedback.",
+      "matchItems": [
+        "Database Manipulation",
+        "Advanced Windows Controls",
+        "Windows Forms",
+        "Manipulating XML files using C#",
+        "File Input and Output"
+      ],
+      "options": [
+        "Involves CRUD operations on data stored in a structured format, typically using SQL queries.",
+        "Involves utilising DataGridView, ListView, or TreeView to enhance user interaction.",
+        "A .NET framework for building Windows desktop applications with rich user interfaces.",
+        "Involves parsing, creating, updating, and querying XML files within a C# application.",
+        "Involves reading from and writing to files to store and retrieve data within the application."
+      ],
+      "answer": [
+        "Involves CRUD operations on data stored in a structured format, typically using SQL queries.",
+        "Involves utilising DataGridView, ListView, or TreeView to enhance user interaction.",
+        "A .NET framework for building Windows desktop applications with rich user interfaces.",
+        "Involves parsing, creating, updating, and querying XML files within a C# application.",
+        "Involves reading from and writing to files to store and retrieve data within the application."
+      ],
+      "points": 10,
+      "explanation": "The export repeats “Advanced Windows Controls” for two different descriptions. The second label is reconstructed as “Windows Forms”; verify this correction before publishing.",
+      "difficulty": "unrated",
+      "tags": [
+        "review-export"
+      ]
+    }
+  ]
+}

@@ -99,6 +99,11 @@ const transitionSchema = z.object({
   action: z.enum(["publish", "pause", "resume", "close"]),
 });
 
+const answerReviewReleaseSchema = z.object({
+  idToken: z.string().min(1).max(10_000),
+  quizId: z.string().min(1),
+});
+
 type LecturerQuiz = Awaited<ReturnType<typeof getLecturerQuizzes>>[number];
 
 export type QuizActionResponse<T = undefined> =
@@ -207,6 +212,7 @@ export async function saveQuizDraft(rawPayload: unknown): Promise<QuizActionResp
       title: payload.data.title,
       description: payload.data.description,
       status: "draft",
+      answerReviewReleased: false,
       roomCode,
       questionIds: questions.map((question) => question.id),
       settings: {
@@ -273,6 +279,7 @@ export async function importQuizJson(rawIdToken: unknown, rawJson: unknown): Pro
     ...imported.quiz,
     id: quizId,
     status: "draft",
+    answerReviewReleased: false,
     settings: {
       shuffleQuestions: imported.quiz.settings?.shuffleQuestions ?? false,
       shuffleOptions: imported.quiz.settings?.shuffleOptions ?? false,
@@ -352,5 +359,38 @@ export async function transitionQuiz(rawPayload: unknown): Promise<QuizActionRes
     const updatedAt = new Date().toISOString();
     transaction.update(quizRef, { status: nextStatus, updatedAt });
     return { ok: true, email: authorization.email, data: { ...quiz, status: nextStatus, updatedAt } };
+  });
+}
+
+export async function releaseAnswerReview(rawPayload: unknown): Promise<QuizActionResponse<Quiz>> {
+  const payload = answerReviewReleaseSchema.safeParse(rawPayload);
+  if (!payload.success) {
+    return { ok: false, error: "The answer review release request is invalid." };
+  }
+
+  const authorization = await authorized(payload.data.idToken);
+  if (!authorization.ok) return authorization;
+
+  const firestore = getFirebaseAdminFirestore();
+  const quizRef = firestore.collection("quizzes").doc(payload.data.quizId);
+  return firestore.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(quizRef);
+    if (!snapshot.exists) return { ok: false, error: "That quiz no longer exists." };
+
+    const quiz = parseQuiz(snapshot.id, snapshot.data());
+    if (quiz.status === "draft") {
+      return { ok: false, error: "Publish the quiz before releasing answer review." };
+    }
+    if (quiz.answerReviewReleased) {
+      return { ok: true, email: authorization.email, data: quiz };
+    }
+
+    const updatedAt = new Date().toISOString();
+    transaction.update(quizRef, { answerReviewReleased: true, updatedAt });
+    return {
+      ok: true,
+      email: authorization.email,
+      data: { ...quiz, answerReviewReleased: true, updatedAt },
+    };
   });
 }

@@ -21,6 +21,7 @@ export interface Quiz {
   title: string;
   description: string;
   status: "draft" | "published" | "paused" | "closed";
+  answerReviewReleased: boolean;
   roomCode: string;
   questionIds: string[];
   settings: {

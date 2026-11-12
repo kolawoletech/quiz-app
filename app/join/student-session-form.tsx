@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { ArrowDown, ArrowUp, CheckCircle2, Clock3, GripVertical, LoaderCircle, XCircle } from "lucide-react";
 import { signInAnonymously } from "firebase/auth";
 
-import { loadStudentSession, submitStudentQuiz } from "@/app/join/actions";
+import { loadStudentAnswerReview, loadStudentSession, submitStudentQuiz } from "@/app/join/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,6 +29,9 @@ function shuffle<T>(values: T[]) {
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
+  if (minutes >= 60) {
+    return `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+  }
   return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
 }
 
@@ -39,9 +42,12 @@ export function StudentSessionForm() {
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [result, setResult] = useState<StudentSubmissionResult | null>(null);
   const [error, setError] = useState("");
+  const [reviewMessage, setReviewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingReview, setIsCheckingReview] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
+  const [deadlineAt, setDeadlineAt] = useState<number | null>(null);
   const submissionStarted = useRef(false);
   const attemptId = useRef("");
 
@@ -61,6 +67,12 @@ export function StudentSessionForm() {
         attemptId: attemptId.current || (attemptId.current = crypto.randomUUID()),
         idToken: await user.getIdToken(),
       });
+      setSession((current) => current && ({
+        ...current,
+        attemptsUsed: current.attemptsUsed + 1,
+        attemptsRemaining: Math.max(0, current.attemptsRemaining - 1),
+        canAttempt: current.attemptsRemaining > 1,
+      }));
       setResult(submissionResult);
     } catch (submissionError) {
       submissionStarted.current = false;
@@ -70,27 +82,89 @@ export function StudentSessionForm() {
     }
   }, [displayName, session]);
 
-  useEffect(() => {
-    if (!session?.settings.timeLimitMinutes || result) return;
+  async function checkAnswerReview() {
+    if (!session || !attemptId.current) return;
 
-    const timer = window.setInterval(() => {
-      setRemainingSeconds((seconds) => {
-        if (seconds === null || seconds <= 1) {
-          window.clearInterval(timer);
-          return 0;
-        }
-        return seconds - 1;
+    setIsCheckingReview(true);
+    setReviewMessage("");
+    setError("");
+    try {
+      const auth = getStudentFirebaseAuth();
+      const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
+      const response = await loadStudentAnswerReview({
+        roomCode: session.roomCode,
+        attemptId: attemptId.current,
+        idToken: await user.getIdToken(),
       });
-    }, 1000);
+      if (!response.ok) throw new Error(response.error);
+      if (!response.available || !response.result) {
+        setReviewMessage("Answer review has not been released yet. Check again later.");
+        return;
+      }
 
-    return () => window.clearInterval(timer);
-  }, [session, result]);
+      setResult(response.result);
+    } catch (reviewError) {
+      setError(reviewError instanceof Error ? reviewError.message : "Answer review could not be checked.");
+    } finally {
+      setIsCheckingReview(false);
+    }
+  }
+
+  useEffect(() => {
+    if (deadlineAt === null || result) return;
+
+    const updateRemainingTime = () => {
+      const seconds = Math.max(0, Math.ceil((deadlineAt - Date.now()) / 1000));
+      setRemainingSeconds((current) => current === seconds ? current : seconds);
+      if (seconds === 0) window.clearInterval(timer);
+    };
+    const timer = window.setInterval(updateRemainingTime, 1000);
+    document.addEventListener("visibilitychange", updateRemainingTime);
+    updateRemainingTime();
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", updateRemainingTime);
+    };
+  }, [deadlineAt, result]);
 
   useEffect(() => {
     if (remainingSeconds === 0 && !result && !submissionStarted.current) {
       void submitAnswers(answers);
     }
   }, [remainingSeconds, result, answers, submitAnswers]);
+
+  function startAttempt(loadedSession: StudentSession) {
+    const questions = loadedSession.settings.shuffleQuestions
+      ? shuffle(loadedSession.questions)
+      : loadedSession.questions;
+    const shuffledSession = {
+      ...loadedSession,
+      questions: questions.map((question) => ({
+        ...question,
+        options: ["matching", "rearrange"].includes(question.type)
+          || (loadedSession.settings.shuffleOptions && question.type !== "truefalse")
+          ? shuffle(question.options)
+          : question.options,
+      })),
+    };
+    setSession(shuffledSession);
+    setAnswers(Object.fromEntries(
+      shuffledSession.questions
+        .filter((question) => question.type === "rearrange")
+        .map((question) => [question.id, question.options]),
+    ));
+    setResult(null);
+    setReviewMessage("");
+    setError("");
+    submissionStarted.current = false;
+    attemptId.current = "";
+    const timeLimitSeconds = shuffledSession.settings.timeLimitMinutes
+      ? shuffledSession.settings.timeLimitMinutes * 60
+      : null;
+    setRemainingSeconds(timeLimitSeconds);
+    setDeadlineAt(timeLimitSeconds === null ? null : Date.now() + timeLimitSeconds * 1000);
+  }
 
   async function joinSession(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -106,34 +180,17 @@ export function StudentSessionForm() {
         return;
       }
 
-      const loadedSession = response.session;
-      const questions = loadedSession.settings.shuffleQuestions
-        ? shuffle(loadedSession.questions)
-        : loadedSession.questions;
-      const shuffledSession = {
-        ...loadedSession,
-        questions: questions.map((question) => ({
-          ...question,
-          options: ["matching", "rearrange"].includes(question.type)
-            || (loadedSession.settings.shuffleOptions && question.type !== "truefalse")
-            ? shuffle(question.options)
-            : question.options,
-        })),
-      };
-      setSession(shuffledSession);
-      setAnswers(Object.fromEntries(
-        shuffledSession.questions
-          .filter((question) => question.type === "rearrange")
-          .map((question) => [question.id, question.options]),
-      ));
-      setResult(null);
-      submissionStarted.current = false;
-      attemptId.current = "";
-      setRemainingSeconds(
-        shuffledSession.settings.timeLimitMinutes
-          ? shuffledSession.settings.timeLimitMinutes * 60
-          : null,
-      );
+      if (response.previousReview) {
+        setSession(response.session);
+        setAnswers({});
+        setResult(response.previousReview);
+        setRemainingSeconds(null);
+        setDeadlineAt(null);
+        submissionStarted.current = false;
+        attemptId.current = "";
+      } else {
+        startAttempt(response.session);
+      }
     } catch (joinError) {
       setError(joinError instanceof Error ? joinError.message : "The session could not be loaded.");
     } finally {
@@ -244,6 +301,7 @@ export function StudentSessionForm() {
   }
 
   const answeredCount = session.questions.filter((question) => hasAnswer(question.id)).length;
+  const isTimedOut = remainingSeconds === 0;
 
   if (result) {
     return (
@@ -252,7 +310,7 @@ export function StudentSessionForm() {
           <CardHeader>
             <Badge className="w-fit">Room {session.roomCode}</Badge>
             <Badge className="w-fit">
-              {Math.max(0, session.attemptsRemaining - 1)} of {session.attemptLimit} attempts remaining
+              {session.attemptsRemaining} of {session.attemptLimit} attempts remaining
             </Badge>
             <CardTitle className="text-2xl">{session.title}</CardTitle>
             <CardDescription>Submitted as {displayName.trim() || "Anonymous participant"}</CardDescription>
@@ -272,7 +330,7 @@ export function StudentSessionForm() {
               </div>
             ) : (
               <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
-                Your response was submitted. Results are hidden by this quiz&apos;s settings.
+                Your response was submitted. Scores are hidden by this quiz&apos;s settings.
               </p>
             )}
             {result.questionResults ? (
@@ -298,9 +356,34 @@ export function StudentSessionForm() {
                 })}
               </div>
             ) : (
-              <p className="text-sm text-slate-500">Answer review is disabled for this quiz.</p>
+              <div className="space-y-3">
+                <p className="text-sm text-slate-500">Answer review is not available yet. Check again after your lecturer releases it.</p>
+                {reviewMessage && <p role="status" className="text-sm text-slate-600">{reviewMessage}</p>}
+                {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+                <Button type="button" variant="outline" disabled={isCheckingReview} onClick={() => void checkAnswerReview()}>
+                  {isCheckingReview && <LoaderCircle className="size-4 animate-spin" />}
+                  Check for released answers
+                </Button>
+              </div>
             )}
-            <Button variant="outline" onClick={() => window.location.reload()}>Join another session</Button>
+            {session.canAttempt ? (
+              <Button variant="outline" onClick={() => startAttempt(session)}>Start another attempt</Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSession(null);
+                  setResult(null);
+                  setAnswers({});
+                  setRemainingSeconds(null);
+                  setDeadlineAt(null);
+                  setError("");
+                  setReviewMessage("");
+                }}
+              >
+                Choose another quiz
+              </Button>
+            )}
           </CardContent>
         </Card>
       </main>
@@ -317,12 +400,6 @@ export function StudentSessionForm() {
               <CardTitle className="text-2xl">{session.title}</CardTitle>
               <CardDescription className="mt-1">{session.description}</CardDescription>
             </div>
-            {remainingSeconds !== null && (
-              <Badge className="flex items-center gap-2">
-                <Clock3 className="h-4 w-4" />
-                {formatTime(remainingSeconds)} remaining
-              </Badge>
-            )}
             <Badge>{session.attemptsRemaining} attempt{session.attemptsRemaining === 1 ? "" : "s"} available</Badge>
           </div>
           <p className="text-sm text-slate-500">
@@ -331,6 +408,26 @@ export function StudentSessionForm() {
           </p>
         </CardHeader>
       </Card>
+
+      {remainingSeconds !== null && (
+        <div className={`sticky top-2 z-20 flex items-center justify-between gap-3 rounded-lg border px-4 py-3 shadow-sm ${
+          remainingSeconds <= 60
+            ? "border-red-300 bg-red-50 text-red-800"
+            : "border-slate-200 bg-white text-slate-800"
+        }`}>
+          <span className="text-sm font-medium">
+            {isTimedOut ? "Time is up — submitting your answers." : "Time remaining"}
+          </span>
+          <span
+            role="timer"
+            aria-label={`Time remaining: ${formatTime(remainingSeconds)}`}
+            className="flex shrink-0 items-center gap-2 font-mono text-lg font-bold tabular-nums"
+          >
+            <Clock3 className="h-5 w-5" aria-hidden="true" />
+            {formatTime(remainingSeconds)}
+          </span>
+        </div>
+      )}
 
       {session.questions.map((question, index) => {
         const selected = answers[question.id] ?? [];
@@ -360,7 +457,7 @@ export function StudentSessionForm() {
                       <select
                         value={selected[matchIndex] ?? ""}
                         onChange={(event) => updateMatch(question.id, matchIndex, event.target.value)}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isTimedOut}
                         required
                         aria-label={`Match for ${item}`}
                         className="w-full rounded-md border border-slate-200 bg-white p-3 text-sm"
@@ -380,7 +477,7 @@ export function StudentSessionForm() {
                   {selected.map((line, lineIndex) => (
                     <li
                       key={`${line}-${lineIndex}`}
-                      draggable={!isSubmitting}
+                      draggable={!isSubmitting && !isTimedOut}
                       onDragStart={(event) => event.dataTransfer.setData("text/plain", String(lineIndex))}
                       onDragOver={(event) => event.preventDefault()}
                       onDrop={(event) => {
@@ -398,7 +495,7 @@ export function StudentSessionForm() {
                         variant="ghost"
                         size="icon"
                         aria-label={`Move line ${lineIndex + 1} up`}
-                        disabled={isSubmitting || lineIndex === 0}
+                        disabled={isSubmitting || isTimedOut || lineIndex === 0}
                         onClick={() => moveCodeLine(question.id, lineIndex, lineIndex - 1)}
                       >
                         <ArrowUp className="size-4" />
@@ -408,7 +505,7 @@ export function StudentSessionForm() {
                         variant="ghost"
                         size="icon"
                         aria-label={`Move line ${lineIndex + 1} down`}
-                        disabled={isSubmitting || lineIndex === selected.length - 1}
+                        disabled={isSubmitting || isTimedOut || lineIndex === selected.length - 1}
                         onClick={() => moveCodeLine(question.id, lineIndex, lineIndex + 1)}
                       >
                         <ArrowDown className="size-4" />
@@ -426,7 +523,7 @@ export function StudentSessionForm() {
                         value={option}
                         checked={selected.includes(option)}
                         onChange={(event) => updateAnswer(question.id, option, event.target.checked)}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isTimedOut}
                         className="h-4 w-4 accent-slate-900"
                       />
                       <span className="text-sm">{option}</span>
@@ -438,7 +535,7 @@ export function StudentSessionForm() {
                   value={selected[0] ?? ""}
                   onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: [event.target.value] }))}
                   rows={question.type === "code" ? 6 : 3}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isTimedOut}
                   aria-label={`Answer to question ${index + 1}`}
                   placeholder="Type your answer"
                   className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
@@ -457,10 +554,10 @@ export function StudentSessionForm() {
         </p>
         <Button
           onClick={() => void submitAnswers(answers)}
-          disabled={isSubmitting || !hasAnsweredEveryQuestion()}
+          disabled={isSubmitting || (!isTimedOut && !hasAnsweredEveryQuestion())}
         >
           {isSubmitting && <LoaderCircle className="h-4 w-4 animate-spin" />}
-          {isSubmitting ? "Submitting…" : "Submit answers"}
+          {isSubmitting ? "Submitting…" : isTimedOut ? "Retry submission" : "Submit answers"}
         </Button>
       </div>
     </main>

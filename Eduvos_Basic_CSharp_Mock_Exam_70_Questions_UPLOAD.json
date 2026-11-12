@@ -1,0 +1,1459 @@
+{
+  "title": "Eduvos Basic C# Programming – Comprehensive Mock Exam",
+  "description": "70-question reconstructed practice mock based on recoverable topics and answer feedback in the supplied Eduvos assessment export. The export omitted many original question stems and code snippets, so these are practice questions rather than a verbatim reproduction. Correct answers and explanations are included. The answer key has been content-reviewed; code-fragment questions are instructional snippets unless explicitly described as complete programs.",
+  "subject": "C# Programming",
+  "settings": {
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "showScoreAfterSubmit": true,
+    "showCorrectAnswersAfterSubmit": true,
+    "mode": "self-paced"
+  },
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "Which statement rethrows the current exception while preserving its original stack trace?",
+      "points": 1,
+      "explanation": "A bare throw inside catch rethrows the current exception and preserves its stack trace.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "single",
+      "options": [
+        "throw;",
+        "throw ex;",
+        "return ex;",
+        "catch;"
+      ],
+      "answer": [
+        "throw;"
+      ]
+    },
+    {
+      "id": "q-2",
+      "question": "Which runtime structure tracks active method calls and their return locations?",
+      "points": 1,
+      "explanation": "The call stack tracks active method calls and return locations. Avoid assuming every local variable is always physically stored on the stack; JIT optimisations and runtime implementation details can affect storage.",
+      "difficulty": "unrated",
+      "tags": [
+        "Memory and execution"
+      ],
+      "type": "single",
+      "options": [
+        "The call stack",
+        "The database",
+        "The Windows Registry",
+        "The project folder"
+      ],
+      "answer": [
+        "The call stack"
+      ]
+    },
+    {
+      "id": "q-3",
+      "question": "Which OOP concept allows a base reference to invoke an overridden derived-class method?",
+      "points": 1,
+      "explanation": "Runtime polymorphism selects the override based on the object's actual type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Polymorphism"
+      ],
+      "type": "single",
+      "options": [
+        "Encapsulation",
+        "Polymorphism",
+        "Compilation",
+        "Serialization"
+      ],
+      "answer": [
+        "Polymorphism"
+      ]
+    },
+    {
+      "id": "q-4",
+      "question": "What does #warning do in C#?",
+      "points": 1,
+      "explanation": "The directive emits a compiler warning with the supplied message.",
+      "difficulty": "unrated",
+      "tags": [
+        "Preprocessor directives"
+      ],
+      "type": "single",
+      "options": [
+        "It asks the compiler to display a warning",
+        "It throws a runtime exception",
+        "It stops the application",
+        "It disables all warnings"
+      ],
+      "answer": [
+        "It asks the compiler to display a warning"
+      ]
+    },
+    {
+      "id": "q-5",
+      "question": "Which type stores true or false?",
+      "points": 1,
+      "explanation": "bool is the Boolean data type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Data types"
+      ],
+      "type": "single",
+      "options": [
+        "bool",
+        "int",
+        "char",
+        "double"
+      ],
+      "answer": [
+        "bool"
+      ]
+    },
+    {
+      "id": "q-6",
+      "question": "What is printed by `for (int totalMon = 0; totalMon < 12; totalMon += 12) Console.WriteLine(totalMon + 12);`?",
+      "points": 1,
+      "explanation": "The first iteration prints 0 + 12; then totalMon becomes 12 and the condition fails.",
+      "difficulty": "unrated",
+      "tags": [
+        "Loops"
+      ],
+      "type": "single",
+      "options": [
+        "12",
+        "1",
+        "24",
+        "Nothing"
+      ],
+      "answer": [
+        "12"
+      ]
+    },
+    {
+      "id": "q-7",
+      "question": "Classes are reference types, while structs are value types.",
+      "points": 1,
+      "explanation": "This is the fundamental distinction between class and struct types.",
+      "difficulty": "unrated",
+      "tags": [
+        "Classes and structs"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-8",
+      "question": "What does the regular expression pattern `\\w+` generally match?",
+      "points": 1,
+      "explanation": "\\w matches word characters; + means one or more.",
+      "difficulty": "unrated",
+      "tags": [
+        "Regular expressions"
+      ],
+      "type": "single",
+      "options": [
+        "One or more word characters",
+        "One or more whitespace characters",
+        "Exactly one digit",
+        "Punctuation only"
+      ],
+      "answer": [
+        "One or more word characters"
+      ]
+    },
+    {
+      "id": "q-9",
+      "question": "What must a base-class method be marked as to allow overriding?",
+      "points": 1,
+      "explanation": "A derived class can override a virtual or abstract member.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "virtual, abstract or override",
+        "private only",
+        "static only",
+        "const"
+      ],
+      "answer": [
+        "virtual, abstract or override"
+      ]
+    },
+    {
+      "id": "q-10",
+      "question": "Which declaration represents a read-only int property?",
+      "points": 1,
+      "explanation": "A property with no set accessor is read-only through ordinary property assignment.",
+      "difficulty": "unrated",
+      "tags": [
+        "Properties"
+      ],
+      "type": "single",
+      "options": [
+        "int Age { get; }",
+        "int Age { set; }",
+        "void Age()",
+        "readonly int Age()"
+      ],
+      "answer": [
+        "int Age { get; }"
+      ]
+    },
+    {
+      "id": "q-11",
+      "question": "What is the common purpose of a constructor?",
+      "points": 1,
+      "explanation": "Constructors establish an object's initial state.",
+      "difficulty": "unrated",
+      "tags": [
+        "Constructors"
+      ],
+      "type": "single",
+      "options": [
+        "Initialise an object when it is created",
+        "Destroy an object",
+        "Override all methods",
+        "Create a namespace"
+      ],
+      "answer": [
+        "Initialise an object when it is created"
+      ]
+    },
+    {
+      "id": "q-12",
+      "question": "What does `this` refer to inside an instance method?",
+      "points": 1,
+      "explanation": "this refers to the object on which the instance method is executing.",
+      "difficulty": "unrated",
+      "tags": [
+        "this keyword"
+      ],
+      "type": "single",
+      "options": [
+        "The current instance",
+        "The base class only",
+        "The namespace",
+        "A static field"
+      ],
+      "answer": [
+        "The current instance"
+      ]
+    },
+    {
+      "id": "q-13",
+      "question": "Which type is suitable for general-purpose double-precision floating-point values?",
+      "points": 1,
+      "explanation": "double stores double-precision floating-point numbers.",
+      "difficulty": "unrated",
+      "tags": [
+        "Data types"
+      ],
+      "type": "single",
+      "options": [
+        "double",
+        "bool",
+        "char",
+        "byte"
+      ],
+      "answer": [
+        "double"
+      ]
+    },
+    {
+      "id": "q-14",
+      "question": "Given `void Greet(string name, bool clearScreen = false)`, which call uses the default value?",
+      "points": 1,
+      "explanation": "The second parameter is optional because it has a default value.",
+      "difficulty": "unrated",
+      "tags": [
+        "Optional parameters"
+      ],
+      "type": "single",
+      "options": [
+        "Greet(\"Ava\");",
+        "Greet();",
+        "Greet(true);",
+        "Greet(\"Ava\", \"yes\");"
+      ],
+      "answer": [
+        "Greet(\"Ava\");"
+      ]
+    },
+    {
+      "id": "q-15",
+      "question": "Given `int[] arr = { 4, 8, 12, 16 };`, which expression returns 12?",
+      "points": 1,
+      "explanation": "C# arrays are zero-indexed.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arrays"
+      ],
+      "type": "single",
+      "options": [
+        "arr[2]",
+        "arr[3]",
+        "arr[1]",
+        "arr[4]"
+      ],
+      "answer": [
+        "arr[2]"
+      ]
+    },
+    {
+      "id": "q-16",
+      "question": "Which company develops C# and .NET?",
+      "points": 1,
+      "explanation": "Microsoft develops C# and .NET with community contributions.",
+      "difficulty": "unrated",
+      "tags": [
+        "C# platform"
+      ],
+      "type": "single",
+      "options": [
+        "Microsoft",
+        "Oracle",
+        "Adobe",
+        "Mozilla"
+      ],
+      "answer": [
+        "Microsoft"
+      ]
+    },
+    {
+      "id": "q-17",
+      "question": "Which keyword prevents a class from being inherited?",
+      "points": 1,
+      "explanation": "A sealed class cannot be used as a base class.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "sealed",
+        "static",
+        "virtual",
+        "base"
+      ],
+      "answer": [
+        "sealed"
+      ]
+    },
+    {
+      "id": "q-18",
+      "question": "What is dynamic method invocation at runtime?",
+      "points": 1,
+      "explanation": "Virtual dispatch supports runtime polymorphism.",
+      "difficulty": "unrated",
+      "tags": [
+        "Polymorphism"
+      ],
+      "type": "single",
+      "options": [
+        "Selecting an override according to the object's runtime type",
+        "Selecting methods randomly",
+        "Selecting by return type only",
+        "Deleting the base class"
+      ],
+      "answer": [
+        "Selecting an override according to the object's runtime type"
+      ]
+    },
+    {
+      "id": "q-19",
+      "question": "What is a risk of using `throw new Exception()` to rethrow a caught exception?",
+      "points": 1,
+      "explanation": "Use bare throw; to rethrow the current exception while preserving its stack trace.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exceptions"
+      ],
+      "type": "single",
+      "options": [
+        "It creates a new exception and can lose the original stack details",
+        "It is identical to `throw;`",
+        "It always resumes execution",
+        "It cannot compile anywhere"
+      ],
+      "answer": [
+        "It creates a new exception and can lose the original stack details"
+      ]
+    },
+    {
+      "id": "q-20",
+      "question": "Which statement describes a static method?",
+      "points": 1,
+      "explanation": "Static members belong to the type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Static members"
+      ],
+      "type": "single",
+      "options": [
+        "It can be called through the type without creating an instance",
+        "It can only be called in a constructor",
+        "It always creates an object",
+        "It must access instance fields"
+      ],
+      "answer": [
+        "It can be called through the type without creating an instance"
+      ]
+    },
+    {
+      "id": "q-21",
+      "question": "Which interface exposes `MoveNext()` and `Current` for traversing a collection?",
+      "points": 1,
+      "explanation": "IEnumerator represents an enumerator.",
+      "difficulty": "unrated",
+      "tags": [
+        "Enumeration"
+      ],
+      "type": "single",
+      "options": [
+        "IEnumerator",
+        "IComparer",
+        "IDisposable",
+        "IFormattable"
+      ],
+      "answer": [
+        "IEnumerator"
+      ]
+    },
+    {
+      "id": "q-22",
+      "question": "When does a finally block normally run?",
+      "points": 1,
+      "explanation": "finally is commonly used for cleanup.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "single",
+      "options": [
+        "When control leaves the try/catch construct, whether or not an exception occurred",
+        "Only when an exception is thrown",
+        "Only when catch succeeds",
+        "Only when the application exits"
+      ],
+      "answer": [
+        "When control leaves the try/catch construct, whether or not an exception occurred"
+      ]
+    },
+    {
+      "id": "q-23",
+      "question": "What happens when code accesses an invalid array index?",
+      "points": 1,
+      "explanation": "An array has a fixed valid index range.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arrays"
+      ],
+      "type": "single",
+      "options": [
+        "An IndexOutOfRangeException is thrown",
+        "The array automatically grows",
+        "The index becomes zero",
+        "The compiler fixes the index"
+      ],
+      "answer": [
+        "An IndexOutOfRangeException is thrown"
+      ]
+    },
+    {
+      "id": "q-24",
+      "question": "Which declaration creates a field that can be assigned at declaration or in a constructor?",
+      "points": 1,
+      "explanation": "A readonly field can be assigned at declaration or in an appropriate constructor.",
+      "difficulty": "unrated",
+      "tags": [
+        "Fields"
+      ],
+      "type": "single",
+      "options": [
+        "readonly int maxCount;",
+        "var maxCount;",
+        "static int maxCount;",
+        "int readonly();"
+      ],
+      "answer": [
+        "readonly int maxCount;"
+      ]
+    },
+    {
+      "id": "q-25",
+      "question": "What is abstraction?",
+      "points": 1,
+      "explanation": "Abstraction focuses on what an object does rather than unnecessary implementation detail.",
+      "difficulty": "unrated",
+      "tags": [
+        "Abstraction"
+      ],
+      "type": "single",
+      "options": [
+        "Hiding implementation details and exposing essential features",
+        "Making every field public",
+        "Copying objects",
+        "Sorting data"
+      ],
+      "answer": [
+        "Hiding implementation details and exposing essential features"
+      ]
+    },
+    {
+      "id": "q-26",
+      "question": "Which menu path is commonly used to create a new project?",
+      "points": 1,
+      "explanation": "The New Project command is available from File.",
+      "difficulty": "unrated",
+      "tags": [
+        "Visual Studio"
+      ],
+      "type": "single",
+      "options": [
+        "File > New > Project",
+        "Edit > Copy > Project",
+        "Build > Clean > Project",
+        "Debug > Attach > Project"
+      ],
+      "answer": [
+        "File > New > Project"
+      ]
+    },
+    {
+      "id": "q-27",
+      "question": "What is printed by `int result = 2 + 2 * 2; Console.WriteLine(result);`?",
+      "points": 1,
+      "explanation": "Multiplication is evaluated before addition.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arithmetic operators"
+      ],
+      "type": "single",
+      "options": [
+        "6",
+        "8",
+        "4",
+        "12"
+      ],
+      "answer": [
+        "6"
+      ]
+    },
+    {
+      "id": "q-28",
+      "question": "What is printed when a BaseClass reference refers to a DerivedClass object and calls an overridden Show method that prints `DerivedClass: 20`?",
+      "points": 2,
+      "explanation": "The runtime object type determines which override executes.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "Base",
+        "DerivedClass: 20",
+        "Compilation error",
+        "Nothing"
+      ],
+      "answer": [
+        "DerivedClass: 20"
+      ]
+    },
+    {
+      "id": "q-29",
+      "question": "A Dog overrides Animal.Speak() to print `Dog barks`. What is printed by `Animal pet = new Dog(); pet.Speak();`?",
+      "points": 2,
+      "explanation": "The Dog override is invoked at runtime.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "Animal sound",
+        "Dog barks",
+        "Compilation error",
+        "Nothing"
+      ],
+      "answer": [
+        "Dog barks"
+      ]
+    },
+    {
+      "id": "q-30",
+      "question": "A Child class overrides Parent.Display() to print `Child: 10`. What is printed by `Parent p = new Child(); p.Display();`?",
+      "points": 2,
+      "explanation": "The actual object is Child, so its override runs.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "Parent",
+        "Child: 10",
+        "Compilation error",
+        "Parent: 10"
+      ],
+      "answer": [
+        "Child: 10"
+      ]
+    },
+    {
+      "id": "q-31",
+      "question": "What is printed by `$\"{name}\\n{relationship}\"` when name is Jane and relationship is Friend?",
+      "points": 2,
+      "explanation": "Interpolation inserts values and \\n adds a newline.",
+      "difficulty": "unrated",
+      "tags": [
+        "String interpolation"
+      ],
+      "type": "single",
+      "options": [
+        "Jane then Friend on the next line",
+        "JaneFriend on one line",
+        "The literal braces",
+        "Compilation error"
+      ],
+      "answer": [
+        "Jane then Friend on the next line"
+      ]
+    },
+    {
+      "id": "q-32",
+      "question": "What does `$\"My name is {name}, I am {age} years old\"` do?",
+      "points": 2,
+      "explanation": "String interpolation evaluates expressions inside braces.",
+      "difficulty": "unrated",
+      "tags": [
+        "String interpolation"
+      ],
+      "type": "single",
+      "options": [
+        "Inserts the values of name and age into the string",
+        "Prints the variable names literally",
+        "Declares two variables",
+        "Causes a compilation error"
+      ],
+      "answer": [
+        "Inserts the values of name and age into the string"
+      ]
+    },
+    {
+      "id": "q-33",
+      "question": "What is printed by `int x = 10; x += 5; Console.WriteLine(x);`?",
+      "points": 2,
+      "explanation": "x += 5 is equivalent to x = x + 5.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arithmetic operators"
+      ],
+      "type": "single",
+      "options": [
+        "15",
+        "10",
+        "5",
+        "105"
+      ],
+      "answer": [
+        "15"
+      ]
+    },
+    {
+      "id": "q-34",
+      "question": "What does `int[] arr = new int[3]; arr[0] = 5;` do?",
+      "points": 2,
+      "explanation": "The first element is at index zero.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arrays"
+      ],
+      "type": "single",
+      "options": [
+        "Sets the value at index 0 to 5",
+        "Sets index 1 to 5",
+        "Creates five elements",
+        "Throws an index exception"
+      ],
+      "answer": [
+        "Sets the value at index 0 to 5"
+      ]
+    },
+    {
+      "id": "q-35",
+      "question": "A method is assigned to an Action delegate and the delegate is invoked once. How many times does that method run?",
+      "points": 2,
+      "explanation": "A single invocation calls the assigned method once.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates"
+      ],
+      "type": "single",
+      "options": [
+        "Once",
+        "Twice",
+        "Three times",
+        "Never"
+      ],
+      "answer": [
+        "Once"
+      ]
+    },
+    {
+      "id": "q-36",
+      "question": "Which statement correctly describes a car and a vehicle in an inheritance model?",
+      "points": 2,
+      "explanation": "A derived type is a more specific form of its base type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "single",
+      "options": [
+        "A car is a specific kind of vehicle",
+        "A vehicle is always a car",
+        "They cannot be related",
+        "A car must inherit from Motorcycle"
+      ],
+      "answer": [
+        "A car is a specific kind of vehicle"
+      ]
+    },
+    {
+      "id": "q-37",
+      "question": "How do you call a method named PrintMessage with no parameters?",
+      "points": 2,
+      "explanation": "A method call uses its name followed by parentheses.",
+      "difficulty": "unrated",
+      "tags": [
+        "Methods"
+      ],
+      "type": "single",
+      "options": [
+        "PrintMessage();",
+        "void PrintMessage;",
+        "call PrintMessage;",
+        "new PrintMessage();"
+      ],
+      "answer": [
+        "PrintMessage();"
+      ]
+    },
+    {
+      "id": "q-38",
+      "question": "A concrete class implements an interface with two required methods. What must it do?",
+      "points": 2,
+      "explanation": "A non-abstract implementing class must satisfy the interface contract.",
+      "difficulty": "unrated",
+      "tags": [
+        "Interfaces"
+      ],
+      "type": "single",
+      "options": [
+        "Implement both methods",
+        "Implement neither",
+        "Implement only one",
+        "Declare itself static"
+      ],
+      "answer": [
+        "Implement both methods"
+      ]
+    },
+    {
+      "id": "q-39",
+      "question": "What happens if a non-abstract class omits a required interface member?",
+      "points": 2,
+      "explanation": "A concrete class must implement required interface members.",
+      "difficulty": "unrated",
+      "tags": [
+        "Compilation errors"
+      ],
+      "type": "single",
+      "options": [
+        "Compilation fails",
+        "The method is generated automatically",
+        "The interface is ignored",
+        "The program always runs"
+      ],
+      "answer": [
+        "Compilation fails"
+      ]
+    },
+    {
+      "id": "q-40",
+      "question": "What is printed by `int n = 4; n *= 2; n += 2; Console.WriteLine(n);`?",
+      "points": 2,
+      "explanation": "4 multiplied by 2 is 8, then adding 2 gives 10.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arithmetic operators"
+      ],
+      "type": "single",
+      "options": [
+        "10",
+        "8",
+        "6",
+        "12"
+      ],
+      "answer": [
+        "10"
+      ]
+    },
+    {
+      "id": "q-41",
+      "question": "If a method is added to a multicast delegate three times, how many times is it called when the delegate is invoked?",
+      "points": 2,
+      "explanation": "Each entry in the invocation list is called in order.",
+      "difficulty": "unrated",
+      "tags": [
+        "Multicast delegates"
+      ],
+      "type": "single",
+      "options": [
+        "Three times",
+        "Once",
+        "Twice",
+        "Zero times"
+      ],
+      "answer": [
+        "Three times"
+      ]
+    },
+    {
+      "id": "q-42",
+      "question": "A class is a blueprint from which objects can be created.",
+      "points": 1,
+      "explanation": "A class defines the structure and behaviour of its instances.",
+      "difficulty": "unrated",
+      "tags": [
+        "Classes and objects"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-43",
+      "question": "A derived class can inherit accessible members from its base class.",
+      "points": 1,
+      "explanation": "Inheritance allows reuse and extension of accessible base members.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-44",
+      "question": "Encapsulation helps protect internal state by controlling access to data.",
+      "points": 1,
+      "explanation": "Access modifiers and properties can control access.",
+      "difficulty": "unrated",
+      "tags": [
+        "Encapsulation"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-45",
+      "question": "A constructor has the same name as its class and has no return type.",
+      "points": 1,
+      "explanation": "C# constructors use the class name and no return type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Constructors"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-46",
+      "question": "A static method is called through an object instance in the same way as an instance method.",
+      "points": 1,
+      "explanation": "Static members are accessed through the type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Static members"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ]
+    },
+    {
+      "id": "q-47",
+      "question": "A finally block is commonly used to perform cleanup.",
+      "points": 1,
+      "explanation": "finally is used for cleanup after try/catch processing.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-48",
+      "question": "The first element of a C# array has index 1.",
+      "points": 1,
+      "explanation": "C# arrays begin at index zero.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arrays"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ]
+    },
+    {
+      "id": "q-49",
+      "question": "A delegate can reference a method with a compatible signature.",
+      "points": 1,
+      "explanation": "Delegate parameter and return types must be compatible.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-50",
+      "question": "A class can implement more than one interface.",
+      "points": 1,
+      "explanation": "C# supports multiple interface implementation.",
+      "difficulty": "unrated",
+      "tags": [
+        "Interfaces"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-51",
+      "question": "A sealed class can be inherited by another class.",
+      "points": 1,
+      "explanation": "sealed prevents class inheritance.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ]
+    },
+    {
+      "id": "q-52",
+      "question": "A property with only a get accessor is read-only through normal property assignment.",
+      "points": 1,
+      "explanation": "No set accessor is exposed.",
+      "difficulty": "unrated",
+      "tags": [
+        "Properties"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-53",
+      "question": "Method overloading is commonly described as compile-time polymorphism.",
+      "points": 1,
+      "explanation": "The compiler selects an overload based on the call arguments.",
+      "difficulty": "unrated",
+      "tags": [
+        "Polymorphism"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-54",
+      "question": "A bare `throw;` inside a catch block rethrows the current exception.",
+      "points": 1,
+      "explanation": "It preserves the original exception's stack trace.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exceptions"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "True"
+      ]
+    },
+    {
+      "id": "q-55",
+      "question": "A struct is a reference type in C#.",
+      "points": 1,
+      "explanation": "A struct is a value type.",
+      "difficulty": "unrated",
+      "tags": [
+        "Structs"
+      ],
+      "type": "truefalse",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": [
+        "False"
+      ]
+    },
+    {
+      "id": "q-56",
+      "question": "Match each concept with its description.",
+      "points": 5,
+      "explanation": "These are foundational object-oriented programming terms.",
+      "difficulty": "unrated",
+      "tags": [
+        "C# terminology"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "Class",
+        "Object",
+        "Constructor",
+        "Property",
+        "Method"
+      ],
+      "options": [
+        "An instance of a class",
+        "A blueprint defining data and behaviour",
+        "Initialises a new object",
+        "Provides controlled access to data",
+        "Defines an action or behaviour"
+      ],
+      "answer": [
+        "A blueprint defining data and behaviour",
+        "An instance of a class",
+        "Initialises a new object",
+        "Provides controlled access to data",
+        "Defines an action or behaviour"
+      ]
+    },
+    {
+      "id": "q-57",
+      "question": "Match each keyword with its purpose.",
+      "points": 4,
+      "explanation": "Each keyword has a distinct role.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "try",
+        "catch",
+        "finally",
+        "throw"
+      ],
+      "options": [
+        "Contains code that may cause an exception",
+        "Handles an exception",
+        "Runs cleanup code",
+        "Raises or rethrows an exception"
+      ],
+      "answer": [
+        "Contains code that may cause an exception",
+        "Handles an exception",
+        "Runs cleanup code",
+        "Raises or rethrows an exception"
+      ]
+    },
+    {
+      "id": "q-58",
+      "question": "Match each keyword with its meaning.",
+      "points": 4,
+      "explanation": "These keywords control inheritance and overriding.",
+      "difficulty": "unrated",
+      "tags": [
+        "Inheritance"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "virtual",
+        "override",
+        "abstract",
+        "sealed"
+      ],
+      "options": [
+        "Allows a member to be overridden",
+        "Provides a replacement implementation in a derived class",
+        "Declares an incomplete member or class",
+        "Prevents further inheritance or overriding"
+      ],
+      "answer": [
+        "Allows a member to be overridden",
+        "Provides a replacement implementation in a derived class",
+        "Declares an incomplete member or class",
+        "Prevents further inheritance or overriding"
+      ]
+    },
+    {
+      "id": "q-59",
+      "question": "Match each type with its purpose.",
+      "points": 5,
+      "explanation": "These are common built-in C# types.",
+      "difficulty": "unrated",
+      "tags": [
+        "C# types"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "bool",
+        "char",
+        "int",
+        "double",
+        "string"
+      ],
+      "options": [
+        "True or false",
+        "A single character",
+        "Whole numbers",
+        "Double-precision floating-point numbers",
+        "A sequence of characters"
+      ],
+      "answer": [
+        "True or false",
+        "A single character",
+        "Whole numbers",
+        "Double-precision floating-point numbers",
+        "A sequence of characters"
+      ]
+    },
+    {
+      "id": "q-60",
+      "question": "Match each term with its description.",
+      "points": 4,
+      "explanation": "These terms describe method references, iteration and contracts.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates and interfaces"
+      ],
+      "type": "matching",
+      "matchItems": [
+        "Delegate",
+        "Multicast delegate",
+        "IEnumerator",
+        "Interface"
+      ],
+      "options": [
+        "A type-safe reference to compatible method(s)",
+        "A delegate whose invocation list can contain multiple methods",
+        "Supports traversing a collection",
+        "Defines a contract for implementing types"
+      ],
+      "answer": [
+        "A type-safe reference to compatible method(s)",
+        "A delegate whose invocation list can contain multiple methods",
+        "Supports traversing a collection",
+        "Defines a contract for implementing types"
+      ]
+    },
+    {
+      "id": "q-61",
+      "question": "Rearrange these code fragments into a complete Program class whose Main method calls SayHello.",
+      "points": 2,
+      "explanation": "The class contains Main and SayHello. Main calls SayHello; both methods must be inside the class braces.",
+      "difficulty": "unrated",
+      "tags": [
+        "Methods"
+      ],
+      "type": "rearrange",
+      "options": [
+        "class Program",
+        "{",
+        "static void Main()",
+        "{",
+        "SayHello();",
+        "}",
+        "static void SayHello()",
+        "{",
+        "Console.WriteLine(\"Hello\");",
+        "}",
+        "}"
+      ],
+      "answer": [
+        "class Program",
+        "{",
+        "static void Main()",
+        "{",
+        "SayHello();",
+        "}",
+        "static void SayHello()",
+        "{",
+        "Console.WriteLine(\"Hello\");",
+        "}",
+        "}"
+      ]
+    },
+    {
+      "id": "q-62",
+      "question": "Arrange the fragments into a valid try/catch/finally sequence.",
+      "points": 2,
+      "explanation": "The risky operation belongs in try, the handler in catch and cleanup in finally.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "rearrange",
+      "options": [
+        "try {",
+        "Console.WriteLine(\"Work\");",
+        "} catch (Exception ex) {",
+        "Console.WriteLine(ex.Message);",
+        "} finally {",
+        "Console.WriteLine(\"Cleanup\"); }"
+      ],
+      "answer": [
+        "try {",
+        "Console.WriteLine(\"Work\");",
+        "} catch (Exception ex) {",
+        "Console.WriteLine(ex.Message);",
+        "} finally {",
+        "Console.WriteLine(\"Cleanup\"); }"
+      ]
+    },
+    {
+      "id": "q-63",
+      "question": "Arrange the steps to declare, define, assign and invoke a delegate.",
+      "points": 2,
+      "explanation": "Declare the delegate type, provide a compatible method, assign it and invoke it.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates"
+      ],
+      "type": "rearrange",
+      "options": [
+        "delegate void Notify();",
+        "static void ShowMessage() { Console.WriteLine(\"Hello\"); }",
+        "Notify notification = ShowMessage;",
+        "notification();"
+      ],
+      "answer": [
+        "delegate void Notify();",
+        "static void ShowMessage() { Console.WriteLine(\"Hello\"); }",
+        "Notify notification = ShowMessage;",
+        "notification();"
+      ]
+    },
+    {
+      "id": "q-64",
+      "question": "Arrange the statements to create an array, assign its first element and print it.",
+      "points": 2,
+      "explanation": "Create the array before assigning and reading an element.",
+      "difficulty": "unrated",
+      "tags": [
+        "Arrays"
+      ],
+      "type": "rearrange",
+      "options": [
+        "int[] numbers = new int[3];",
+        "numbers[0] = 5;",
+        "Console.WriteLine(numbers[0]);"
+      ],
+      "answer": [
+        "int[] numbers = new int[3];",
+        "numbers[0] = 5;",
+        "Console.WriteLine(numbers[0]);"
+      ]
+    },
+    {
+      "id": "q-65",
+      "question": "Assume `int number = 0;` has already been declared. Place the correct keywords in the code template to handle division by zero.\nEnter the completed code with every numbered blank filled in.",
+      "points": 2,
+      "explanation": "With number declared as zero before this snippet, the division throws DivideByZeroException. The try block contains the risky statement and catch handles that exception.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "code",
+      "codeSnippet": "___1___\n{\n    int result = 10 / number;\n}\n___2___ (DivideByZeroException)\n{\n    Console.WriteLine(\"Cannot divide by zero\");\n}",
+      "answer": [
+        "try\n{\n    int result = 10 / number;\n}\ncatch (DivideByZeroException)\n{\n    Console.WriteLine(\"Cannot divide by zero\");\n}"
+      ]
+    },
+    {
+      "id": "q-66",
+      "question": "Complete the delegate declaration, compatible method assignment and invocation by placing the correct fragments.\nEnter the completed code with every numbered blank filled in.",
+      "points": 3,
+      "explanation": "Declare the delegate type, define a method with a compatible signature, assign that method and invoke the delegate with parentheses.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates"
+      ],
+      "type": "code",
+      "codeSnippet": "___1___ void MessageHandler();\n\nstatic void ShowMessage()\n{\n    Console.WriteLine(\"Hello\");\n}\n\nMessageHandler handler = ___2___;\nhandler___3___;",
+      "answer": [
+        "delegate void MessageHandler();\n\nstatic void ShowMessage()\n{\n    Console.WriteLine(\"Hello\");\n}\n\nMessageHandler handler = ShowMessage;\nhandler();"
+      ]
+    },
+    {
+      "id": "q-67",
+      "question": "Which statements about C# properties are correct? Select all that apply.",
+      "points": 3,
+      "explanation": "Properties can have get, set or other accessor combinations; both are not mandatory.",
+      "difficulty": "unrated",
+      "tags": [
+        "Properties"
+      ],
+      "type": "multiple",
+      "options": [
+        "A property can have a get accessor",
+        "A property can have a set accessor",
+        "A property must always have both get and set",
+        "A read-only property can expose a value without allowing ordinary external assignment"
+      ],
+      "answer": [
+        "A property can have a get accessor",
+        "A property can have a set accessor",
+        "A read-only property can expose a value without allowing ordinary external assignment"
+      ]
+    },
+    {
+      "id": "q-68",
+      "question": "Which statements about delegates are correct? Select all that apply.",
+      "points": 3,
+      "explanation": "Methods assigned to delegates must have compatible signatures.",
+      "difficulty": "unrated",
+      "tags": [
+        "Delegates"
+      ],
+      "type": "multiple",
+      "options": [
+        "A delegate stores a reference to a compatible method",
+        "A delegate signature includes parameter types and return type",
+        "A multicast delegate can invoke multiple methods",
+        "A delegate can invoke any method regardless of signature"
+      ],
+      "answer": [
+        "A delegate stores a reference to a compatible method",
+        "A delegate signature includes parameter types and return type",
+        "A multicast delegate can invoke multiple methods"
+      ]
+    },
+    {
+      "id": "q-69",
+      "question": "Which statements about interfaces are correct? Select all that apply.",
+      "points": 3,
+      "explanation": "C# supports multiple interface implementation but single class inheritance.",
+      "difficulty": "unrated",
+      "tags": [
+        "Interfaces"
+      ],
+      "type": "multiple",
+      "options": [
+        "A class can implement multiple interfaces",
+        "An interface defines a contract",
+        "A concrete class must implement required interface members",
+        "A class can inherit from multiple classes"
+      ],
+      "answer": [
+        "A class can implement multiple interfaces",
+        "An interface defines a contract",
+        "A concrete class must implement required interface members"
+      ]
+    },
+    {
+      "id": "q-70",
+      "question": "What is printed by this code?\n\ntry { Console.WriteLine(\"Start\"); int x = 10 / int.Parse(\"0\"); Console.WriteLine(\"End\"); }\ncatch (DivideByZeroException) { Console.WriteLine(\"Error\"); }\nfinally { Console.WriteLine(\"Finally\"); }",
+      "points": 2,
+      "explanation": "The division throws; End is skipped, catch handles the exception, and finally runs.",
+      "difficulty": "unrated",
+      "tags": [
+        "Exception handling"
+      ],
+      "type": "single",
+      "options": [
+        "Start, Error, Finally",
+        "Start, End, Finally",
+        "Error only",
+        "Start, Finally, End"
+      ],
+      "answer": [
+        "Start, Error, Finally"
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } fro
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { ChevronLeft, ChevronRight, LoaderCircle, LogIn, Plus, Save, Search, ShieldCheck, X } from "lucide-react";
 
-import { importQuizJson, loadLecturerQuizzes, saveQuizDraft, transitionQuiz, type QuizActionResponse } from "@/app/quizzes/actions";
+import { importQuizJson, loadLecturerQuizzes, releaseAnswerReview, saveQuizDraft, transitionQuiz, type QuizActionResponse } from "@/app/quizzes/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +21,7 @@ type QuizDraft = {
   attemptLimit: number;
   passMark?: number;
   timeLimitMinutes?: number;
+  isTimed: boolean;
   shuffleQuestions: boolean;
   shuffleOptions: boolean;
   showScoreAfterSubmit: boolean;
@@ -49,6 +50,7 @@ function emptyDraft(): QuizDraft {
     title: "",
     description: "",
     attemptLimit: 1,
+    isTimed: false,
     shuffleQuestions: false,
     shuffleOptions: false,
     showScoreAfterSubmit: true,
@@ -66,6 +68,7 @@ function draftFromQuiz({ quiz, questions }: LecturerQuiz): QuizDraft {
     attemptLimit: quiz.settings.attemptLimit,
     passMark: quiz.settings.passMark,
     timeLimitMinutes: quiz.settings.timeLimitMinutes,
+    isTimed: quiz.settings.timeLimitMinutes !== undefined,
     shuffleQuestions: quiz.settings.shuffleQuestions,
     shuffleOptions: quiz.settings.shuffleOptions,
     showScoreAfterSubmit: quiz.settings.showScoreAfterSubmit,
@@ -178,8 +181,10 @@ export function QuizManager() {
     try {
       const user = getFirebaseAuth().currentUser;
       if (!user) throw new Error("Sign in again to save this quiz.");
+      const { isTimed, ...draftData } = draft;
       const response: QuizActionResponse<LecturerQuiz> = await saveQuizDraft({
-        ...draft,
+        ...draftData,
+        timeLimitMinutes: isTimed ? draft.timeLimitMinutes ?? 30 : undefined,
         idToken: await user.getIdToken(),
         questions: draft.questions.map((question) => ({
           ...question,
@@ -261,6 +266,34 @@ export function QuizManager() {
       setNotice(`Quiz ${response.data.status}.`);
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : "The quiz status could not be changed.");
+    } finally {
+      setBusyQuizId("");
+    }
+  }
+
+  async function releaseAnswers(quizId: string) {
+    if (!window.confirm("Release correct answers and explanations to all students for this quiz? This cannot be undone.")) return;
+
+    setBusyQuizId(quizId);
+    setError("");
+    setNotice("");
+    try {
+      const user = getFirebaseAuth().currentUser;
+      if (!user) throw new Error("Sign in again to release answer review.");
+      const response: QuizActionResponse<Quiz> = await releaseAnswerReview({
+        quizId,
+        idToken: await user.getIdToken(),
+      });
+      if (!response.ok) {
+        setError(response.error);
+        return;
+      }
+      setQuizzes((current) => (current ?? []).map((entry) =>
+        entry.quiz.id === quizId ? { ...entry, quiz: response.data } : entry,
+      ));
+      setNotice(`Answer review released for "${response.data.title}".`);
+    } catch (releaseError) {
+      setError(releaseError instanceof Error ? releaseError.message : "Answer review could not be released.");
     } finally {
       setBusyQuizId("");
     }
@@ -388,20 +421,51 @@ export function QuizManager() {
                   <label className={labelClass}>Pass mark (%) — optional
                     <Input type="number" min={0} max={100} value={draft.passMark ?? ""} onChange={(event) => setDraft({ ...draft, passMark: event.target.value === "" ? undefined : Number(event.target.value) })} />
                   </label>
-                  <label className={labelClass}>Time limit in minutes — optional
-                    <Input type="number" min={1} max={600} value={draft.timeLimitMinutes ?? ""} onChange={(event) => setDraft({ ...draft, timeLimitMinutes: event.target.value === "" ? undefined : Number(event.target.value) })} />
+                  <label className={labelClass}>Quiz timing
+                    <select
+                      className={controlClass}
+                      value={draft.isTimed ? "timed" : "untimed"}
+                      onChange={(event) => setDraft({
+                        ...draft,
+                        isTimed: event.target.value === "timed",
+                        ...(event.target.value === "timed" && draft.timeLimitMinutes === undefined
+                          ? { timeLimitMinutes: 30 }
+                          : {}),
+                      })}
+                    >
+                      <option value="untimed">Untimed</option>
+                      <option value="timed">Timed</option>
+                    </select>
                   </label>
-                  <label className={labelClass}>Quiz mode
+                  {draft.isTimed && (
+                    <label className={labelClass}>Time limit in minutes (1–600)
+                      <Input
+                        required
+                        type="number"
+                        min={1}
+                        max={600}
+                        value={draft.timeLimitMinutes ?? ""}
+                        onChange={(event) => setDraft({
+                          ...draft,
+                          timeLimitMinutes: event.target.value === "" ? undefined : Number(event.target.value),
+                        })}
+                      />
+                    </label>
+                  )}
+                  <label className={labelClass}>Delivery mode
                     <select className={controlClass} value={draft.mode} onChange={(event) => setDraft({ ...draft, mode: event.target.value as QuizDraft["mode"] })}>
                       <option value="self-paced">Self-paced</option><option value="live">Live</option>
                     </select>
                   </label>
+                  <p className="text-sm text-slate-500 sm:col-span-2">
+                    Timing is independent of delivery mode. Timed quizzes start the countdown when each student joins.
+                  </p>
                   <div className="flex flex-wrap gap-x-5 gap-y-2 sm:col-span-2">
                     {([
                       ["shuffleQuestions", "Shuffle questions"],
                       ["shuffleOptions", "Shuffle options"],
                       ["showScoreAfterSubmit", "Show score after submission"],
-                      ["showCorrectAnswersAfterSubmit", "Show answer review after submission"],
+                      ["showCorrectAnswersAfterSubmit", "Show answer review immediately after every submission"],
                     ] as const).map(([key, label]) => (
                       <label key={key} className="flex items-center gap-2 text-sm text-slate-700">
                         <input className={checkboxClass} type="checkbox" checked={draft[key]} onChange={(event) => setDraft({ ...draft, [key]: event.target.checked })} />
@@ -601,6 +665,24 @@ export function QuizManager() {
                         {busyQuizId === quiz.id && <LoaderCircle className="size-4 animate-spin" />}{label}
                       </Button>
                     ))}
+                    {quiz.status !== "draft" && quiz.settings.showCorrectAnswersAfterSubmit && (
+                      <Badge className="self-center">Answer review after every submission</Badge>
+                    )}
+                    {quiz.status !== "draft" && !quiz.settings.showCorrectAnswersAfterSubmit && (
+                      quiz.answerReviewReleased ? (
+                        <Badge className="self-center">Answer review released</Badge>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={busyQuizId === quiz.id}
+                          onClick={() => void releaseAnswers(quiz.id)}
+                        >
+                          {busyQuizId === quiz.id && <LoaderCircle className="size-4 animate-spin" />}
+                          Release answer review
+                        </Button>
+                      )
+                    )}
                   </div>
                   {quiz.status === "closed" && <p className="text-xs text-slate-500">Closed quizzes cannot be reopened. Existing results are retained.</p>}
                 </CardContent>

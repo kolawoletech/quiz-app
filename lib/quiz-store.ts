@@ -9,6 +9,7 @@ const quizSchema = z.object({
   title: z.string().min(1),
   description: z.string(),
   status: z.enum(["draft", "published", "paused", "closed", "archived"]),
+  answerReviewReleased: z.boolean().default(false),
   roomCode: z.string().regex(/^\d{4}$/),
   questionIds: z.array(z.string().min(1)).min(1),
   settings: z.object({

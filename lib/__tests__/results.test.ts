@@ -23,6 +23,7 @@ const basicQuiz: Quiz = {
   title: "Test quiz",
   description: "Test quiz description",
   status: "published",
+  answerReviewReleased: false,
   roomCode: "9762",
   questionIds: [question.id],
   settings: {

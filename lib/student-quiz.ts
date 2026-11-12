@@ -17,6 +17,7 @@ export interface StudentSession {
   attemptsUsed: number;
   attemptsRemaining: number;
   attemptLimit: number;
+  canAttempt: boolean;
   settings: {
     shuffleQuestions: boolean;
     shuffleOptions: boolean;
@@ -29,7 +30,11 @@ export interface StudentSession {
 }
 
 export type LoadStudentSessionResult =
-  | { ok: true; session: StudentSession }
+  | { ok: true; session: StudentSession; previousReview?: StudentSubmissionResult }
+  | { ok: false; error: string };
+
+export type StudentAnswerReviewResult =
+  | { ok: true; available: boolean; result?: StudentSubmissionResult }
   | { ok: false; error: string };
 
 export interface StudentQuestionResult {
